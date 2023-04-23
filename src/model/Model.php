@@ -19,7 +19,7 @@ class Model extends Db
      */
     public function findAll()
     {
-        $query = $this->sendQuery('SELECT * FROM '.$this->table);
+        $query = $this->sendQuery("SELECT * FROM $this->table");
         return $query->fetchAll();
     }
 
@@ -45,7 +45,7 @@ class Model extends Db
         $liste_champs = implode(' AND ', $champs);
 
         // On execute la requete
-        return $this->sendQuery('SELECT * FROM '. $this->table . ' WHERE '. $liste_champs, $valeurs)->fetchAll();
+        return $this->sendQuery("SELECT * FROM $this->table WHERE $liste_champs", $valeurs)->fetchAll();
     }
 
     /**
@@ -80,7 +80,7 @@ class Model extends Db
         $liste_interogations = implode(', ', $interogations);
 
         // On execute la requete
-        return $this->sendQuery('INSERT INTO '. $this->table . ' ('.$liste_champs.') VALUES ('.$liste_interogations.')', $valeurs);
+        return $this->sendQuery("INSERT INTO $this->table ('$liste_champs') VALUES ('$liste_interogations')", $valeurs);
     }
 
     /**
@@ -123,7 +123,7 @@ class Model extends Db
         $liste_champs = implode(', ', $champs);
 
         // On execute la requete
-        return $this->sendQuery('UPDATE '. $this->table . ' SET '.$liste_champs.' WHERE id = ?', $valeurs);
+        return $this->sendQuery("UPDATE $this->table SET $liste_champs WHERE id = ?", $valeurs);
     }
 
     /**
