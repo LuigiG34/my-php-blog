@@ -1,0 +1,5 @@
+mysql-data/
+vendor/
+node_modules/
+public/theme
+config.ini
