@@ -1,35 +1,23 @@
 <?php
 
 namespace App\Controllers;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 /**
  * Controller class
  */
 abstract class Controller
 {
-    /**
-     * render function (render template)
-     *
-     * @param string $fichier views file
-     * @param array $donnees variable or array with data
-     * @param string $template data 'default' or 'admin'
-     */
-    public function render(string $fichier, array $donnees = [], string $template = 'default')
+    private $loader;
+    protected $twig;
+
+    public function __construct()
     {
-        // On extrait le contenu de $donnees.
-        extract($donnees);
+        // Paramétré le dossier contenant nos templates twig
+        $this->loader = new FilesystemLoader(ROOT.'/templates');
 
-        // On démarre le buffer de sortie.
-        // A partir de ce point toute sortie (echo ou HTML) est conservé en mémoire.
-        ob_start();
-
-        // On créé le chemin vers la vue.
-        require_once ROOT . '/templates/' . $fichier . '.php';
-
-        // On stocke dans la variable le buffer.
-        $contenu = ob_get_clean();
-
-        // On recupere notre template.
-        require_once ROOT . '/templates/'.$template.'.php';
+        //Paramétré environnement twig
+        $this->twig = new Environment($this->loader);
     }
 }

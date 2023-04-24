@@ -9,11 +9,9 @@ class HomepageController extends Controller
 {
     /**
      * Appelle homepage
-     *
-     * @return void
      */
     public function index()
     {
-        $this->render('homepage/index');
+        $this->twig->display('homepage/index.html.twig');
     }
 }
