@@ -1,8 +1,8 @@
 <?php
 
-namespace App\core;
+namespace App\Core;
 
-use App\controllers\HomepageController;
+use App\Controllers\HomepageController;
 
 /**
  * Routeur Class

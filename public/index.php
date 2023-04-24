@@ -1,6 +1,6 @@
 <?php
 
-use App\core\Routeur;
+use App\Core\Routeur;
 
 // On definie une constante contenant le dossier racine du projet.
 define('ROOT', __DIR__.'/..');

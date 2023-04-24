@@ -1,8 +1,8 @@
 <?php
 
-namespace App\model;
+namespace App\Model;
 
-use App\core\Db;
+use App\Core\Db;
 
 /**
  * Class Model

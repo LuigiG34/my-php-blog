@@ -1,6 +1,6 @@
 <?php
 
-namespace App\constraint;
+namespace App\Validation;
 use FFI\Exception;
 
 abstract class ImageTreatment
