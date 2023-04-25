@@ -86,16 +86,16 @@ class Model extends Db
     /**
      * Hydrate
      */
-    public function hydrate($donnees)
+    public function hydrate($donnees, $entity)
     {
         foreach($donnees as $key => $value){
             // On recupere le nom du setter correspondant à la clé
             $setter = 'set' . ucfirst($key);
 
             // On vérifie si le setter existe
-            if(method_exists($this, $setter)){
+            if(method_exists($entity, $setter)){
                 // On appelle le setter
-                $this->$setter($value);
+                $entity->$setter($value);
             }
         }
         return $this;
@@ -104,7 +104,7 @@ class Model extends Db
     /**
      * Update
      */
-    public function update()
+    public function update($id)
     {
         $champs = [];
         $valeurs = [];
@@ -117,7 +117,7 @@ class Model extends Db
                 $valeurs[] = $valeur;
             }
         }
-        $valeurs[] = $this->id;
+        $valeurs[] = $id;
 
         // On transforme le tableau champs en une chaine de caracteres
         $liste_champs = implode(', ', $champs);
