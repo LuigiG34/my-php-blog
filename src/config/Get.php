@@ -11,7 +11,7 @@ class Get
 
     public function __construct()
     {
-        $this->get = $_GET;
+        self::$get = $_GET;
     }
 
     /**
@@ -19,10 +19,10 @@ class Get
      *
      * @param string $name
      */
-    public function getGet($name)
+    static public function getGet($name)
     {
-        if(isset($this->get[$name])) {
-            return $this->get[$name];
+        if(isset(self::$get[$name])) {
+            return self::$get[$name];
         }
     }
 
@@ -32,10 +32,10 @@ class Get
      *
      * @param string $name
      */
-    public function getAllGet()
+    static public function getAllGet()
     {
-        if(isset($this->get)) {
-            return $this->get;
+        if(isset(self::$get)) {
+            return self::$get;
         }
     }
 
@@ -48,7 +48,7 @@ class Get
      */
     public function setGet($name, $value)
     {
-        $this->get[$name] = $value;
+        self::$get[$name] = $value;
     }
 
 }
