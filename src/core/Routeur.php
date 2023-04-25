@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Config\Get;
 use App\Controllers\HomepageController;
 
 /**
@@ -38,7 +39,8 @@ class Routeur
 
         // On gère les paramètres d'URL.
         // On sépare les paramètres dans un tableau.
-        $params = explode('/', $_GET['p']);
+        $get = new Get;
+        $params = explode('/', $get->getGet('p'));
 
         if ($params[0] !== '') {
             // On a au moins un parametres dans l'URL.

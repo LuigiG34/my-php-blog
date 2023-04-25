@@ -11,7 +11,7 @@ class Session
 
     public function __construct()
     {
-        self::$session = $_SESSION;
+        $this->session = $_SESSION;
     }
 
     /**
@@ -19,10 +19,10 @@ class Session
      *
      * @param string $name
      */
-    static public function getSession($name)
+    public function getSession($name)
     {
-        if(isset(self::$session[$name])) {
-            return self::$session[$name];
+        if(isset($this->session[$name])) {
+            return $this->session[$name];
         }
     }
 
@@ -33,9 +33,9 @@ class Session
      * @param string $name
      * @param array|string $value
      */
-    static public function setSession($name, $value)
+    public function setSession($name, $value)
     {
-        self::$session[$name] = $value;
+        $this->session[$name] = $value;
     }
 
 
@@ -44,8 +44,8 @@ class Session
      *
      * @param string $name
      */
-    static public function unsetSession($name)
+    public function unsetSession($name)
     {
-        unset(self::$session[$name]);
+        unset($this->session[$name]);
     }
 }

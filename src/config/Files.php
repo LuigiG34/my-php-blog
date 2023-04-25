@@ -11,7 +11,7 @@ class Files
 
     public function __construct()
     {
-        self::$files = $_FILES;
+        $this->files = $_FILES;
     }
 
     /**
@@ -19,10 +19,10 @@ class Files
      *
      * @param string $name
      */
-    static public function getFiles($name)
+    public function getFiles($name)
     {
-        if(isset(self::$files[$name])) {
-            return self::$files[$name];
+        if(isset($this->files[$name])) {
+            return $this->files[$name];
         }
     }
 
@@ -33,9 +33,9 @@ class Files
      * @param string $name
      * @param array|string $value
      */
-    static public function setFiles($name, $value)
+    public function setFiles($name, $value)
     {
-        self::$files[$name] = $value;
+        $this->files[$name] = $value;
     }
 
 }

@@ -11,7 +11,7 @@ class Post
 
     public function __construct()
     {
-        self::$post = $_POST;
+        $this->post = $_POST;
     }
 
     /**
@@ -19,10 +19,10 @@ class Post
      *
      * @param string $name
      */
-    static public function getPost($name)
+    public function getPost($name)
     {
-        if(isset(self::$post[$name])) {
-            return self::$post[$name];
+        if(isset($this->post[$name])) {
+            return $this->post[$name];
         }
     }
 
@@ -31,10 +31,10 @@ class Post
      *
      * @param string $name
      */
-    static public function getAllPost()
+    public function getAllPost()
     {
-        if(isset(self::$post)) {
-            return self::$post;
+        if(isset($this->post)) {
+            return $this->post;
         }
     }
 
@@ -44,9 +44,9 @@ class Post
      * @param string $name
      * @param array|string $value
      */
-    static public function setPost($name, $value)
+    public function setPost($name, $value)
     {
-        self::$post[$name] = $value;
+        $this->post[$name] = $value;
     }
 
 }
