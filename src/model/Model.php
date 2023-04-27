@@ -59,14 +59,14 @@ class Model extends Db
     /**
      * Create
      */
-    public function create(): object
+    public function create($entity): object
     {
         $champs = [];
         $interogations = [];
         $valeurs = [];
 
         // On boucle pour éclater le tableau
-        foreach($this as $champ => $valeur){
+        foreach($entity as $champ => $valeur){
             if($valeur !== null && $champ != 'db' && $champ != 'table'){
                 // INSERT INTO table (champs) VALUES (?,?,?)
                 $champs[] = "$champ";
@@ -146,6 +146,8 @@ class Model extends Db
         if($attributs !== null){
             // Requête preparée
             $query = $this->db->prepare($sql);
+            var_dump($sql);
+            var_dump($attributs);
             $query->execute($attributs);
             return $query;
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 class Utilisateurs
 {
     protected $id_utilisateur;
+    protected $prenom;
     protected $email;
     protected $mot_de_passe;
     protected $token_reset;
@@ -150,6 +151,26 @@ class Utilisateurs
     public function setId_utilisateur($id_utilisateur)
     {
         $this->id_utilisateur = $id_utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of prenom
+     */ 
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * Set the value of prenom
+     *
+     * @return  self
+     */ 
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
 
         return $this;
     }
