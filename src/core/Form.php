@@ -12,7 +12,6 @@ class Form
     /**
      * Génere le formulaire HTML.
      *
-     * @return string
      */
     public function create()
     {
