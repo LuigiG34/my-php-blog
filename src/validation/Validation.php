@@ -20,7 +20,7 @@ class Validation
         }
     }
 
-    public function signUpValid($email, $posts, $password, $passwordVerif)
+    public function signUpValid($email, $posts, $password, $passwordVerif, $data)
     {
         if($this->validEmail($email) === false){
             return "L'adresse mail n'est pas valide.";
@@ -32,6 +32,10 @@ class Validation
 
         if($password !== $passwordVerif){
             return "Les mots de passes ne coresspondent pas.";
+        }
+
+        if($data !== null) {
+            return "L'adresse mail indiqué existe déjà en base de données.";
         }
 
         return true;
