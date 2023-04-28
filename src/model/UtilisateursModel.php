@@ -25,4 +25,17 @@ class UtilisateursModel extends Model
             ":mot_de_passe" => $password
         ]);
     }
+
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT id, prenom, email, mot_de_passe, role FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE email = $email";
+        $query = $this->db->query($sql);
+        $data = $query->fetch();
+
+        if($data){
+            return $data;
+        }else{
+            return null;
+        }
+    }
 }
