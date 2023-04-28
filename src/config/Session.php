@@ -23,6 +23,8 @@ class Session
     {
         if(isset($this->session[$name])) {
             return $this->session[$name];
+        }else{
+            return false;
         }
     }
 
