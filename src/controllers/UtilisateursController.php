@@ -37,19 +37,22 @@ class UtilisateursController extends Controller
     public function signupValid()
     {
         $post = new Post;
+        $userModel = new UtilisateursModel;
         $validation = new Validation;
         $allPosts = $post->getAllPost();
-        print_r($allPosts);
 
+        $data = $userModel->getUserByEmail($post->getPost('email'));
         
-        if($validation->signUpValid($post->getPost('email'),$allPosts,$post->getPost('password'),$post->getPost('password-again')) !== true){
-            return false; // Mettre flash ici avec la valeur de signUpValid
+        if($validation->signUpValid($post->getPost('email'),$allPosts,$post->getPost('password'),$post->getPost('password-again'), $data) !== true){
+
+            return false; // Mettre flash ici avec la valeur de signUpValid          
+        
         }else{
+
             $email = strip_tags($post->getPost('email'));
             $prenom = strip_tags($post->getPost('prenom'));
             $pswd = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
 
-            $userModel = new UtilisateursModel;
             $userModel->createUser($email,$pswd,$prenom);
 
         }
