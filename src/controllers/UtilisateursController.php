@@ -14,6 +14,27 @@ use App\Validation\Validation;
  */
 class UtilisateursController extends Controller
 {
+    public function signinValid()
+    {
+        $post = new Post;
+        $userModel = new UtilisateursModel;
+        $validation = new Validation;
+        $allPosts = $post->getAllPost();
+
+        $data = $userModel->getUserByEmail($post->getPost('email'));
+        $password = $data['mot_de_passe'];
+        
+        if($validation->signInValid($post->getPost('email'),$allPosts,$post->getPost('password'),$password, $data) !== true){
+
+            return false; // Mettre flash ici avec la valeur de signInValid          
+        
+        }else{
+
+            // succès mettre flash succès + créer la session + reidirection vers page accueil
+
+        }
+    }
+
     /**
      * Login
      */
@@ -21,7 +42,7 @@ class UtilisateursController extends Controller
     {
         $form = new Form;
 
-        $form->debutForm()
+        $form->debutForm('post', '/utilisateurs/signinValid')
         ->ajoutLabelFor('email', 'Email :')
         ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
         ->ajoutLabelFor('password', 'Mot de passe :')

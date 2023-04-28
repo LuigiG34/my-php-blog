@@ -40,4 +40,25 @@ class Validation
 
         return true;
     }
+
+    public function signInValid($email, $posts, $password, $passwordVerif, $data)
+    {
+        if($this->validEmail($email) === false){
+            return "L'adresse mail n'est pas valide.";
+        }
+
+        if($this->notEmpty($posts) === false){
+            return "Un ou plusieurs champs sont vides.";
+        }
+
+        if(password_verify($password, $passwordVerif) === false){
+            return "L'adresse mail et/ou le mot de passe est incorrect.";
+        }
+
+        if($data !== null) {
+            return "L'adresse mail et/ou le mot de passe est incorrect.";
+        }
+
+        return true;
+    }
 }
