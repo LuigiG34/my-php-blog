@@ -24,7 +24,7 @@ class UtilisateursController extends Controller
             $allPosts = $post->getAllPost();
 
             $data = $userModel->getUserByEmail($post->getPost('email'));
-            $password = $data['mot_de_passe'];
+            $password = $data->mot_de_passe;
 
             $verif = $validation->signInValid($post->getPost('email'), $allPosts, $post->getPost('password'), $password, $data);
 

@@ -28,8 +28,12 @@ class UtilisateursModel extends Model
 
     public function getUserByEmail($email)
     {
-        $sql = "SELECT id, prenom, email, mot_de_passe, role FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE email = $email";
-        $query = $this->db->query($sql);
+        $sql = "SELECT prenom, email, mot_de_passe, role FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE email = :email";
+        $query = $this->db->prepare($sql);
+        $query->execute([
+            ":email" => $email
+        ]);
+
         $data = $query->fetch();
 
         if($data){
