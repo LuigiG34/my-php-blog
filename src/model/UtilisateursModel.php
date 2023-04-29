@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Core\Db;
 
-class UtilisateursModel extends Model
+class UtilisateursModel
 {
     protected $table;
     protected $db;

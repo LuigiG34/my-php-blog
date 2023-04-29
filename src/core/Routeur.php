@@ -3,14 +3,12 @@
 namespace App\Core;
 
 use App\Config\Get;
-use App\Config\Session;
-use App\Controllers\Controller;
 use App\Controllers\HomepageController;
 
 /**
  * Routeur Class
  */
-class Routeur extends Controller
+class Routeur
 {
     /**
      * Start app function.
