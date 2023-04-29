@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Config\Session;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\Container;
 
 /**
  * Controller class
@@ -22,8 +23,11 @@ abstract class Controller
         //Paramétré environnement twig
         $this->twig = new Environment($this->loader);
 
+        $session = new Session;
+        $alert = $session->getSession('alert');
         // Pass the session to Twig as a global variable
         $this->twig->addGlobal('session', $_SESSION);
+        $this->twig->addGlobal('alert', $alert);
     }
 
     /**

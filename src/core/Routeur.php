@@ -3,12 +3,14 @@
 namespace App\Core;
 
 use App\Config\Get;
+use App\Config\Session;
+use App\Controllers\Controller;
 use App\Controllers\HomepageController;
 
 /**
  * Routeur Class
  */
-class Routeur
+class Routeur extends Controller
 {
     /**
      * Start app function.
@@ -61,13 +63,11 @@ class Routeur
                     // Si il reste des parametres on les passes à la méthode.
                     // Au lieu d'utilisé $controller->$action($params) on utilise call_user_func_array() qui appel une méthode en lui donnant un paramètre qui n'est pas un tableau.
                     (isset($params[0])) ? call_user_func_array([$controller, $action], $params) : $controller->$action();
-
                 } else {
                     // Sinon on renvoie une erreur 404.
                     http_response_code(404);
                     echo 'La page recherché est introuvable.';
                 }
-
             } else {
                 // Sinon on renvoie une erreur 404.
                 http_response_code(404);

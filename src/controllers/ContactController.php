@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Config\Session;
 use App\Core\Form;
 
 /**
@@ -14,6 +15,12 @@ class ContactController extends Controller
      */
     public function index()
     {
+        $session = new Session;
+        $user = $session->getSession('user');
+        $alert = $session->getSession('alert');
+        $this->twig->addGlobal('alert', $alert);
+        $this->twig->addGlobal('user', $user);
+
         $form = new Form;
 
         $form->debutForm()
@@ -30,7 +37,9 @@ class ContactController extends Controller
         ->finForm();
 
         $this->twig->display('contact/index.html.twig', [
-            'form' => $form->create()
+            'form' => $form->create(),
+            'alert' => $alert,
+            'user' => $user
         ]);
     }
 }
