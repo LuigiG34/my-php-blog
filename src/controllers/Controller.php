@@ -2,11 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Config\Session;
-use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
-use Twig\Container;
-
 /**
  * Controller class
  */
