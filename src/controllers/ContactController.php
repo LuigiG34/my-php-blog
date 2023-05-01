@@ -15,12 +15,6 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
-        $alert = $session->getSession('alert');
-        $this->twig->addGlobal('alert', $alert);
-        $this->twig->addGlobal('user', $user);
-
         $form = new Form;
 
         $form->debutForm()
@@ -36,10 +30,8 @@ class ContactController extends Controller
         ->ajoutBouton("M'inscrire", ['class' => 'btn btn-primary w-100 mt-3'])
         ->finForm();
 
-        $this->twig->display('contact/index.html.twig', [
-            'form' => $form->create(),
-            'alert' => $alert,
-            'user' => $user
+        $this->render('contact/index', [
+            'form' => $form->create()
         ]);
     }
 }

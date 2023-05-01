@@ -1,7 +1,3 @@
-{% extends "base.html.twig" %}
-
-{% block body %}
-
 <!-- Page content-->
             <section class="py-5">
                 <div class="container px-5">
@@ -14,7 +10,7 @@
                         </div>
                         <div class="row gx-5 justify-content-center">
                             <div class="col-lg-8 col-xl-6">
-                                {{ form|raw }}
+                                <?= $form ?>
 
                                 <div id='error-form' class='mt-3'></div>
                             </div>
@@ -23,8 +19,4 @@
                 </div>
             </section>
 
-{% endblock %}
-
-{% block js %}
     <script src="/assets/typescript/contact.ts"></script>
-{% endblock %}

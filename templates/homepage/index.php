@@ -1,6 +1,3 @@
-{% extends "base.html.twig" %}
-
-{% block body %}
     <!-- Header-->
             <header class="py-5">
                 <div class="container px-5 pb-5">
@@ -161,4 +158,3 @@
                     </div>
                 </div>
             </section>
-{% endblock %}

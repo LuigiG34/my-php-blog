@@ -14,15 +14,6 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
-        $alert = $session->getSession('alert');
-        $this->twig->addGlobal('alert', $alert);
-        $this->twig->addGlobal('user', $user);
-
-        $this->twig->display('articles/articles-archive.html.twig', [
-            'alert' => $alert,
-            'user' => $user
-        ]);
+        $this->render('articles/articles-archive');
     }
 }

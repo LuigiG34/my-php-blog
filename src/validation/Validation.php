@@ -30,7 +30,7 @@ class Validation
             return "Un ou plusieurs champs sont vides.";
         }
 
-        $passwordRegex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).{8,}$/';
+        $passwordRegex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!(){}[\]<>?|]).{8,}$/';
         if (!preg_match($passwordRegex, $password)) {
             return 'Le mot de passe doit contenir au moins 8 caractères dont 1 lettre majuscule, 1 lettre minuscule, 1 symbole et 1 chiffre';
           }

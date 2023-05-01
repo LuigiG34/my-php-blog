@@ -61,6 +61,7 @@ class Routeur
                     // Si il reste des parametres on les passes à la méthode.
                     // Au lieu d'utilisé $controller->$action($params) on utilise call_user_func_array() qui appel une méthode en lui donnant un paramètre qui n'est pas un tableau.
                     (isset($params[0])) ? call_user_func_array([$controller, $action], $params) : $controller->$action();
+
                 } else {
                     // Sinon on renvoie une erreur 404.
                     http_response_code(404);

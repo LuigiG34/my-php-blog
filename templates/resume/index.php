@@ -1,7 +1,3 @@
-{% extends "base.html.twig" %}
-
-{% block body %}
-
 <!-- Page Content-->
             <div class="container px-5 my-5">
                 <div class="text-center mb-5">
@@ -194,5 +190,3 @@
                     </div>
                 </div>
             </div>
-
-{% endblock %}

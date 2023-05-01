@@ -13,11 +13,14 @@ use App\Validation\Validation;
  */
 class UtilisateursController extends Controller
 {
-    public function signinValid()
+
+
+    public function signInValid()
     {
         $session = new Session;
 
-        if ($session->getSession('user') === false) {
+        if ($session->getSession('user') === null) {
+
             $post = new Post;
             $userModel = new UtilisateursModel;
             $validation = new Validation;
@@ -30,85 +33,72 @@ class UtilisateursController extends Controller
 
             if ($verif !== true) {
 
-                $alert = $this->alert('danger', $verif);
-                $this->twig->addGlobal('alert', $alert);
-
-                $form = $this->signInForm();
-                
-                echo $this->twig->render('utilisateurs/signin.html.twig', [
-                    'alert' => $alert,
-                    'form' => $form
-                ]);
+                $this->alert('danger', $verif);
+                header('Location: /utilisateurs/signin');
             } else {
 
-                // succès mettre flash succès + créer la session + reidirection vers page accueil
-                $session->setSession('user', [
+                $_SESSION['user'] = [
                     'email' => $data->email,
                     'prenom' => $data->prenom,
                     'role' => $data->role
-                ]);
+                ];
 
-                $user = $session->getSession('user');
-                $alert = $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
-                $this->twig->addGlobal('alert', $alert);
-                $this->twig->addGlobal('user', $user);
-
-
-                echo $this->twig->render('homepage/index.html.twig', [
-                    'alert' => $alert,
-                    'user' => $user
-                ]);
+                $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
+                header('Location: /');
             }
         } else {
-            // if user session exists no access to signin
+            // si utilisateur est connecté on le redirige
             header('Location: /');
         }
     }
 
-    /**
-     * Login
-     */
+
     public function signin()
     {
         $session = new Session;
 
-        if ($session->getSession('user') === false) {
-            
-            $form = $this->signInForm();
+        // si utilisateur est connecté on le redirige
+        if ($session->getSession('user') === null) {
 
-            $this->twig->display('utilisateurs/signin.html.twig', [
-                'form' => $form
+            // On créer le formulaire
+            $form = new Form;
+
+            $form->debutForm('post', '/utilisateurs/signinValid')
+                ->ajoutLabelFor('email', 'Email :')
+                ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
+                ->ajoutLabelFor('password', 'Mot de passe :')
+                ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password', 'required' => 'true'])
+                ->ajoutBouton("Me connecter", ['class' => 'btn btn-primary w-100 mt-3'])
+                ->finForm();
+
+            $this->render('utilisateurs/signin', [
+                'form' => $form->create()
             ]);
         } else {
-            // if user session exists no access to signin
+            // si utilisateur est connecté on le redirige
             header('Location: /');
         }
     }
+
 
     public function signupValid()
     {
         $session = new Session;
 
-        if ($session->getSession('user') === false) {
+        if ($session->getSession('user') === null) {
             $post = new Post;
             $userModel = new UtilisateursModel;
             $validation = new Validation;
             $allPosts = $post->getAllPost();
 
             $data = $userModel->getUserByEmail($post->getPost('email'));
+
             $verif = $validation->signUpValid($post->getPost('email'), $allPosts, $post->getPost('password'), $post->getPost('password-again'), $data);
 
             if ($verif !== true) {
 
-                $alert = $this->alert('danger', $verif);
-                $this->twig->addGlobal('alert', $alert);
-
-                $form = $this->signUpForm();
-                
-                echo $this->twig->render('utilisateurs/signup.html.twig', [
-                    'alert' => $alert,
-                    'form' => $form
-                ]);
+                $this->alert('danger', $verif);
+                header('Location: /utilisateurs/signup');
 
             } else {
 
@@ -118,18 +108,16 @@ class UtilisateursController extends Controller
 
                 $userModel->createUser($email, $pswd, $prenom);
                 $alert = $this->alert('success', 'Votre inscription a bien fonctionné !');
-                $form = $this->signInForm();
 
-                echo $this->twig->render('utilisateurs/signin.html.twig', [
-                    'alert' => $alert,
-                    'form' => $form
-                ]);
+                header('Location: /utilisateurs/signin');
             }
         } else {
             // if user session exists no access to signup
             header('Location: /');
         }
     }
+
+
 
     /**
      * register
@@ -138,15 +126,30 @@ class UtilisateursController extends Controller
     {
         $session = new Session;
 
-        if ($session->getSession('user') === false) {
+        // si utilisateur est connecté on le redirige
+        if ($session->getSession('user') === null) {
 
-            $form = $this->signUpForm();
+            $form = new Form;
 
-            $this->twig->display('utilisateurs/signup.html.twig', [
-                'form' => $form
+            $form->debutForm('post', '/utilisateurs/signupValid')
+                ->ajoutLabelFor('prenom', 'Prénom :')
+                ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true'])
+                ->ajoutLabelFor('email', 'Email :')
+                ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
+                ->ajoutLabelFor('password', 'Mot de passe :')
+                ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password', 'required' => 'true'])
+                ->ajoutLabelFor('password', 'Confirmer mot de passe :')
+                ->ajoutInput('password', 'password-again', ['class' => 'form-control mb-3', 'id' => 'password-again', 'required' => 'true'])
+                ->ajoutInput('checkbox', 'rgpd', ['class' => 'me-2', 'required' => 'true'])
+                ->ajoutLabelFor('rgpd', 'Accepter les termes et les conditions d\'utilisations')
+                ->ajoutBouton("M'inscrire", ['class' => 'btn btn-primary w-100 mt-3'])
+                ->finForm();
+
+            $this->render('utilisateurs/signup', [
+                'form' => $form->create()
             ]);
         } else {
-            // if user session exists no access to signin
+            // si utilisateur est connecté on le redirige
             header('Location: /');
         }
     }
@@ -157,46 +160,12 @@ class UtilisateursController extends Controller
      */
     public function logout()
     {
-        $session = new Session;
-        $session->unsetSession('user');
+        session_start(); // start the session if it hasn't been started already
+
+        session_unset(); // unset all session variables
+
+        session_destroy(); // destroy the session
         header('Location: /');
         exit;
-    }
-
-
-    public function signInForm()
-    {
-        $form = new Form;
-
-        $form->debutForm('post', '/utilisateurs/signinValid')
-            ->ajoutLabelFor('email', 'Email :')
-            ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
-            ->ajoutLabelFor('password', 'Mot de passe :')
-            ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password', 'required' => 'true'])
-            ->ajoutBouton("Me connecter", ['class' => 'btn btn-primary w-100 mt-3'])
-            ->finForm();
-
-        return $form->create();
-    }
-
-    public function signUpForm()
-    {
-        $form = new Form;
-
-        $form->debutForm('post', '/utilisateurs/signupValid')
-            ->ajoutLabelFor('prenom', 'Prénom :')
-            ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true'])
-            ->ajoutLabelFor('email', 'Email :')
-            ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
-            ->ajoutLabelFor('password', 'Mot de passe :')
-            ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password', 'required' => 'true'])
-            ->ajoutLabelFor('password', 'Confirmer mot de passe :')
-            ->ajoutInput('password', 'password-again', ['class' => 'form-control mb-3', 'id' => 'password-again', 'required' => 'true'])
-            ->ajoutInput('checkbox', 'rgpd', ['class' => 'me-2', 'required' => 'true'])
-            ->ajoutLabelFor('rgpd', 'Accepter les termes et les conditions d\'utilisations')
-            ->ajoutBouton("M'inscrire", ['class' => 'btn btn-primary w-100 mt-3'])
-            ->finForm();
-
-        return $form->create();
     }
 }

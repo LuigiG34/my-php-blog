@@ -12,22 +12,23 @@ use Twig\Container;
  */
 abstract class Controller
 {
-    private $loader;
-    protected $twig;
-
-    public function __construct()
+    public function render(string $fichier, array $donnees = [], string $template = 'base')
     {
-        // Paramétré le dossier contenant nos templates twig
-        $this->loader = new FilesystemLoader(ROOT . '/templates');
+        // On extrait le contenu de $donnees
+        extract($donnees);
 
-        //Paramétré environnement twig
-        $this->twig = new Environment($this->loader);
+        // On démarre le buffer de sortie
+        // A partir de ce point toute sortie (echo ou HTML) est conservé en mémoire
+        ob_start();
 
-        $session = new Session;
-        $alert = $session->getSession('alert');
-        // Pass the session to Twig as a global variable
-        $this->twig->addGlobal('session', $_SESSION);
-        $this->twig->addGlobal('alert', $alert);
+        // On créé le chemin vers la vue
+        require_once ROOT . '/templates/' . $fichier . '.php';
+
+        // On stocke dans la variable le buffer
+        $contenu = ob_get_clean();
+
+        // On recupere notre template
+        require_once ROOT . '/templates/'.$template.'.php';
     }
 
     /**
@@ -38,14 +39,12 @@ abstract class Controller
      */
     public function alert(string $class, string $message)
     {
-        $session = new Session;
-
-        $session->setSession('alert', [
+        $_SESSION['alert'] = [
             "class" => $class,
             "msg" => $message
-        ]);
+        ];
 
-        return $session->getSession('alert');
+        return $_SESSION['alert'];
     }
 
     /**
