@@ -46,6 +46,20 @@ class Validation
         return true;
     }
 
+
+    public function modifierValid($email, $posts)
+    {
+        if ($this->validEmail($email) === false) {
+            return "L'adresse mail n'est pas valide.";
+        }
+
+        if ($this->notEmpty($posts) === false) {
+            return "Prénom et/ou email sont vides.";
+        }
+
+        return true;
+    }
+
     public function signInValid($email, $posts, $password, $passwordVerif, $data)
     {
         if ($this->validEmail($email) === false) {

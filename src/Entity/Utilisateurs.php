@@ -11,29 +11,11 @@ class Utilisateurs
     protected $token_reset;
     protected $created_at;
     protected $rgpd_date;
-    protected $id_role;
+    protected $role;
 
     
 
-    /**
-     * Get the value of id_role
-     */ 
-    public function getId_role()
-    {
-        return $this->id_role;
-    }
 
-    /**
-     * Set the value of id_role
-     *
-     * @return  self
-     */ 
-    public function setId_role($id_role)
-    {
-        $this->id_role = $id_role;
-
-        return $this;
-    }
 
     /**
      * Get the value of rgpd_date
@@ -171,6 +153,26 @@ class Utilisateurs
     public function setPrenom($prenom)
     {
         $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of role
+     */ 
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * Set the value of role
+     *
+     * @return  self
+     */ 
+    public function setRole($role)
+    {
+        $this->role = $role;
 
         return $this;
     }

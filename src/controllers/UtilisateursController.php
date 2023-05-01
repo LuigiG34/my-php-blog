@@ -8,6 +8,7 @@ use App\Core\Form;
 use App\Model\UtilisateursModel;
 use App\Validation\Validation;
 use App\Core\Mailer;
+use App\Entity\Utilisateurs;
 
 /**
  * UtilisateursController
@@ -15,6 +16,30 @@ use App\Core\Mailer;
 class UtilisateursController extends Controller
 {
 
+    public function profil()
+    {
+        $session = new Session;
+
+        if ($session->getSession('user') === null) {
+            // si utilisateur n'est pas connecté on le redirige
+            header('Location: /');
+        } else {
+            $userModel = new UtilisateursModel;
+            $data = $userModel->getUserById($_SESSION['user']['id']);
+
+            $user = new Utilisateurs;
+            $user->setId_utilisateur($data->id_utilisateur)
+                ->setPrenom($data->prenom)
+                ->setEmail($data->email)
+                ->setMot_de_passe($data->mot_de_passe)
+                ->setRole($data->role)
+                ->setCreated_at($data->created_at);
+
+            $this->render('utilisateurs/index', [
+                'user' => $user
+            ]);
+        }
+    }
 
     public function signInValid()
     {
@@ -196,12 +221,11 @@ class UtilisateursController extends Controller
 
             $verif = $validation->forgotPassValid($post->getPost('email'), $allPosts, $data);
 
-            if($verif !== true){
+            if ($verif !== true) {
 
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
-            
-            }else{
+            } else {
 
                 $token = bin2hex(random_bytes(32));
                 $email = htmlspecialchars($post->getPost('email'));
@@ -213,8 +237,6 @@ class UtilisateursController extends Controller
                 $this->alert('success', 'Un mail vient de vous être envoyé. (Vérifié vos spams)');
                 header("Location: /utilisateurs/forgotPassword");
             }
-
-
         } else {
             // si utilisateur est connecté on le redirige
             header('Location: /');
@@ -232,7 +254,7 @@ class UtilisateursController extends Controller
             $userModel = new UtilisateursModel;
             $data = $userModel->getUserByToken($token);
 
-            if($data === null){
+            if ($data === null) {
                 $this->alert('danger', 'Vous n\'avez pas accès à cette page.');
                 header("Location: /");
             }
@@ -248,8 +270,6 @@ class UtilisateursController extends Controller
             $this->render('utilisateurs/new-password', [
                 'form' => $form->create()
             ]);
-            
-
         } else {
             // si utilisateur est connecté on le redirige
             header('Location: /');
@@ -271,32 +291,104 @@ class UtilisateursController extends Controller
 
             $verif = $validation->newPassValid($post->getPost('password'), $allPosts);
 
-            if($verif !== true){
+            if ($verif !== true) {
 
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
-            
-            }else{
+            } else {
 
                 $pswd = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
 
-                $userModel->updateTokenAndPasswordByToken($pswd ,'NULL', $token);
+                $userModel->updateTokenAndPasswordByToken($pswd, 'NULL', $token);
 
                 $this->alert('success', 'Votre mot de passe a été mis à jour.');
                 header("Location: /utilisateurs/signin");
             }
-            
-
         } else {
             // si utilisateur est connecté on le redirige
             header('Location: /');
         }
     }
 
+    public function modifier()
+    {
+        $session = new Session;
 
-    /**
-     * Deconexion      
-     */
+        // si utilisateur est connecté on le redirige
+        if ($session->getSession('user') === null) {
+            // si utilisateur n'est pas connecté on le redirige
+            header('Location: /');
+        } else {
+            $userModel = new UtilisateursModel;
+            $data = $userModel->getUserById($_SESSION['user']['id']);
+
+            $user = new Utilisateurs;
+            $user->setId_utilisateur($data->id_utilisateur)
+                ->setPrenom($data->prenom)
+                ->setEmail($data->email)
+                ->setMot_de_passe($data->mot_de_passe);
+
+            $form = new Form;
+
+            $form->debutForm('post', '/utilisateurs/modifierValid')
+                ->ajoutLabelFor('prenom', 'Prénom :')
+                ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true', "value" => $user->getPrenom()])
+                ->ajoutLabelFor('email', 'Email :')
+                ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true', "value" => $user->getEmail()])
+                ->ajoutLabelFor('password', 'Nouveau mot de passe :')
+                ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password'])
+                ->ajoutLabelFor('password', 'Confirmer mot de passe :')
+                ->ajoutInput('password', 'password-again', ['class' => 'form-control mb-3', 'id' => 'password-again'])
+                ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
+                ->finForm();
+
+            $this->render('utilisateurs/modifier', [
+                'form' => $form->create()
+            ]);
+        }
+    }
+
+
+    public function modifierValid()
+    {
+        $session = new Session;
+
+        // si utilisateur est connecté on le redirige
+        if ($session->getSession('user') === null) {
+            // si utilisateur est connecté on le redirige
+            header('Location: /');
+        } else {
+
+            $validation = new Validation;
+            $post = new Post;
+            $userModel = new UtilisateursModel;
+
+            $verif = $validation->modifierValid($post->getPost('email'), [$post->getPost('email'), $post->getPost('prenom')]);
+
+            if ($verif !== true) {
+
+                $this->alert('danger', $verif);
+                header('Location: /utilisateurs/forgotPassword');
+            } else {
+                $data = $userModel->getUserById($_SESSION['user']['id']);
+
+                $user = new Utilisateurs;
+                $user->setMot_de_passe($data->mot_de_passe);
+
+                if(empty($post->getPost('password'))){
+                    $password = $user->getMot_de_passe();
+                }else{
+                    $password = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
+                }
+
+                $userModel->updateUserById($_SESSION['user']['id'], strip_tags($post->getPost('prenom')), strip_tags($post->getPost('email')), $password);
+
+                $this->alert('success', 'Votre compte a été mis à jour.');
+                header("Location: /utilisateurs/profil");
+            }
+        }
+    }
+
     public function logout()
     {
         session_start(); // start the session if it hasn't been started already
