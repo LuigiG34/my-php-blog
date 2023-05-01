@@ -50,6 +50,9 @@
 
 						<?php if(isset($_SESSION['user'])) : ?>
 						<li class="nav-item">
+							<a class="nav-link" href="/utilisateurs/profil">Mon Profil</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" href="/utilisateurs/logout">Se déconnecter</a>
 						</li>
 						<?php else : ?>

@@ -36,13 +36,55 @@ class UtilisateursModel
 
         $data = $query->fetch();
 
-        if($data){
+        if ($data) {
             return $data;
-        }else{
+        } else {
             return null;
         }
     }
 
+    public function getUserById($id)
+    {
+        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, role, created_at FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE id_utilisateur = :id";
+        $query = $this->db->prepare($sql);
+        $query->execute([
+            ":id" => $id
+        ]);
+
+        $data = $query->fetch();
+
+        if ($data) {
+            return $data;
+        } else {
+            return null;
+        }
+    }
+
+    public function getAllUsers()
+    {
+        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, role, created_at FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role";
+        $query = $this->db->query($sql);
+        $data = $query->fetch();
+
+        if ($data) {
+            return $data;
+        } else {
+            return null;
+        }
+    }
+
+    public function updateUserById($id, $prenom, $email, $mot_de_passe)
+    {
+        $sql = "UPDATE $this->table SET prenom = :prenom, email = :email, mot_de_passe = :mot_de_passe WHERE id_utilisateur = :id";
+        $query = $this->db->prepare($sql);
+
+        $query->execute([
+            ":id" => $id,
+            ":prenom" => $prenom,
+            ":email" => $email,
+            ":mot_de_passe" => $mot_de_passe
+        ]);
+    }
 
     public function updateToken($token_reset, $email)
     {
@@ -78,9 +120,9 @@ class UtilisateursModel
 
         $data = $query->fetch();
 
-        if($data){
+        if ($data) {
             return $data;
-        }else{
+        } else {
             return null;
         }
     }
