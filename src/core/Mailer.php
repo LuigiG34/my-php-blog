@@ -27,7 +27,7 @@ class Mailer
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Port       = 587;
 
-        $this->mail->setFrom($config['DB_NAME'], 'Blog Luigi Gandemer');
+        $this->mail->setFrom($config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
         $this->mail->CharSet = 'UTF-8';
     }
 
@@ -106,13 +106,13 @@ class Mailer
         $this->mail->Subject = "Confirmation d'inscription sur le site Luigi Gandemer Blog.";
 
         $this->mail->Body = "<p>Bonjour ". $to ."</p>";
-        $this->mail->Body .= "<p>Nous nous confirmons votre inscription au site de Luigi Gandemer - Blog.</p>";
+        $this->mail->Body .= "<p>Nous confirmons votre inscription au site de Luigi Gandemer - Blog.</p>";
         $this->mail->Body .= "<p>Cordialement,</p>";
         $this->mail->Body .= "<div><img style='height: 100%;min-width:50px; max-width: 250px;' src='https://i.ibb.co/LPH83Vt/Luigi-Gandemer-Freelance-Web-Dev.png'>";
         $this->mail->isHTML(true);
 
         $this->mail->AltBody = "Bonjour,";
-        $this->mail->AltBody .= "Nous nous confirmons votre inscription au site de Luigi Gandemer - Blog.";
+        $this->mail->AltBody .= "Nous confirmons votre inscription au site de Luigi Gandemer - Blog.";
         $this->mail->AltBody .= "Cordialement,";
         $this->mail->AltBody .= "Luigi Gandemer";
 
