@@ -3,7 +3,7 @@
 namespace App\Validation;
 use FFI\Exception;
 
-abstract class ImageTreatment
+class ImageTreatment
 {
     public function fileExists($file)
     {

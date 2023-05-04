@@ -113,4 +113,13 @@ class Validation
 
         return true;
     }
+
+    public function addArticleValid($posts)
+    {
+        if ($this->notEmpty($posts) === false) {
+            return "Un ou plusieurs champs sont vides.";
+        }
+
+        return true;
+    }
 }
