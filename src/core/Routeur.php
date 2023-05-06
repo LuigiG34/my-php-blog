@@ -62,16 +62,6 @@ class Routeur
                     // Au lieu d'utilisé $controller->$action($params) on utilise call_user_func_array() qui appel une méthode en lui donnant un paramètre qui n'est pas un tableau.
                     (isset($params[0])) ? call_user_func_array([$controller, $action], $params) : $controller->$action();
 
-                } elseif (http_response_code() == 401) {
-                    // Sinon on renvoie une erreur 401.
-                    http_response_code(401);
-                    header('Location: /erreur/erreur401');
-
-                } elseif (http_response_code() == 500) {
-                    // Sinon on renvoie une erreur 500.
-                    http_response_code(500);
-                    header('Location: /erreur/erreur500');
-
                 } else {
                     // Sinon on renvoie une erreur 404.
                     http_response_code(404);

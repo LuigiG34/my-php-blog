@@ -42,7 +42,7 @@
 							<a class="nav-link" href="/resume">Mon CV</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/articles">Articles</a>
+							<a class="nav-link" href="/articles/all">Articles</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/contact">Contact</a>

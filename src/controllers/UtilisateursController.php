@@ -70,6 +70,25 @@ class UtilisateursController extends Controller
                     'role' => $data->role
                 ];
 
+                if($data->role === 'ADMIN'){
+                    $_SESSION['user'] = [
+                        'id' => $data->id_utilisateur,
+                        'email' => $data->email,
+                        'prenom' => $data->prenom,
+                        'role' => $data->role,
+                        'token' => bin2hex(random_bytes(32))
+                    ];
+    
+                }else{
+                    $_SESSION['user'] = [
+                        'id' => $data->id_utilisateur,
+                        'email' => $data->email,
+                        'prenom' => $data->prenom,
+                        'role' => $data->role
+                    ];
+    
+                }
+
                 $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
                 header('Location: /');
             }

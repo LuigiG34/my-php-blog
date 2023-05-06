@@ -155,7 +155,7 @@ class Form
      * @param array $attributs
      * @return self
      */
-    public function ajoutSelect(string $nom, array $options, array $attributs =[]): self
+    public function ajoutSelect(string $nom, array $options, array $attributs =[], $default =null): self
     {
         // On crée le select.
         $this->formCode .= "<select name='$nom'";
@@ -166,6 +166,10 @@ class Form
         // On ajoute les options.
         foreach($options as $valeur => $texte){
             $this->formCode .= "<option value=\"$valeur\">$texte</option>";
+        }
+
+        if($default !== null) {
+            $this->formCode .= "<option value=\"{$default[0]}\" selected>{$default[1]}</option>";
         }
 
         // On ferme le select.

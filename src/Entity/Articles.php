@@ -5,14 +5,15 @@ namespace App\Entity;
 class Articles
 {
     protected $id_article;
+    protected $titre;
     protected $chapo;
     protected $contenu;
     protected $created_at;
     protected $updated_at;
     protected $img;
     protected $slug;
-    protected $id_categorie;
-    protected $id_utilisateur;
+    protected $categorie;
+    protected $auteur;
 
 
     /**
@@ -156,41 +157,61 @@ class Articles
     }
 
     /**
-     * Get the value of id_categorie
+     * Get the value of auteur
      */ 
-    public function getId_categorie()
+    public function getAuteur()
     {
-        return $this->id_categorie;
+        return $this->auteur;
     }
 
     /**
-     * Set the value of id_categorie
+     * Set the value of auteur
      *
      * @return  self
      */ 
-    public function setId_categorie($id_categorie)
+    public function setAuteur($auteur)
     {
-        $this->id_categorie = $id_categorie;
+        $this->auteur = $auteur;
 
         return $this;
     }
 
     /**
-     * Get the value of id_utilisateur
+     * Get the value of categorie
      */ 
-    public function getId_utilisateur()
+    public function getCategorie()
     {
-        return $this->id_utilisateur;
+        return $this->categorie;
     }
 
     /**
-     * Set the value of id_utilisateur
+     * Set the value of categorie
      *
      * @return  self
      */ 
-    public function setId_utilisateur($id_utilisateur)
+    public function setCategorie($categorie)
     {
-        $this->id_utilisateur = $id_utilisateur;
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of titre
+     */ 
+    public function getTitre()
+    {
+        return $this->titre;
+    }
+
+    /**
+     * Set the value of titre
+     *
+     * @return  self
+     */ 
+    public function setTitre($titre)
+    {
+        $this->titre = $titre;
 
         return $this;
     }
