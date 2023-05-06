@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Validation;
-use FFI\Exception;
+// use FFI\Exception;
+use Exception;
 
 class ImageTreatment
 {
