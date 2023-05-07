@@ -20,6 +20,23 @@ class Validation
         }
     }
 
+    public function contactValid($email, $posts, $msg)
+    {
+        if ($this->validEmail($email) === false) {
+            return "L'adresse mail n'est pas valide.";
+        }
+
+        if ($this->notEmpty($posts) === false) {
+            return "Un ou plusieurs champs sont vides.";
+        }
+
+        if (strlen($msg) < 20) {
+            return 'Le champ Message doit contenir au moins 20 caractères.';
+        }
+
+        return true;
+    }
+
     public function signUpValid($email, $posts, $password, $passwordVerif, $data)
     {
         if ($this->validEmail($email) === false) {
