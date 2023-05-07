@@ -8,9 +8,11 @@ class Commentaires
     protected $contenu;
     protected $created_at;
     protected $id_article;
+    protected $article;
     protected $auteur;
     protected $statut;
     protected $id_admin;
+    protected $id_statut_commentaire;
 
 
     /**
@@ -149,6 +151,46 @@ class Commentaires
     public function setStatut($statut)
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of article
+     */ 
+    public function getArticle()
+    {
+        return $this->article;
+    }
+
+    /**
+     * Set the value of article
+     *
+     * @return  self
+     */ 
+    public function setArticle($article)
+    {
+        $this->article = $article;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_statut_commentaire
+     */ 
+    public function getId_statut_commentaire()
+    {
+        return $this->id_statut_commentaire;
+    }
+
+    /**
+     * Set the value of id_statut_commentaire
+     *
+     * @return  self
+     */ 
+    public function setId_statut_commentaire($id_statut_commentaire)
+    {
+        $this->id_statut_commentaire = $id_statut_commentaire;
 
         return $this;
     }

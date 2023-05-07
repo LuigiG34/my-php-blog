@@ -399,12 +399,20 @@ class ArticlesController extends Controller
         $session = new Session;
         $user = $session->getSession('user');
 
+        $articleModel = new ArticlesModel;
+
+        $article = $articleModel->getArticleById($id);
+
+        if($article !== null){
+            $slug = $article->slug;
+        }
+
         $commentaireModel = new CommentaireModel;
 
         $commentaireModel->addCommentaire($_POST['commentaire'], $user['id'], $id);
 
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('success', 'Votre commentaire à été publié, un administrateur le validera dans les 48h.');
-        header('Location: /articles/all');
+        header("Location: /articles/unique/$slug");
     }
 }
