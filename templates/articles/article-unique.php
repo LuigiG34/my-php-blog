@@ -28,15 +28,17 @@
                 <?= $form ?>
 
                 <div class="my-5">
-                    <?php foreach($commentaires as $c) :?>
-                        <div class="py-3">
-                            <hr>
-                            <small><?= $c->getAuteur() ?> | <?= $c->getCreated_at() ?></small>
-                            <p><?= $c->getContenu() ?></p>
-                        </div>
-                        
-
-                    <?php endforeach; ?>
+                    <?php if (isset($commentaires) && !empty($commentaires)) :?>
+                        <?php foreach ($commentaires as $c) : ?>
+                            <div class="py-3">
+                                <hr>
+                                <small><?= $c->getAuteur() ?> | <?= $c->getCreated_at() ?></small>
+                                <p><?= $c->getContenu() ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Pas de commentaires.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

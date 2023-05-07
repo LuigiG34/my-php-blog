@@ -48,15 +48,18 @@ class ArticlesController extends Controller
 
             $array = [];
 
-            foreach ($commentaires as $c) {
-                $ent = new Commentaires;
-                $ent->setCreated_at($c->created_at)
-                    ->setContenu($c->contenu)
-                    ->setAuteur($c->prenom)
-                    ->setStatut($c->type);
-
-                $array[] = $ent;
+            if($commentaires !== null){
+                foreach ($commentaires as $c) {
+                    $ent = new Commentaires;
+                    $ent->setCreated_at($c->created_at)
+                        ->setContenu($c->contenu)
+                        ->setAuteur($c->prenom)
+                        ->setStatut($c->type);
+    
+                    $array[] = $ent;
+                }
             }
+            
 
             // On créer le formulaire
             $form = new Form;
