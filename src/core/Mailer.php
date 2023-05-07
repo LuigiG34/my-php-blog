@@ -55,21 +55,22 @@ class Mailer
      * @param string $to
      * @param string $link
      */
-    public function sendRequest(string $from, string $description){
+    public function sendRequest(string $from, string $description, string $email){
 
         $config = parse_ini_file(ROOT . '/config.ini');
         $this->mail->setFrom($config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
         $this->mail->addAddress('contact@luigigandemer.fr');
 
         $this->mail->Subject = $from . ' vous a envoyé un message via le site Luigi Gandemer Blog.';
-        $this->mail->Body = $description;
+        $this->mail->Body = 'Email : '.$email .' ';
+        $this->mail->Body .= 'Message : ' .$description;
 
         if(!$this->mail->send()){
             throw new Exception("Votre message n'a pas pu être envoyé. Mailer Error: {$this->mail->ErrorInfo}");
         }
     }
 
-    public function sendConfirmationContact(string $to){
+    public function sendConfirmationContact(string $from, string $to){
 
         $config = parse_ini_file(ROOT . '/config.ini');
         $this->mail->setFrom($config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
@@ -78,7 +79,7 @@ class Mailer
 
         $this->mail->Subject = "Confirmation de l'envoi de votre demande de contact sur le site Luigi Gandemer Blog.";
 
-        $this->mail->Body = "<p>Bonjour ". $to ."</p>";
+        $this->mail->Body = "<p>Bonjour ". $from ."</p>";
         $this->mail->Body .= "<p>Nous avons bien reçu votre demande de contact. Vous recevrez une réponse sous 72 heures.</p>";
         $this->mail->Body .= "<p>Cordialement,</p>";
         $this->mail->Body .= "<div><img style='height: 100%;min-width:50px; max-width: 250px;' src='https://i.ibb.co/LPH83Vt/Luigi-Gandemer-Freelance-Web-Dev.png'>";
