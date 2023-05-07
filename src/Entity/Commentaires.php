@@ -8,8 +8,8 @@ class Commentaires
     protected $contenu;
     protected $created_at;
     protected $id_article;
-    protected $id_utilisateur;
-    protected $id_statut_commentaire;
+    protected $auteur;
+    protected $statut;
     protected $id_admin;
 
 
@@ -29,46 +29,6 @@ class Commentaires
     public function setId_admin($id_admin)
     {
         $this->id_admin = $id_admin;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of id_statut_commentaire
-     */ 
-    public function getId_statut_commentaire()
-    {
-        return $this->id_statut_commentaire;
-    }
-
-    /**
-     * Set the value of id_statut_commentaire
-     *
-     * @return  self
-     */ 
-    public function setId_statut_commentaire($id_statut_commentaire)
-    {
-        $this->id_statut_commentaire = $id_statut_commentaire;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of id_utilisateur
-     */ 
-    public function getId_utilisateur()
-    {
-        return $this->id_utilisateur;
-    }
-
-    /**
-     * Set the value of id_utilisateur
-     *
-     * @return  self
-     */ 
-    public function setId_utilisateur($id_utilisateur)
-    {
-        $this->id_utilisateur = $id_utilisateur;
 
         return $this;
     }
@@ -149,6 +109,46 @@ class Commentaires
     public function setId_commentaire($id_commentaire)
     {
         $this->id_commentaire = $id_commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of auteur
+     */ 
+    public function getAuteur()
+    {
+        return $this->auteur;
+    }
+
+    /**
+     * Set the value of auteur
+     *
+     * @return  self
+     */ 
+    public function setAuteur($auteur)
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of statut
+     */ 
+    public function getStatut()
+    {
+        return $this->statut;
+    }
+
+    /**
+     * Set the value of statut
+     *
+     * @return  self
+     */ 
+    public function setStatut($statut)
+    {
+        $this->statut = $statut;
 
         return $this;
     }

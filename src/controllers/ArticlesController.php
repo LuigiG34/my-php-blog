@@ -7,8 +7,10 @@ use App\Config\Post;
 use App\Config\Session;
 use App\Core\Form;
 use App\Entity\Articles;
+use App\Entity\Commentaires;
 use App\Model\ArticlesModel;
 use App\Model\CategorieModel;
+use App\Model\CommentaireModel;
 use App\Validation\ImageTreatment;
 use App\Validation\Validation;
 
@@ -21,30 +23,67 @@ class ArticlesController extends Controller
     public function unique($slug)
     {
         $articleModel = new ArticlesModel;
+        $session = new Session;
 
         $article = $articleModel->getArticleBySlug($slug);
 
-        if($article !== null){
+        if ($article !== null) {
 
             $entity = new Articles;
             $entity->setId_article($article->id_article)
-            ->setTitre($article->titre)
-            ->setChapo($article->chapo)
-            ->setContenu($article->contenu)
-            ->setCreated_at($article->created_at)
-            ->setImg($article->img)
-            ->setCategorie($article->type)
-            ->setAuteur($article->prenom);
+                ->setTitre($article->titre)
+                ->setChapo($article->chapo)
+                ->setContenu($article->contenu)
+                ->setCreated_at($article->created_at)
+                ->setImg($article->img)
+                ->setCategorie($article->type)
+                ->setAuteur($article->prenom);
 
-            $this->render('articles/article-unique', [
-                'article' => $entity
-            ]);
+            $user = $session->getSession('user');
+            // si utilisateur n'est pas connecté on le redirige
 
-        }else{
+            $commentaireModel = new CommentaireModel;
+
+            $commentaires = $commentaireModel->getCommentairesByArticleId($article->id_article);
+
+            $array = [];
+
+            foreach ($commentaires as $c) {
+                $ent = new Commentaires;
+                $ent->setCreated_at($c->created_at)
+                    ->setContenu($c->contenu)
+                    ->setAuteur($c->prenom)
+                    ->setStatut($c->type);
+
+                $array[] = $ent;
+            }
+
+            // On créer le formulaire
+            $form = new Form;
+
+            $form->debutForm('post', "/articles/addCommentaire/$article->id_article")
+
+                ->ajoutLabelFor('commentaire', 'Commentaire :')
+                ->ajoutTextarea('commentaire', "", ['class' => 'form-control mb-3', 'id' => 'commentaire', 'rows' => 5, 'required' => 'true'])
+
+                ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
+                ->finForm();
+
+            if ($user === null) {
+                $this->render('articles/article-unique', [
+                    'article' => $entity,
+                    'commentaires' => $array
+                ]);
+            } else {
+                $this->render('articles/article-unique', [
+                    'article' => $entity,
+                    'commentaires' => $array,
+                    'form' => $form->create()
+                ]);
+            }
+        } else {
             header('Location: /articles/all');
         }
-
-        
     }
 
     public function all()
@@ -54,18 +93,17 @@ class ArticlesController extends Controller
 
         $array = $articleModel->getAllArticles();
 
-        foreach($array as $article)
-        {
+        foreach ($array as $article) {
             $entity = new Articles;
             $entity->setId_article($article->id_article)
-            ->setTitre($article->titre)
-            ->setChapo($article->chapo)
-            ->setContenu($article->contenu)
-            ->setCreated_at($article->created_at)
-            ->setImg($article->img)
-            ->setSlug($article->slug)
-            ->setCategorie($article->type)
-            ->setAuteur($article->prenom);
+                ->setTitre($article->titre)
+                ->setChapo($article->chapo)
+                ->setContenu($article->contenu)
+                ->setCreated_at($article->created_at)
+                ->setImg($article->img)
+                ->setSlug($article->slug)
+                ->setCategorie($article->type)
+                ->setAuteur($article->prenom);
 
             $articles[] = $entity;
         }
@@ -102,7 +140,6 @@ class ArticlesController extends Controller
 
                     $this->alert('danger', $verif);
                     header('Location: /articles/add');
-
                 } else {
 
                     $img = new ImageTreatment;
@@ -190,7 +227,7 @@ class ArticlesController extends Controller
                 $articleModel = new ArticlesModel;
                 $data = $articleModel->getArticleById($id);
 
-                if($data === null){
+                if ($data === null) {
                     header('Location: /articles/all');
                 }
 
@@ -224,8 +261,6 @@ class ArticlesController extends Controller
                 $this->render('articles/update', [
                     'form' => $form->create()
                 ]);
-
-                
             } else {
                 // si utilisateur n'est pas connecté on le redirige
                 $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
@@ -234,7 +269,8 @@ class ArticlesController extends Controller
         }
     }
 
-    public function updateValid($id){
+    public function updateValid($id)
+    {
         $session = new Session;
         $post = new Post;
         $file = new Files;
@@ -253,14 +289,14 @@ class ArticlesController extends Controller
 
                 $data = $articleModel->getArticleById($id);
 
-                if($data === null){
+                if ($data === null) {
                     header('Location: /articles/all');
                 }
 
-                if($file->getFiles('img')['size'] > 0){
+                if ($file->getFiles('img')['size'] > 0) {
                     unlink("uploads/$data->img");
                     $imgUrl = $img->addFile($file->getFiles('img'), 'uploads/');
-                }else{
+                } else {
                     $imgUrl = $data->img;
                 }
 
@@ -270,7 +306,6 @@ class ArticlesController extends Controller
 
                 $this->alert('success', 'L\'article a bien été modifié !');
                 header("Location: /articles/unique/$slug");
-                
             } else {
                 // si utilisateur n'est pas connecté on le redirige
                 $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
@@ -279,7 +314,8 @@ class ArticlesController extends Controller
         }
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $session = new Session;
         $user = $session->getSession('user');
 
@@ -324,32 +360,28 @@ class ArticlesController extends Controller
         } else {
 
             if ($user['role'] === "ADMIN") {
-                
-                if($user['token'] === $post->getPost('token'))
-                {
+
+                if ($user['token'] === $post->getPost('token')) {
                     $articleModel = new ArticlesModel;
                     $data = $articleModel->getArticleById($id);
                     $img = "uploads/$data->img";
 
-                    if(file_exists($img)) {
+                    if (file_exists($img)) {
 
                         unlink($img);
                         $articleModel->deleteArticle($id);
                         $this->alert('success', 'L\'article a été supprimé !');
                         header('Location: /articles/all');
-
-                    }else {
+                    } else {
                         // si utilisateur n'est pas connecté on le redirige
                         $this->alert('danger', 'L\'image n\'existe pas');
                         header('Location: /');
                     }
-
-                }else {
+                } else {
                     // si utilisateur n'est pas connecté on le redirige
                     $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
                     header('Location: /');
                 }
-
             } else {
                 // si utilisateur n'est pas connecté on le redirige
                 $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
@@ -359,4 +391,17 @@ class ArticlesController extends Controller
     }
 
 
+    public function addCommentaire($id)
+    {
+        $session = new Session;
+        $user = $session->getSession('user');
+
+        $commentaireModel = new CommentaireModel;
+
+        $commentaireModel->addCommentaire($_POST['commentaire'], $user['id'], $id);
+
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('success', 'Votre commentaire à été publié, un administrateur le validera dans les 48h.');
+        header('Location: /articles/all');
+    }
 }

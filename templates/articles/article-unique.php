@@ -22,10 +22,22 @@
 
                     </div>
                 </div>
-                <p class="mt-5"><?= $article->getContenu() ?></p>
+                <p class="my-5"><?= $article->getContenu() ?></p>
 
 
+                <?= $form ?>
 
+                <div class="my-5">
+                    <?php foreach($commentaires as $c) :?>
+                        <div class="py-3">
+                            <hr>
+                            <small><?= $c->getAuteur() ?> | <?= $c->getCreated_at() ?></small>
+                            <p><?= $c->getContenu() ?></p>
+                        </div>
+                        
+
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>
