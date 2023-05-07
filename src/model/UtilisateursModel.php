@@ -64,7 +64,7 @@ class UtilisateursModel
     {
         $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, role, created_at FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role";
         $query = $this->db->query($sql);
-        $data = $query->fetch();
+        $data = $query->fetchAll();
 
         if ($data) {
             return $data;

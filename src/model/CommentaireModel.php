@@ -37,10 +37,11 @@ class CommentaireModel
 
     public function gettAllCommentaires()
     {
-        $sql = "SELECT table.contenu, table.created_at, utilisateur.prenom, statut_commentaire.type 
-        FROM $this->table AS table 
-        INNER JOIN utilisateur ON table.id_utilisateur = utilisateur.id_utilisateur 
-        INNER JOIN statut_commentaire ON table.id_statut_commentaire = statut_commentaire.id_statut_commentaire;";
+        $sql = "SELECT c.id_statut_commentaire, c.id_commentaire, c.contenu, c.created_at, utilisateurs.email, statut_commentaire.type, articles.titre
+        FROM $this->table AS c 
+        INNER JOIN utilisateurs ON c.id_utilisateur = utilisateurs.id_utilisateur 
+        INNER JOIN articles ON c.id_article = articles.id_article
+        INNER JOIN statut_commentaire ON c.id_statut_commentaire = statut_commentaire.id_statut_commentaire;";
 
         $query = $this->db->query($sql);
 
@@ -64,4 +65,31 @@ class CommentaireModel
         ]);
     }
 
+    public function getCommentaireById($id)
+    {
+        $sql = "SELECT * FROM $this->table WHERE id_commentaire = :id";
+        $query = $this->db->prepare($sql);
+        $query->execute([
+            ":id" => $id
+        ]);
+
+        $data = $query->fetch();
+
+        if ($data) {
+            return $data;
+        } else {
+            return null;
+        }
+    }
+
+    public function updateStatus($id, $statut)
+    {
+        $sql = "UPDATE $this->table SET id_statut_commentaire = :statut WHERE id_commentaire = :id";
+        $query = $this->db->prepare($sql);
+
+        $query->execute([
+            ":statut" => $statut,
+            ":id" => $id
+        ]);
+    }
 }
