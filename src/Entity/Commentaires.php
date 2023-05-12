@@ -4,150 +4,51 @@ namespace App\Entity;
 
 class Commentaires
 {
-    protected $id_commentaire;
+    protected $idCommentaire;
     protected $contenu;
-    protected $created_at;
-    protected $id_article;
+    protected $createdAt;
+    protected $idArticle;
     protected $article;
     protected $auteur;
     protected $statut;
-    protected $id_admin;
-    protected $id_statut_commentaire;
+    protected $idAdmin;
+    protected $idStatutCommentaire;
 
 
-    /**
-     * Get the value of id_admin
-     */ 
-    public function getId_admin()
+    public function getIdStatutCommentaire()
     {
-        return $this->id_admin;
+        return $this->idStatutCommentaire;
     }
 
-    /**
-     * Set the value of id_admin
-     *
-     * @return  self
-     */ 
-    public function setId_admin($id_admin)
+
+    public function setIdStatutCommentaire($idStatutCommentaire)
     {
-        $this->id_admin = $id_admin;
+        $this->idStatutCommentaire = $idStatutCommentaire;
 
         return $this;
     }
 
-    /**
-     * Get the value of id_article
-     */ 
-    public function getId_article()
+
+    public function getIdAdmin()
     {
-        return $this->id_article;
+        return $this->idAdmin;
     }
 
-    /**
-     * Set the value of id_article
-     *
-     * @return  self
-     */ 
-    public function setId_article($id_article)
+
+    public function setIdAdmin($idAdmin)
     {
-        $this->id_article = $id_article;
+        $this->idAdmin = $idAdmin;
 
         return $this;
     }
 
-    /**
-     * Get the value of created_at
-     */ 
-    public function getCreated_at()
-    {
-        return $this->created_at;
-    }
 
-    /**
-     * Set the value of created_at
-     *
-     * @return  self
-     */ 
-    public function setCreated_at($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of contenu
-     */ 
-    public function getContenu()
-    {
-        return $this->contenu;
-    }
-
-    /**
-     * Set the value of contenu
-     *
-     * @return  self
-     */ 
-    public function setContenu($contenu)
-    {
-        $this->contenu = $contenu;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of id_commentaire
-     */ 
-    public function getId_commentaire()
-    {
-        return $this->id_commentaire;
-    }
-
-    /**
-     * Set the value of id_commentaire
-     *
-     * @return  self
-     */ 
-    public function setId_commentaire($id_commentaire)
-    {
-        $this->id_commentaire = $id_commentaire;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of auteur
-     */ 
-    public function getAuteur()
-    {
-        return $this->auteur;
-    }
-
-    /**
-     * Set the value of auteur
-     *
-     * @return  self
-     */ 
-    public function setAuteur($auteur)
-    {
-        $this->auteur = $auteur;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of statut
-     */ 
     public function getStatut()
     {
         return $this->statut;
     }
 
-    /**
-     * Set the value of statut
-     *
-     * @return  self
-     */ 
+
     public function setStatut($statut)
     {
         $this->statut = $statut;
@@ -155,19 +56,27 @@ class Commentaires
         return $this;
     }
 
-    /**
-     * Get the value of article
-     */ 
+
+    public function getAuteur()
+    {
+        return $this->auteur;
+    }
+
+
+    public function setAuteur($auteur)
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+
     public function getArticle()
     {
         return $this->article;
     }
 
-    /**
-     * Set the value of article
-     *
-     * @return  self
-     */ 
+
     public function setArticle($article)
     {
         $this->article = $article;
@@ -175,22 +84,58 @@ class Commentaires
         return $this;
     }
 
-    /**
-     * Get the value of id_statut_commentaire
-     */ 
-    public function getId_statut_commentaire()
+
+    public function getIdArticle()
     {
-        return $this->id_statut_commentaire;
+        return $this->idArticle;
     }
 
-    /**
-     * Set the value of id_statut_commentaire
-     *
-     * @return  self
-     */ 
-    public function setId_statut_commentaire($id_statut_commentaire)
+
+    public function setIdArticle($idArticle)
     {
-        $this->id_statut_commentaire = $id_statut_commentaire;
+        $this->idArticle = $idArticle;
+
+        return $this;
+    }
+
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+
+    public function getContenu()
+    {
+        return $this->contenu;
+    }
+
+
+    public function setContenu($contenu)
+    {
+        $this->contenu = $contenu;
+
+        return $this;
+    }
+
+
+    public function getIdCommentaire()
+    {
+        return $this->idCommentaire;
+    }
+
+
+    public function setIdCommentaire($idCommentaire)
+    {
+        $this->idCommentaire = $idCommentaire;
 
         return $this;
     }

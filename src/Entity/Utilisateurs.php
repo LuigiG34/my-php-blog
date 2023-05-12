@@ -4,112 +4,93 @@ namespace App\Entity;
 
 class Utilisateurs
 {
-    protected $id_utilisateur;
+    protected $idUtilisateur;
     protected $prenom;
     protected $email;
-    protected $mot_de_passe;
-    protected $token_reset;
-    protected $created_at;
-    protected $rgpd_date;
+    protected $motDePasse;
+    protected $tokenReset;
+    protected $createdAt;
+    protected $rgpdDate;
     protected $role;
-
-    
-
+    protected $isActif;
 
 
-    /**
-     * Get the value of rgpd_date
-     */ 
-    public function getRgpd_date()
+    public function getRole()
     {
-        return $this->rgpd_date;
+        return $this->role;
     }
 
-    /**
-     * Set the value of rgpd_date
-     *
-     * @return  self
-     */ 
-    public function setRgpd_date($rgpd_date)
+
+    public function setRole($role)
     {
-        $this->rgpd_date = $rgpd_date;
+        $this->role = $role;
 
         return $this;
     }
 
-    /**
-     * Get the value of created_at
-     */ 
-    public function getCreated_at()
+
+    public function getCreatedAt()
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    /**
-     * Set the value of created_at
-     *
-     * @return  self
-     */ 
-    public function setCreated_at($created_at)
+
+    public function setCreatedAt($createdAt)
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get the value of token_reset
-     */ 
-    public function getToken_reset()
+
+    public function getRgpdDate()
     {
-        return $this->token_reset;
+        return $this->rgpdDate;
     }
 
-    /**
-     * Set the value of token_reset
-     *
-     * @return  self
-     */ 
-    public function setToken_reset($token_reset)
+
+    public function setRgpdDate($rgpdDate)
     {
-        $this->token_reset = $token_reset;
+        $this->rgpdDate = $rgpdDate;
 
         return $this;
     }
 
-    /**
-     * Get the value of mot_de_passe
-     */ 
-    public function getMot_de_passe()
+
+    public function getTokenReset()
     {
-        return $this->mot_de_passe;
+        return $this->tokenReset;
     }
 
-    /**
-     * Set the value of mot_de_passe
-     *
-     * @return  self
-     */ 
-    public function setMot_de_passe($mot_de_passe)
+
+    public function setTokenReset($tokenReset)
     {
-        $this->mot_de_passe = $mot_de_passe;
+        $this->tokenReset = $tokenReset;
 
         return $this;
     }
 
-    /**
-     * Get the value of email
-     */ 
+
+    public function getMotDePasse()
+    {
+        return $this->motDePasse;
+    }
+
+
+    public function setMotDePasse($motDePasse)
+    {
+        $this->motDePasse = $motDePasse;
+
+        return $this;
+    }
+
+
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set the value of email
-     *
-     * @return  self
-     */ 
+
     public function setEmail($email)
     {
         $this->email = $email;
@@ -117,39 +98,13 @@ class Utilisateurs
         return $this;
     }
 
-    /**
-     * Get the value of id_utilisateur
-     */ 
-    public function getId_utilisateur()
-    {
-        return $this->id_utilisateur;
-    }
 
-    /**
-     * Set the value of id_utilisateur
-     *
-     * @return  self
-     */ 
-    public function setId_utilisateur($id_utilisateur)
-    {
-        $this->id_utilisateur = $id_utilisateur;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of prenom
-     */ 
     public function getPrenom()
     {
         return $this->prenom;
     }
 
-    /**
-     * Set the value of prenom
-     *
-     * @return  self
-     */ 
+
     public function setPrenom($prenom)
     {
         $this->prenom = $prenom;
@@ -157,22 +112,30 @@ class Utilisateurs
         return $this;
     }
 
-    /**
-     * Get the value of role
-     */ 
-    public function getRole()
+
+    public function getIdUtilisateur()
     {
-        return $this->role;
+        return $this->idUtilisateur;
     }
 
-    /**
-     * Set the value of role
-     *
-     * @return  self
-     */ 
-    public function setRole($role)
+
+    public function setIdUtilisateur($idUtilisateur)
     {
-        $this->role = $role;
+        $this->idUtilisateur = $idUtilisateur;
+
+        return $this;
+    }
+
+    
+    public function getIsActif()
+    {
+        return $this->isActif;
+    }
+
+    
+    public function setIsActif($isActif)
+    {
+        $this->isActif = $isActif;
 
         return $this;
     }

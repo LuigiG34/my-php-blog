@@ -17,5 +17,3 @@
         </div>
     </div>
 </section>
-
-<!-- <script src="/assets/typescript/addArticle.ts"></script> -->

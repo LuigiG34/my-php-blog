@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-/**
- * Controller class
- */
+
 abstract class Controller
 {
+
     public function render(string $fichier, array $donnees = [], string $template = 'base')
     {
         // On extrait le contenu de $donnees
@@ -26,12 +25,7 @@ abstract class Controller
         require_once ROOT . '/templates/'.$template.'.php';
     }
 
-    /**
-     * Afficher un message après une requete
-     *
-     * @param string $type
-     * @param string $message
-     */
+    
     public function alert(string $class, string $message)
     {
         $_SESSION['alert'] = [
@@ -42,11 +36,7 @@ abstract class Controller
         return $_SESSION['alert'];
     }
 
-    /**
-     * Generate slug from post's title
-     *
-     * @param string $title
-     */
+    
     public function generateSlug(string $text)
     {
         // replace non letter or digits by divider

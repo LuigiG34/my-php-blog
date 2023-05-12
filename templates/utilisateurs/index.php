@@ -10,7 +10,7 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-8 col-xl-6">
                     <p class="lead fw-normal text-muted my-4">Adresse mail : <?= $user->getEmail() ?></p>
-                    <p class="lead fw-normal text-muted my-4">Inscrit depuis le : <?= $user->getCreated_at() ?></p>
+                    <p class="lead fw-normal text-muted my-4">Inscrit depuis le : <?= $user->getCreatedAt() ?></p>
                     <a href="/utilisateurs/modifier" class="btn btn-primary w-100 mt-3">Modifier mon compte</a>
                 </div>
             </div>

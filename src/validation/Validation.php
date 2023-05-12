@@ -13,12 +13,14 @@ class Validation
         }
     }
 
+
     public function validEmail($var)
     {
         if (!filter_var($var, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
     }
+
 
     public function contactValid($email, $posts, $msg)
     {
@@ -36,6 +38,7 @@ class Validation
 
         return true;
     }
+
 
     public function signUpValid($email, $posts, $password, $passwordVerif, $data)
     {
@@ -76,6 +79,7 @@ class Validation
 
         return true;
     }
+
 
     public function signInValid($email, $posts, $password, $passwordVerif, $data)
     {
@@ -130,6 +134,7 @@ class Validation
 
         return true;
     }
+
 
     public function addArticleValid($posts)
     {

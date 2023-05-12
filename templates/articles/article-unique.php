@@ -15,7 +15,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-12">
-                            <small><?= date('d/m/Y', strtotime($article->getCreated_at())) ?></small>
+                            <small><?= date('d/m/Y', strtotime($article->getCreatedAt())) ?></small>
                             <p class="pt-3"><?= $article->getChapo() ?></p>
                             <small>Auteur : <?= $article->getAuteur() ?></small>
                         </div>
@@ -28,7 +28,7 @@
                 <?= $form ?>
 
                 <div class="my-5">
-                    <?php if (isset($commentaires) && !empty($commentaires)) :?>
+                    <?php if (isset($commentaires) && !empty($commentaires)) : ?>
                         <?php foreach ($commentaires as $c) : ?>
                             <div class="py-3">
                                 <hr>

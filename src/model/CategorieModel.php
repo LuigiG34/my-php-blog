@@ -15,6 +15,7 @@ class CategorieModel
         $this->db = Db::getInstance();
     }
 
+
     public function getAllCategories()
     {
         $sql = "SELECT id_categorie, type FROM $this->table";

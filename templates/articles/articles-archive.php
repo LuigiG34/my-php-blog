@@ -8,22 +8,22 @@
             <div class="col-lg-11 col-xl-9 col-xxl-8">
 
                 <?php foreach ($articles as $article) : ?>
-                    
-                        <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
-                            <div class="card-body p-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="p-5">
-                                        <small><?= date('d/m/Y', strtotime($article->getCreated_at())) ?></small>
-                                        <h2 class="fw-bolder"><?= $article->getTitre() ?></h2>
-                                        <small>Auteur : <?= $article->getAuteur() ?></small>
-                                        <p><?= substr($article->getChapo(), 0, 124) ?>...</p>
-                                        <a href="/articles/unique/<?= $article->getSlug() ?>" class="btn btn-primary">Lire la suite</a>
-                                    </div>
-                                    <img class="img-fluid" src="/uploads/<?= $article->getImg() ?>" alt="..." />
+
+                    <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center">
+                                <div class="p-5">
+                                    <small><?= date('d/m/Y', strtotime($article->getCreatedAt())) ?></small>
+                                    <h2 class="fw-bolder"><?= $article->getTitre() ?></h2>
+                                    <small>Auteur : <?= $article->getAuteur() ?></small>
+                                    <p><?= substr($article->getChapo(), 0, 124) ?>...</p>
+                                    <a href="/articles/unique/<?= $article->getSlug() ?>" class="btn btn-primary">Lire la suite</a>
                                 </div>
+                                <img class="img-fluid" src="/uploads/<?= $article->getImg() ?>" alt="..." />
                             </div>
                         </div>
-                    
+                    </div>
+
                 <?php endforeach; ?>
             </div>
         </div>

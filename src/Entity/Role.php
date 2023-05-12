@@ -4,22 +4,16 @@ namespace App\Entity;
 
 class Role
 {
-    protected $id_role;
+    protected $idRole;
     protected $role;
 
-    /**
-     * Get the value of role
-     */ 
+
     public function getRole()
     {
         return $this->role;
     }
 
-    /**
-     * Set the value of role
-     *
-     * @return  self
-     */ 
+
     public function setRole($role)
     {
         $this->role = $role;
@@ -27,22 +21,16 @@ class Role
         return $this;
     }
 
-    /**
-     * Get the value of id_role
-     */ 
-    public function getId_role()
+
+    public function getIdRole()
     {
-        return $this->id_role;
+        return $this->idRole;
     }
 
-    /**
-     * Set the value of id_role
-     *
-     * @return  self
-     */ 
-    public function setId_role($id_role)
+
+    public function setIdRole($idRole)
     {
-        $this->id_role = $id_role;
+        $this->idRole = $idRole;
 
         return $this;
     }

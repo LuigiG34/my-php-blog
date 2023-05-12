@@ -4,23 +4,17 @@ namespace App\Entity;
 
 class Categorie
 {
-    protected $id_categorie;
+    protected $idCategorie;
     protected $type;
     protected $description;
 
-    /**
-     * Get the value of description
-     */ 
+
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * Set the value of description
-     *
-     * @return  self
-     */ 
+
     public function setDescription($description)
     {
         $this->description = $description;
@@ -28,19 +22,13 @@ class Categorie
         return $this;
     }
 
-    /**
-     * Get the value of type
-     */ 
+
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * Set the value of type
-     *
-     * @return  self
-     */ 
+
     public function setType($type)
     {
         $this->type = $type;
@@ -48,22 +36,16 @@ class Categorie
         return $this;
     }
 
-    /**
-     * Get the value of id_categorie
-     */ 
-    public function getId_categorie()
+
+    public function getIdCategorie()
     {
-        return $this->id_categorie;
+        return $this->idCategorie;
     }
 
-    /**
-     * Set the value of id_categorie
-     *
-     * @return  self
-     */ 
-    public function setId_categorie($id_categorie)
+
+    public function setIdCategorie($idCategorie)
     {
-        $this->id_categorie = $id_categorie;
+        $this->idCategorie = $idCategorie;
 
         return $this;
     }

@@ -21,14 +21,14 @@
         <tbody>
           <?php foreach ($comments as $c) : ?>
             <tr>
-              <th scope="row"><?= $c->getId_commentaire() ?></th>
+              <th scope="row"><?= $c->getIdCommentaire() ?></th>
               <td><?= $c->getContenu() ?></td>
               <td><?= $c->getAuteur() ?></td>
               <td><?= $c->getArticle() ?></td>
               <td>
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault<?= $c->getId_commentaire() ?>" <?= $c->getId_statut_commentaire() == 1 ? 'checked' : '' ?> data-id="<?= $c->getId_commentaire() ?>">
-                  <label class="form-check-label" for="flexSwitchCheckDefault<?= $c->getId_commentaire() ?>"></label>
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault<?= $c->getIdCommentaire() ?>" <?= $c->getIdStatutCommentaire() == 1 ? 'checked' : '' ?> data-id="<?= $c->getIdCommentaire() ?>">
+                  <label class="form-check-label" for="flexSwitchCheckDefault<?= $c->getIdCommentaire() ?>"></label>
                 </div>
               </td>
             </tr>

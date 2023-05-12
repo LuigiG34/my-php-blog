@@ -18,15 +18,15 @@
             <tbody>
                 <?php foreach ($users as $u) : ?>
                     <tr>
-                        <th scope="row"><?= $u->getId_utilisateur() ?></th>
+                        <th scope="row"><?= $u->getIdUtilisateur() ?></th>
                         <td><?= $u->getPrenom() ?></td>
                         <td><?= $u->getEmail() ?></td>
                         <td><?= $u->getRole() ?></td>
-                        <td><?= date('d/m/Y', strtotime($u->getCreated_at()))  ?></td>
+                        <td><?= date('d/m/Y', strtotime($u->getCreatedAt()))  ?></td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault data-id="<?= $u->getId_utilisateur() ?>">
-                                <label class="form-check-label" for="flexSwitchCheckDefault<?= $u->getId_utilisateur() ?>"></label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault<?= $u->getIdUtilisateur() ?>" <?= $u->getIsActif() == 1 ? 'checked' : '' ?> data-id="<?= $u->getIdUtilisateur() ?>">
+                                <label class="form-check-label" for="flexSwitchCheckDefault<?= $u->getIdUtilisateur() ?>"></label>
                             </div>
                         </td>
                     </tr>
@@ -37,3 +37,5 @@
 
     </div>
 </section>
+
+<script src="/assets/typescript/ajax_users.ts"></script>
