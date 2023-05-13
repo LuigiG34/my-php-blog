@@ -41,7 +41,7 @@ class Db extends PDO
             // Definir le mode de transfert d'erreur.
             $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            $e->getMessage();
         }
     }
 

@@ -1,4 +1,13 @@
 {
+    "name": "luigig34/p5-blog",
+    "description": "Projet 5 - PHP/Symfony Openclassrooms.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luigi Gandemer",
+            "email": "luigigandemer6@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "src/"
