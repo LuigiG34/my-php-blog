@@ -21,9 +21,9 @@ class Routeur
     /**
      * start function
      *
-     * @return mixed
+     * @return void
      */
-    public function start(): mixed
+    public function start(): void
     {
         // On démarre la session.
         session_start();
@@ -54,7 +54,8 @@ class Routeur
             $controller = new HomepageController;
 
             // On apppelle l'index.
-            return $controller->index();
+            $controller->index();
+            return;
         }
 
         // On a au moins un parametres dans l'URL.
@@ -84,7 +85,7 @@ class Routeur
         // Si il reste des parametres on les passes à la méthode.
         // Au lieu d'utilisé $controller->$action($params) on utilise call_user_func_array() qui appel une méthode en lui donnant un paramètre qui n'est pas un tableau.
         if (!isset($params[0])) {
-            return $controller->$action();
+            $controller->$action();
         }
 
         if(call_user_func_array([$controller, $action], $params)) {
