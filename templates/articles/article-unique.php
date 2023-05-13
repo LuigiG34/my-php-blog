@@ -27,7 +27,7 @@
 
                 <?php if (isset($form)) : ?>
                     <?= $form ?>
-                <? endif; ?>
+                <?php endif; ?>
 
                 <div class="my-5">
                     <?php if (isset($commentaires) && !empty($commentaires)) : ?>
