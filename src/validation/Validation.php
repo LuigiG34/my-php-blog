@@ -218,10 +218,42 @@ class Validation
      * @param array $posts
      * @return string|boolean
      */
-    public function addArticleValid(array $posts): string|bool
+    public function addArticleValid(array $posts, string $chapo,string $title, string $content): string|bool
     {
         if ($this->notEmpty($posts) === false) {
             return "Un ou plusieurs champs sont vides.";
+        }
+
+        if(strlen($content) < 150) {
+            return "Le contenu de votre article doit dépasser 150 caractères.";
+        }
+
+        if(strlen($chapo) < 50) {
+            return "Le contenu de votre article doit dépasser 50 caractères.";
+        }
+
+        if(strlen($title) > 255) {
+            return "Le titre de votre article ne doit pas dépasser 255 caractères.";
+        }
+
+        return true;
+    }
+
+
+    /**
+     * addCommentValid function
+     *
+     * @param string $contenu
+     * @return string|boolean
+     */
+    public function addCommentValid(string $contenu): string|bool
+    {
+        if (empty($contenu) === false) {
+            return "Un ou plusieurs champs sont vides.";
+        }
+
+        if(strlen($contenu) < 15) {
+            return "Le contenu de votre commentaire doit dépasser 15 caractères.";
         }
 
         return true;
