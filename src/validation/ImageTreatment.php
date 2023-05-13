@@ -3,9 +3,27 @@
 namespace App\Validation;
 use Exception;
 
+/**
+ * ImageTreatment file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class ImageTreatment
 {
-    public function fileExists($file)
+
+    /**
+     * fileExists function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function fileExists(array $file): bool
     {
         if (!isset($file['name']) || empty($file['name'])) {
             return false;
@@ -15,7 +33,14 @@ class ImageTreatment
     }
 
 
-    public function isImage($file)
+    /**
+     * isImage function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function isImage(array $file): bool
     {
         if (!getimagesize($file["tmp_name"])) {
             return false;
@@ -25,7 +50,14 @@ class ImageTreatment
     }
 
 
-    public function validExtension($file)
+    /**
+     * validExtension function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function validExtension(array $file): bool
     {
         // On récupère l'extension
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -38,7 +70,15 @@ class ImageTreatment
     }
 
 
-    public function alreadyExists($file, $dir)
+    /**
+     * alreadyExists function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @return boolean
+     */
+    public function alreadyExists(array $file, string $dir): bool
     {
         $file['name'] = str_replace(" ", "_", $file['name']);
         $target_file = $dir . $file['name'];
@@ -51,7 +91,14 @@ class ImageTreatment
     }
 
 
-    public function sizeValid($file)
+    /**
+     * sizeValid function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function sizeValid(array $file): bool
     {
         if ($file['size'] > 1000000) {
             return false;
@@ -61,7 +108,15 @@ class ImageTreatment
     }
 
 
-    public function moveFile($file, $dir)
+    /**
+     * moveFile function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @return boolean
+     */
+    public function moveFile(array $file, string $dir): bool
     {
         $file['name'] = str_replace(" ", "_", $file['name']);
         $target_file = $dir . $file['name'];
@@ -74,7 +129,17 @@ class ImageTreatment
     }
 
 
-    public function addFile($file, $dir)
+    /**
+     * addFile function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @throws Exception
+     * 
+     * @return string
+     */
+    public function addFile(array $file, string $dir): string
     {
         try {
             if ($this->fileExists($file) === false) {
@@ -103,6 +168,7 @@ class ImageTreatment
 
             $file['name'] = str_replace(" ", "_", $file['name']);
             return $file['name'];
+
         } catch (Exception $e) {
 
             return $e->getMessage();

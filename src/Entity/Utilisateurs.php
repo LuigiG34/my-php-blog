@@ -2,110 +2,76 @@
 
 namespace App\Entity;
 
+use DateTime;
+
+/**
+ * Utilisateurs Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Utilisateurs
 {
-    protected $idUtilisateur;
-    protected $prenom;
-    protected $email;
-    protected $motDePasse;
-    protected $tokenReset;
-    protected $createdAt;
-    protected $rgpdDate;
-    protected $role;
-    protected $isActif;
+    protected string $idUtilisateur;
+    protected string $prenom;
+    protected string $email;
+    protected string $motDePasse;
+    protected string $tokenReset;
+    protected DateTime|string $createdAt;
+    protected DateTime|string $rgpdDate;
+    protected string $role;
+    protected string $isActif;
 
 
-    public function getRole()
+    /**
+     * Get the value of idUtilisateur
+     * 
+     * @return string
+     */ 
+    public function getIdUtilisateur(): string
     {
-        return $this->role;
+        return $this->idUtilisateur;
     }
 
 
-    public function setRole($role)
+    /**
+     * Set the value of idUtilisateur
+     *
+     * @param string $idUtilisateur
+     * 
+     * @return self
+     */ 
+    public function setIdUtilisateur(string $idUtilisateur): self
     {
-        $this->role = $role;
+        $this->idUtilisateur = $idUtilisateur;
 
         return $this;
     }
 
 
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-
-    public function getRgpdDate()
-    {
-        return $this->rgpdDate;
-    }
-
-
-    public function setRgpdDate($rgpdDate)
-    {
-        $this->rgpdDate = $rgpdDate;
-
-        return $this;
-    }
-
-
-    public function getTokenReset()
-    {
-        return $this->tokenReset;
-    }
-
-
-    public function setTokenReset($tokenReset)
-    {
-        $this->tokenReset = $tokenReset;
-
-        return $this;
-    }
-
-
-    public function getMotDePasse()
-    {
-        return $this->motDePasse;
-    }
-
-
-    public function setMotDePasse($motDePasse)
-    {
-        $this->motDePasse = $motDePasse;
-
-        return $this;
-    }
-
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-
-    public function getPrenom()
+    /**
+     * Get the value of prenom
+     * 
+     * @return string
+     */ 
+    public function getPrenom(): string
     {
         return $this->prenom;
     }
 
 
-    public function setPrenom($prenom)
+    /**
+     * Set the value of prenom
+     * 
+     * @param string $prenom Firstname of user
+     *
+     * @return self
+     */ 
+    public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
 
@@ -113,27 +79,180 @@ class Utilisateurs
     }
 
 
-    public function getIdUtilisateur()
+    /**
+     * Get the value of email
+     * 
+     * @return string
+     */ 
+    public function getEmail(): string
     {
-        return $this->idUtilisateur;
+        return $this->email;
     }
 
 
-    public function setIdUtilisateur($idUtilisateur)
+    /**
+     * Set the value of email
+     * 
+     * @param string $email User email
+     *
+     * @return self
+     */ 
+    public function setEmail(string $email): self
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->email = $email;
 
         return $this;
     }
 
-    
-    public function getIsActif()
+
+    /**
+     * Get the value of motDePasse
+     * 
+     * @return string
+     */ 
+    public function getMotDePasse(): string
+    {
+        return $this->motDePasse;
+    }
+
+
+    /**
+     * Set the value of motDePasse
+     *
+     * @param string $motDePasse User password
+     * 
+     * @return self
+     */ 
+    public function setMotDePasse(string $motDePasse): self
+    {
+        $this->motDePasse = $motDePasse;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of tokenReset
+     * 
+     * @return string
+     */ 
+    public function getTokenReset(): string
+    {
+        return $this->tokenReset;
+    }
+
+
+    /**
+     * Set the value of tokenReset
+     *
+     * @param string $tokenReset Token to reset password
+     * 
+     * @return self
+     */ 
+    public function setTokenReset($tokenReset): self
+    {
+        $this->tokenReset = $tokenReset;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of createdAt
+     * 
+     * @return string|DateTime
+     */ 
+    public function getCreatedAt(): string|DateTime
+    {
+        return $this->createdAt;
+    }
+
+
+    /**
+     * Set the value of createdAt
+     *
+     * @param string|DateTime $createdAt Date user was created in DB
+     * 
+     * @return self
+     */ 
+    public function setCreatedAt(string|DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of rgpdDate
+     * 
+     * @return string|DateTime
+     */ 
+    public function getRgpdDate(): string|DateTime
+    {
+        return $this->rgpdDate;
+    }
+
+
+    /**
+     * Set the value of rgpdDate
+     *
+     * @param string|DateTime $rgpdDate Date user accepted RGPD
+     * 
+     * @return self
+     */ 
+    public function setRgpdDate($rgpdDate): self
+    {
+        $this->rgpdDate = $rgpdDate;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of role
+     * 
+     * @return string
+     */ 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+
+    /**
+     * Set the value of role
+     *
+     * @param string $role Users role
+     * 
+     * @return self
+     */ 
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of isActif
+     * 
+     * @return string
+     */ 
+    public function getIsActif(): string
     {
         return $this->isActif;
     }
 
-    
-    public function setIsActif($isActif)
+    /**
+     * Set the value of isActif
+     * 
+     * @param string $isActif verify if user is actif or not
+     *
+     * @return  self
+     */ 
+    public function setIsActif(string $isActif): self
     {
         $this->isActif = $isActif;
 

@@ -2,10 +2,19 @@
 
 namespace App\Config;
 
-
+/**
+ * Post Config file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Post
 {
-    private $post;
+    private array $post;
 
     public function __construct()
     {
@@ -13,7 +22,13 @@ class Post
     }
 
 
-    public function getPost($name)
+    /**
+     * getPost function
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getPost(string $name): mixed
     {
         if (isset($this->post[$name])) {
             return $this->post[$name];
@@ -21,7 +36,12 @@ class Post
     }
 
 
-    public function getAllPost()
+    /**
+     * getAllPost function
+     *
+     * @return array
+     */
+    public function getAllPost(): array
     {
         if (isset($this->post)) {
             return $this->post;
@@ -29,7 +49,14 @@ class Post
     }
 
 
-    public function setPost($name, $value)
+    /**
+     * setPost function
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    public function setPost(string $name, mixed $value): void
     {
         $this->post[$name] = $value;
     }

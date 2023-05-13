@@ -2,20 +2,42 @@
 
 namespace App\Entity;
 
+/**
+ * Categorie Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Categorie
 {
-    protected $idCategorie;
-    protected $type;
-    protected $description;
+    protected string $idCategorie;
+    protected string $type;
+    protected string $description;
 
 
-    public function getDescription()
+    /**
+     * Get the value of description
+     * 
+     * @return string
+     */
+    public function getDescription(): string
     {
         return $this->description;
     }
 
 
-    public function setDescription($description)
+    /**
+     * Set the value of description
+     *
+     * @param string $description contenu du commentaire
+     * 
+     * @return self
+     */
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -23,13 +45,25 @@ class Categorie
     }
 
 
-    public function getType()
+    /**
+     * Get the value of type
+     * 
+     * @return string
+     */
+    public function getType(): string
     {
         return $this->type;
     }
 
 
-    public function setType($type)
+    /**
+     * Set the value of type
+     * 
+     * @param string $type Type of category
+     *
+     * @return self
+     */
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -37,13 +71,25 @@ class Categorie
     }
 
 
-    public function getIdCategorie()
+    /**
+     * Get the value of idCategorie
+     * 
+     * @return string
+     */
+    public function getIdCategorie(): string
     {
         return $this->idCategorie;
     }
 
 
-    public function setIdCategorie($idCategorie)
+    /**
+     * Set the value of idCategorie
+     * 
+     * @param string $idCategorie
+     *
+     * @return self
+     */
+    public function setIdCategorie(string $idCategorie): self
     {
         $this->idCategorie = $idCategorie;
 

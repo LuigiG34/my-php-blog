@@ -40,7 +40,7 @@ class ContactController extends Controller
         ->ajoutBouton("Envoyer", ['class' => 'btn btn-primary w-100 mt-3'])
         ->finForm();
 
-        $this->render('contact/index', [
+        return $this->render('contact/index', [
             'form' => $this->form->create()
         ]);
     }
@@ -58,7 +58,7 @@ class ContactController extends Controller
         if($valid !== true)
         {
             $this->alert('danger', $valid);
-            return header('Location: /contact');
+            header('Location: /contact');
         }
 
         $this->mailer->sendRequest($from, $description, $email);

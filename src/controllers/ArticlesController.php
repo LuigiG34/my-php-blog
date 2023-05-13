@@ -22,7 +22,7 @@ class ArticlesController extends Controller
     protected $post;
     protected $allPosts;
     protected $session;
-    protected $userSession;
+    protected null|array $userSession;
     protected $form;
     protected $articleModel;
     protected $categorieModel;

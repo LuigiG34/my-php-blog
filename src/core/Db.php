@@ -6,11 +6,20 @@ namespace App\Core;
 use PDO;
 use PDOException;
 
-
+/**
+ * Database file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Db extends PDO
 {
     // Instance unique de la classe.
-    private static $instance;
+    private static PDO $instance;
 
 
     private function __construct()
@@ -37,6 +46,11 @@ class Db extends PDO
     }
 
 
+    /**
+     * getInstance function
+     *
+     * @return self
+     */
     public static function getInstance(): self
     {
         // Si la bdd n'est pas instancié, on l'instancie.

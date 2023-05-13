@@ -51,7 +51,7 @@ class Routeur
         if (class_exists($controller) === false) {
             // Sinon on renvoie une erreur 404.
             http_response_code(404);
-            return header('Location: /erreur/erreur404');
+            header('Location: /erreur/erreur404');
         }
 
 
@@ -64,7 +64,7 @@ class Routeur
         if (method_exists($controller, $action) === false) {
             // Sinon on renvoie une erreur 404.
             http_response_code(404);
-            return header('Location: /erreur/erreur404');
+            header('Location: /erreur/erreur404');
         }
 
         // Si il reste des parametres on les passes à la méthode.
@@ -75,7 +75,7 @@ class Routeur
 
         if(call_user_func_array([$controller, $action], $params)) {
             http_response_code(500);
-            return header('Location: /erreur/erreur500');
+            header('Location: /erreur/erreur500');
         }
     }
 }

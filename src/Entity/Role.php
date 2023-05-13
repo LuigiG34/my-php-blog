@@ -2,19 +2,41 @@
 
 namespace App\Entity;
 
+/**
+ * Role Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Role
 {
-    protected $idRole;
-    protected $role;
+    protected string $idRole;
+    protected string $role;
 
 
-    public function getRole()
+    /**
+     * Get the value of role
+     * 
+     * @return string
+     */ 
+    public function getRole(): string
     {
         return $this->role;
     }
 
-
-    public function setRole($role)
+    
+    /**
+     * Set the value of role
+     *
+     * @param string $role
+     * 
+     * @return self
+     */ 
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
@@ -22,13 +44,25 @@ class Role
     }
 
 
-    public function getIdRole()
+    /**
+     * Get the value of idRole
+     * 
+     * @return string
+     */ 
+    public function getIdRole(): string
     {
         return $this->idRole;
     }
 
 
-    public function setIdRole($idRole)
+    /**
+     * Set the value of idRole
+     *
+     * @param string $idRole
+     * 
+     * @return self
+     */ 
+    public function setIdRole(string $idRole): self
     {
         $this->idRole = $idRole;
 
