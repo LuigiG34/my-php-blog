@@ -5,7 +5,7 @@ namespace App\Config;
 /**
  * Post Config file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -26,9 +26,9 @@ class Post
      * getPost function
      *
      * @param string $name
-     * @return mixed
+     * @return array|string
      */
-    public function getPost(string $name): mixed
+    public function getPost(string $name): array|string
     {
         if (isset($this->post[$name])) {
             return $this->post[$name];
@@ -53,10 +53,10 @@ class Post
      * setPost function
      *
      * @param string $name
-     * @param mixed $value
+     * @param array|string $value
      * @return void
      */
-    public function setPost(string $name, mixed $value): void
+    public function setPost(string $name, array|string $value): void
     {
         $this->post[$name] = $value;
     }

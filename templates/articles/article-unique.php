@@ -25,14 +25,16 @@
                 <p class="my-5"><?= $article->getContenu() ?></p>
 
 
-                <?= $form ?>
+                <?php if (isset($form)) : ?>
+                    <?= $form ?>
+                <? endif; ?>
 
                 <div class="my-5">
                     <?php if (isset($commentaires) && !empty($commentaires)) : ?>
                         <?php foreach ($commentaires as $c) : ?>
                             <div class="py-3">
                                 <hr>
-                                <small><?= $c->getAuteur() ?> | <?= $c->getCreated_at() ?></small>
+                                <small><?= $c->getAuteur() ?> | <?= $c->getCreatedAt() ?></small>
                                 <p><?= $c->getContenu() ?></p>
                             </div>
                         <?php endforeach; ?>

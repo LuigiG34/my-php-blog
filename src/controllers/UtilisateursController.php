@@ -10,18 +10,27 @@ use App\Validation\Validation;
 use App\Core\Mailer;
 use App\Entity\Utilisateurs;
 
-
+/**
+ * Utilisateurs Controller file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class UtilisateursController extends Controller
 {
 
-    protected $post;
-    protected $allPosts;
-    protected $session;
-    protected $userSession;
-    protected $form;
-    protected $userModel;
-    protected $validation;
-    protected $mailer;
+    protected Post $post;
+    protected array $allPosts;
+    protected Session $session;
+    protected null|array $userSession;
+    protected Form $form;
+    protected UtilisateursModel $userModel;
+    protected Validation $validation;
+    protected Mailer $mailer;
 
 
     public function __construct()
@@ -37,7 +46,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function profil()
+    /**
+     * profil function
+     *
+     * @return mixed
+     */
+    public function profil(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -61,7 +75,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function signInValid()
+    /**
+     * signInValid function
+     *
+     * @return void
+     */
+    public function signInValid(): void
     {
         if ($this->userSession === null) {
 
@@ -107,7 +126,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function signin()
+    /**
+     * signin function
+     *
+     * @return mixed
+     */
+    public function signin(): mixed
     {
         if ($this->userSession === null) {
 
@@ -130,7 +154,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function signupValid()
+    /**
+     * signupValid function
+     *
+     * @return void
+     */
+    public function signupValid(): void
     {
         if ($this->userSession === null) {
 
@@ -160,7 +189,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function signup()
+    /**
+     * signup function
+     *
+     * @return mixed
+     */
+    public function signup(): mixed
     {
         if ($this->userSession === null) {
 
@@ -188,7 +222,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function forgotPassword()
+    /**
+     * forgotPassword function
+     *
+     * @return mixed
+     */
+    public function forgotPassword(): mixed
     {
         if ($this->userSession === null) {
 
@@ -208,7 +247,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function forgotPasswordValidation()
+    /**
+     * forgotPasswordValidation function
+     *
+     * @return void
+     */
+    public function forgotPasswordValidation(): void
     {
         if ($this->userSession === null) {
 
@@ -238,7 +282,13 @@ class UtilisateursController extends Controller
     }
 
 
-    public function newPassword($token)
+    /**
+     * newPassword function
+     *
+     * @param string $token
+     * @return mixed
+     */
+    public function newPassword(string $token): mixed
     {
         if ($this->userSession === null) {
 
@@ -265,7 +315,13 @@ class UtilisateursController extends Controller
     }
 
 
-    public function newPasswordValidation($token)
+    /**
+     * newPasswordValidation function
+     *
+     * @param string $token
+     * @return void
+     */
+    public function newPasswordValidation(string $token): void
     {
         // si utilisateur est connecté on le redirige
         if ($this->userSession === null) {
@@ -292,7 +348,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function modifier()
+    /**
+     * modifier function
+     *
+     * @return mixed
+     */
+    public function modifier(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -326,7 +387,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function modifierValid()
+    /**
+     * modifierValid function
+     *
+     * @return void
+     */
+    public function modifierValid(): void
     {
         if ($this->userSession !== null) {
 
@@ -357,7 +423,12 @@ class UtilisateursController extends Controller
     }
 
 
-    public function logout()
+    /**
+     * logout function
+     *
+     * @return void
+     */
+    public function logout(): void
     {
         session_start(); // start the session if it hasn't been started already
 

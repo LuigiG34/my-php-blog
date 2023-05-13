@@ -2,11 +2,29 @@
 
 namespace App\Controllers;
 
-
+/**
+ * Abstract Controller file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 abstract class Controller
 {
 
-    public function render(string $fichier, array $donnees = [], string $template = 'base')
+    /**
+     * render function
+     *
+     * @param string $fichier
+     * @param array $donnees
+     * @param string $template
+     * 
+     * @return void
+     */
+    public function render(string $fichier, array $donnees = [], string $template = 'base'): void
     {
         // On extrait le contenu de $donnees
         extract($donnees);
@@ -26,7 +44,15 @@ abstract class Controller
     }
 
     
-    public function alert(string $class, string $message)
+    /**
+     * alert function
+     *
+     * @param string $class
+     * @param string $message
+     * 
+     * @return array
+     */
+    public function alert(string $class, string $message): array
     {
         $_SESSION['alert'] = [
             "class" => $class,
@@ -37,7 +63,14 @@ abstract class Controller
     }
 
     
-    public function generateSlug(string $text)
+    /**
+     * generateSlug function
+     *
+     * @param string $text
+     * 
+     * @return string
+     */
+    public function generateSlug(string $text): string
     {
         // replace non letter or digits by divider
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);

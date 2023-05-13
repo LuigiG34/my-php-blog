@@ -5,7 +5,7 @@ namespace App\Config;
 /**
  * Session Config file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -29,9 +29,9 @@ class Session
      *
      * @param string $name
      * 
-     * @return mixed
+     * @return array|string|null
      */
-    public function getSession(string $name): mixed
+    public function getSession(array|string $name): array|string|null
     {
         if (isset($this->session[$name])) {
             return $this->session[$name];
@@ -45,10 +45,10 @@ class Session
      * setSession function
      *
      * @param string $name
-     * @param mixed $value
+     * @param array|string $value
      * @return void
      */
-    public function setSession(string $name, mixed $value): void
+    public function setSession(string $name, array|string $value): void
     {
         $this->session[$name] = $value;
     }

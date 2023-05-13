@@ -5,7 +5,7 @@ namespace App\Entity;
 /**
  * Categorie Entity file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog

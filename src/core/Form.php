@@ -3,18 +3,40 @@
 namespace App\Core;
 
 
+/**
+ * Form file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Form
 {
-    protected $formCode = '';
+    protected string $formCode = '';
 
 
-    public function create()
+    /**
+     * create function
+     *
+     * @return string
+     */
+    public function create(): string
     {
         return $this->formCode;
     }
 
 
-    private function ajoutAttribut(array $attributs)
+    /**
+     * ajoutAttribut function
+     *
+     * @param array $attributs
+     * 
+     * @return string
+     */
+    private function ajoutAttribut(array $attributs): string
     {
         // On initialise une chaine de caracteres.
         $str = '';
@@ -37,7 +59,16 @@ class Form
     }
 
 
-    public function debutForm(string $method = 'post', string $action = '#', array $attributs = [])
+    /**
+     * debutForm function
+     *
+     * @param string $method
+     * @param string $action
+     * @param array $attributs
+     * 
+     * @return self
+     */
+    public function debutForm(string $method = 'post', string $action = '#', array $attributs = []): self
     {
         // On crée la balise form.
         $this->formCode .= "<form action='$action' method='$method'";
@@ -49,7 +80,12 @@ class Form
     }
 
 
-    public function finForm()
+    /**
+     * finForm function
+     *
+     * @return self
+     */
+    public function finForm(): self
     {
         $this->formCode .= "</form>";
 
@@ -57,7 +93,16 @@ class Form
     }
 
 
-    public function ajoutLabelFor(string $for, string $texte, array $attributs = [])
+    /**
+     * ajoutLabelFor function
+     *
+     * @param string $for
+     * @param string $texte
+     * @param array $attributs
+     * 
+     * @return self
+     */
+    public function ajoutLabelFor(string $for, string $texte, array $attributs = []): self
     {
         // On ouvre la balise.
         $this->formCode .= "<label for'$for'";
@@ -71,7 +116,17 @@ class Form
         return $this;
     }
 
-    public function ajoutInput(string $type, string $nom, array $attributs = [])
+
+    /**
+     * ajoutInput function
+     *
+     * @param string $type
+     * @param string $nom
+     * @param array $attributs
+     * 
+     * @return self
+     */
+    public function ajoutInput(string $type, string $nom, array $attributs = []): self
     {
         // On ouvre la balise.
         $this->formCode .= "<input type='$type' name='$nom'";
@@ -83,7 +138,16 @@ class Form
     }
 
 
-    public function ajoutTextarea(string $nom, string $valeur = '', array $attributs = [])
+    /**
+     * ajoutTextarea function
+     *
+     * @param string $nom
+     * @param string $valeur
+     * @param array $attributs
+     * 
+     * @return self
+     */
+    public function ajoutTextarea(string $nom, string $valeur = '', array $attributs = []): self
     {
         // On ouvre la balise.
         $this->formCode .= "<textarea name='$nom'";
@@ -98,7 +162,17 @@ class Form
     }
 
 
-    public function ajoutSelect(string $nom, array $options, array $attributs = [], $default = null)
+    /**
+     * ajoutSelect function
+     *
+     * @param string $nom
+     * @param array $options
+     * @param array $attributs
+     * @param array|null $default
+     * 
+     * @return self
+     */
+    public function ajoutSelect(string $nom, array $options, array $attributs = [], array $default = null): self
     {
         // On crée le select.
         $this->formCode .= "<select name='$nom'";
@@ -122,7 +196,15 @@ class Form
     }
 
 
-    public function ajoutBouton(string $texte, array $attributs = [])
+    /**
+     * ajoutBouton function
+     *
+     * @param string $texte
+     * @param array $attributs
+     * 
+     * @return self
+     */
+    public function ajoutBouton(string $texte, array $attributs = []): self
     {
         // On ouvre le bouton.
         $this->formCode .= '<button ';

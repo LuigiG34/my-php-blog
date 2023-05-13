@@ -5,7 +5,7 @@ namespace App\Config;
 /**
  * Get Config file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -26,9 +26,9 @@ class Get
      * getGet function
      *
      * @param string $name
-     * @return mixed
+     * @return array|string
      */
-    public function getGet(string $name): string
+    public function getGet(string $name): array|string
     {
         if (isset($this->get[$name])) {
             return $this->get[$name];
@@ -57,7 +57,7 @@ class Get
      * 
      * @return void
      */
-    public function setGet(string $name, mixed $value): void
+    public function setGet(string $name, array|string $value): void
     {
         $this->get[$name] = $value;
     }

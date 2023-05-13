@@ -10,13 +10,23 @@ use App\Model\ArticlesModel;
 use App\Model\CommentaireModel;
 use App\Model\UtilisateursModel;
 
+/**
+ * Admin Controller file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class AdminController extends Controller
 {
-    protected $session;
-    protected $userSession;
-    protected $userModel;
-    protected $articleModel;
-    protected $commentaireModel;
+    protected Session $session;
+    protected null|array $userSession;
+    protected UtilisateursModel $userModel;
+    protected ArticlesModel $articleModel;
+    protected CommentaireModel $commentaireModel;
 
 
     public function __construct()
@@ -29,7 +39,12 @@ class AdminController extends Controller
     }
 
 
-    public function index()
+    /**
+     * index function
+     *
+     * @return mixed
+     */
+    public function index(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -44,7 +59,12 @@ class AdminController extends Controller
     }
 
 
-    public function users()
+    /**
+     * users function
+     *
+     * @return mixed
+     */
+    public function users(): mixed
     {
 
         if ($this->userSession !== null) {
@@ -85,7 +105,12 @@ class AdminController extends Controller
     }
 
 
-    public function articles()
+    /**
+     * articles function
+     *
+     * @return mixed
+     */
+    public function articles(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -122,7 +147,12 @@ class AdminController extends Controller
     }
 
 
-    public function comments()
+    /**
+     * comments function
+     *
+     * @return mixed
+     */
+    public function comments(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -158,7 +188,13 @@ class AdminController extends Controller
     }
 
 
-    public function activeCommentaire($id)
+    /**
+     * activeCommentaire function
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function activeCommentaire(string $id): mixed
     {
         if ($this->userSession !== null) {
 
@@ -185,7 +221,13 @@ class AdminController extends Controller
     }
 
 
-    public function activeUtilisateur($id)
+    /**
+     * activeUtilisateur function
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function activeUtilisateur(string $id): mixed
     {
         if ($this->userSession !== null) {
 
