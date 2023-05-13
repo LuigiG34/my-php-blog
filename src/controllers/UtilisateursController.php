@@ -10,106 +10,109 @@ use App\Validation\Validation;
 use App\Core\Mailer;
 use App\Entity\Utilisateurs;
 
-/**
- * UtilisateursController
- */
+
 class UtilisateursController extends Controller
 {
 
+    protected $post;
+    protected $allPosts;
+    protected $session;
+    protected $userSession;
+    protected $form;
+    protected $userModel;
+    protected $validation;
+    protected $mailer;
+
+
+    public function __construct()
+    {
+        $this->post = new Post;
+        $this->allPosts = $this->post->getAllPost();
+        $this->session = new Session;
+        $this->userSession = $this->session->getSession('user');
+        $this->form = new Form;
+        $this->userModel = new UtilisateursModel;
+        $this->validation = new Validation;
+        $this->mailer = new Mailer;
+    }
+
+
     public function profil()
     {
-        $session = new Session;
+        if ($this->userSession !== null) {
 
-        if ($session->getSession('user') === null) {
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-            $userModel = new UtilisateursModel;
-            $data = $userModel->getUserById($_SESSION['user']['id']);
+            $data = $this->userModel->getUserById($_SESSION['user']['id']);
 
             $user = new Utilisateurs;
-            $user->setId_utilisateur($data->id_utilisateur)
+            $user->setIdUtilisateur($data->id_utilisateur)
                 ->setPrenom($data->prenom)
                 ->setEmail($data->email)
-                ->setMot_de_passe($data->mot_de_passe)
+                ->setMotDePasse($data->mot_de_passe)
                 ->setRole($data->role)
-                ->setCreated_at($data->created_at);
+                ->setCreatedAt($data->created_at);
 
-            $this->render('utilisateurs/index', [
+            return $this->render('utilisateurs/index', [
                 'user' => $user
             ]);
         }
+
+        $this->alert('danger', 'Vous n\êtes pas connecté !');
+        header('Location: /');
     }
+
 
     public function signInValid()
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        if ($session->getSession('user') === null) {
-
-            $post = new Post;
-            $userModel = new UtilisateursModel;
-            $validation = new Validation;
-            $allPosts = $post->getAllPost();
-
-            $data = $userModel->getUserByEmail($post->getPost('email'));
+            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
             $password = $data->mot_de_passe;
 
-            $verif = $validation->signInValid($post->getPost('email'), $allPosts, $post->getPost('password'), $password, $data);
+            if ($data->is_actif === "0") {
+                $this->alert('danger', "Votre compte à été désactivé par un administrateur.");
+                header('Location: /utilisateurs/signin');
+            }
+
+            $verif = $this->validation->signInValid($this->post->getPost('email'), $this->allPosts, $this->post->getPost('password'), $password, $data);
 
             if ($verif !== true) {
-
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/signin');
-            } else {
+            }
 
+            $_SESSION['user'] = [
+                'id' => $data->id_utilisateur,
+                'email' => $data->email,
+                'prenom' => $data->prenom,
+                'role' => $data->role
+            ];
+
+            if ($data->role === 'ADMIN') {
                 $_SESSION['user'] = [
                     'id' => $data->id_utilisateur,
                     'email' => $data->email,
                     'prenom' => $data->prenom,
-                    'role' => $data->role
+                    'role' => $data->role,
+                    'token' => bin2hex(random_bytes(32))
                 ];
-
-                if($data->role === 'ADMIN'){
-                    $_SESSION['user'] = [
-                        'id' => $data->id_utilisateur,
-                        'email' => $data->email,
-                        'prenom' => $data->prenom,
-                        'role' => $data->role,
-                        'token' => bin2hex(random_bytes(32))
-                    ];
-    
-                }else{
-                    $_SESSION['user'] = [
-                        'id' => $data->id_utilisateur,
-                        'email' => $data->email,
-                        'prenom' => $data->prenom,
-                        'role' => $data->role
-                    ];
-    
-                }
-
-                $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
-                header('Location: /');
             }
-        } else {
-            // si utilisateur est connecté on le redirige
+
+            $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
             header('Location: /');
+            return;
         }
+
+        $this->alert('danger', "Vous êtes déjà connecté !");
+        header('Location: /');
     }
 
 
     public function signin()
     {
-        $session = new Session;
-
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
+        if ($this->userSession === null) {
 
             // On créer le formulaire
-            $form = new Form;
-
-            $form->debutForm('post', '/utilisateurs/signinValid')
+            $this->form->debutForm('post', '/utilisateurs/signinValid')
                 ->ajoutLabelFor('email', 'Email :')
                 ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
                 ->ajoutLabelFor('password', 'Mot de passe :')
@@ -117,66 +120,51 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Me connecter", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            $this->render('utilisateurs/signin', [
-                'form' => $form->create()
+            return $this->render('utilisateurs/signin', [
+                'form' => $this->form->create()
             ]);
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', "Vous êtes déjà connecté !");
+        header('Location: /');
     }
 
 
     public function signupValid()
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        if ($session->getSession('user') === null) {
-            $post = new Post;
-            $userModel = new UtilisateursModel;
-            $validation = new Validation;
-            $allPosts = $post->getAllPost();
+            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
 
-            $data = $userModel->getUserByEmail($post->getPost('email'));
-
-            $verif = $validation->signUpValid($post->getPost('email'), $allPosts, $post->getPost('password'), $post->getPost('password-again'), $data);
+            $verif = $this->validation->signUpValid($this->post->getPost('email'), $this->allPosts, $this->post->getPost('password'), $this->post->getPost('password-again'), $data);
 
             if ($verif !== true) {
-
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/signup');
-            } else {
-
-                $mailer = new Mailer;
-
-                $email = strip_tags($post->getPost('email'));
-                $prenom = strip_tags($post->getPost('prenom'));
-                $pswd = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
-
-                $userModel->createUser($email, $pswd, $prenom);
-                $alert = $this->alert('success', 'Votre inscription a bien fonctionné !');
-
-                $mailer->sendConfirmationSignUp($email);
-
-                header('Location: /utilisateurs/signin');
             }
-        } else {
-            // if user session exists no access to signup
-            header('Location: /');
+
+            $email = htmlspecialchars($this->post->getPost('email'));
+            $prenom = htmlspecialchars($this->post->getPost('prenom'));
+            $pswd = password_hash(htmlspecialchars($this->post->getPost('password')), PASSWORD_ARGON2I);
+
+            $this->userModel->createUser($email, $pswd, $prenom);
+
+            $this->alert('success', 'Votre inscription a bien fonctionné !');
+            $this->mailer->sendConfirmationSignUp($email);
+            header('Location: /utilisateurs/signin');
+            return;
         }
+        // if user session exists no access to signup
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
 
 
     public function signup()
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
-
-            $form = new Form;
-
-            $form->debutForm('post', '/utilisateurs/signupValid')
+            $this->form->debutForm('post', '/utilisateurs/signupValid')
                 ->ajoutLabelFor('prenom', 'Prénom :')
                 ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true'])
                 ->ajoutLabelFor('email', 'Email :')
@@ -190,166 +178,133 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("M'inscrire", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            $this->render('utilisateurs/signup', [
-                'form' => $form->create()
+            return $this->render('utilisateurs/signup', [
+                'form' => $this->form->create()
             ]);
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
 
 
     public function forgotPassword()
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
-
-            $form = new Form;
-
-            $form->debutForm('post', '/utilisateurs/forgotPasswordValidation')
+            $this->form->debutForm('post', '/utilisateurs/forgotPasswordValidation')
                 ->ajoutLabelFor('email', 'Email :')
                 ->ajoutInput('email', 'email', ['class' => 'form-control mb-3', 'id' => 'email', 'required' => 'true'])
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            $this->render('utilisateurs/forgot-password', [
-                'form' => $form->create()
+            return $this->render('utilisateurs/forgot-password', [
+                'form' => $this->form->create()
             ]);
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
 
 
     public function forgotPasswordValidation()
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
+            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
 
-            $validation = new Validation;
-            $post = new Post;
-            $userModel = new UtilisateursModel;
-            $data = $userModel->getUserByEmail($post->getPost('email'));
-            $allPosts = $post->getAllPost();
-
-            $verif = $validation->forgotPassValid($post->getPost('email'), $allPosts, $data);
+            $verif = $this->validation->forgotPassValid($this->post->getPost('email'), $this->allPosts, $data);
 
             if ($verif !== true) {
 
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
-            } else {
-
-                $token = bin2hex(random_bytes(32));
-                $email = htmlspecialchars($post->getPost('email'));
-
-                $userModel->updateToken($token, $email);
-                $mailer = new Mailer;
-                $mailer->resetPassword($email, "http://localhost:8000/utilisateurs/newPassword/$token");
-
-                $this->alert('success', 'Un mail vient de vous être envoyé. (Vérifié vos spams)');
-                header("Location: /utilisateurs/forgotPassword");
             }
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
+
+            $token = bin2hex(random_bytes(32));
+            $email = htmlspecialchars($this->post->getPost('email'));
+
+            $this->userModel->updateToken($token, $email);
+            $this->mailer->resetPassword($email, "http://localhost:8000/utilisateurs/newPassword/$token");
+
+            $this->alert('success', 'Un mail vient de vous être envoyé. (Vérifié vos spams)');
+            header("Location: /utilisateurs/forgotPassword");
+            return;
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
 
 
     public function newPassword($token)
     {
-        $session = new Session;
+        if ($this->userSession === null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
-
-            $userModel = new UtilisateursModel;
-            $data = $userModel->getUserByToken($token);
+            $data = $this->userModel->getUserByToken($token);
 
             if ($data === null) {
                 $this->alert('danger', 'Vous n\'avez pas accès à cette page.');
                 header("Location: /");
             }
 
-            $form = new Form;
-
-            $form->debutForm('post', "/utilisateurs/newPasswordValidation/$token")
+            $this->form->debutForm('post', "/utilisateurs/newPasswordValidation/$token")
                 ->ajoutLabelFor('password', 'Mot de passe :')
                 ->ajoutInput('password', 'password', ['class' => 'form-control mb-3', 'id' => 'password', 'required' => 'true'])
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            $this->render('utilisateurs/new-password', [
-                'form' => $form->create()
+            return $this->render('utilisateurs/new-password', [
+                'form' => $this->form->create()
             ]);
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
 
 
     public function newPasswordValidation($token)
     {
-        $session = new Session;
-
         // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
+        if ($this->userSession === null) {
 
-            $validation = new Validation;
-            $post = new Post;
-            $userModel = new UtilisateursModel;
-            $allPosts = $post->getAllPost();
-
-            $verif = $validation->newPassValid($post->getPost('password'), $allPosts);
+            $verif = $this->validation->newPassValid($this->post->getPost('password'), $this->allPosts);
 
             if ($verif !== true) {
 
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
-            } else {
-
-                $pswd = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
-
-                $userModel->updateTokenAndPasswordByToken($pswd, 'NULL', $token);
-
-                $this->alert('success', 'Votre mot de passe a été mis à jour.');
-                header("Location: /utilisateurs/signin");
             }
-        } else {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
+
+            $pswd = password_hash(htmlspecialchars($this->post->getPost('password')), PASSWORD_ARGON2I);
+
+            $this->userModel->updateTokenAndPasswordByToken($pswd, 'NULL', $token);
+
+            $this->alert('success', 'Votre mot de passe a été mis à jour.');
+            header("Location: /utilisateurs/signin");
+            return;
         }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
     }
+
 
     public function modifier()
     {
-        $session = new Session;
+        if ($this->userSession !== null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-            $userModel = new UtilisateursModel;
-            $data = $userModel->getUserById($_SESSION['user']['id']);
+            $data = $this->userModel->getUserById($_SESSION['user']['id']);
 
             $user = new Utilisateurs;
-            $user->setId_utilisateur($data->id_utilisateur)
+            $user->setIdUtilisateur($data->id_utilisateur)
                 ->setPrenom($data->prenom)
                 ->setEmail($data->email)
-                ->setMot_de_passe($data->mot_de_passe);
+                ->setMotDePasse($data->mot_de_passe);
 
-            $form = new Form;
-
-            $form->debutForm('post', '/utilisateurs/modifierValid')
+            $this->form->debutForm('post', '/utilisateurs/modifierValid')
                 ->ajoutLabelFor('prenom', 'Prénom :')
                 ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true', "value" => $user->getPrenom()])
                 ->ajoutLabelFor('email', 'Email :')
@@ -361,52 +316,46 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            $this->render('utilisateurs/modifier', [
-                'form' => $form->create()
+            return $this->render('utilisateurs/modifier', [
+                'form' => $this->form->create()
             ]);
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté !');
+        header('Location: /');
     }
 
 
     public function modifierValid()
     {
-        $session = new Session;
+        if ($this->userSession !== null) {
 
-        // si utilisateur est connecté on le redirige
-        if ($session->getSession('user') === null) {
-            // si utilisateur est connecté on le redirige
-            header('Location: /');
-        } else {
-
-            $validation = new Validation;
-            $post = new Post;
-            $userModel = new UtilisateursModel;
-
-            $verif = $validation->modifierValid($post->getPost('email'), [$post->getPost('email'), $post->getPost('prenom')]);
+            $verif = $this->validation->modifierValid($this->post->getPost('email'), [$this->post->getPost('email'), $this->post->getPost('prenom')]);
 
             if ($verif !== true) {
 
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
-            } else {
-                $data = $userModel->getUserById($_SESSION['user']['id']);
-
-                $user = new Utilisateurs;
-                $user->setMot_de_passe($data->mot_de_passe);
-
-                if(empty($post->getPost('password'))){
-                    $password = $user->getMot_de_passe();
-                }else{
-                    $password = password_hash(strip_tags($post->getPost('password')), PASSWORD_ARGON2I);
-                }
-
-                $userModel->updateUserById($_SESSION['user']['id'], strip_tags($post->getPost('prenom')), strip_tags($post->getPost('email')), $password);
-
-                $this->alert('success', 'Votre compte a été mis à jour.');
-                header("Location: /utilisateurs/profil");
             }
+
+            $data = $this->userModel->getUserById($this->userSession['id']);
+            $password = password_hash(htmlspecialchars($this->post->getPost('password')), PASSWORD_ARGON2I);
+
+            if (empty($this->post->getPost('password'))) {
+                $password = $data->mot_de_passe;
+            }
+
+            $this->userModel->updateUserById($this->userSession['id'], htmlspecialchars($this->post->getPost('prenom')), htmlspecialchars($this->post->getPost('email')), $password);
+
+            $this->alert('success', 'Votre compte a été mis à jour.');
+            header("Location: /utilisateurs/profil");
+            return;
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté !');
+        header('Location: /');
     }
+
 
     public function logout()
     {
@@ -416,6 +365,6 @@ class UtilisateursController extends Controller
 
         session_destroy(); // destroy the session
         header('Location: /');
-        exit;
+        return;
     }
 }

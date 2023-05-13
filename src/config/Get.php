@@ -3,52 +3,62 @@
 namespace App\Config;
 
 /**
- * Class Get for $_GET
+ * Get Config file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
  */
 class Get
 {
-    private $get;
+    private array $get;
 
     public function __construct()
     {
         $this->get = $_GET;
     }
 
+
     /**
-     * Get the value of get
+     * getGet function
      *
      * @param string $name
+     * @return mixed
      */
-    public function getGet($name)
+    public function getGet(string $name): string
     {
-        if(isset($this->get[$name])) {
+        if (isset($this->get[$name])) {
             return $this->get[$name];
         }
     }
 
 
     /**
-     * Get the value of get
+     * getAllGet function
      *
-     * @param string $name
+     * @return array
      */
-    public function getAllGet()
+    public function getAllGet(): array
     {
-        if(isset($this->get)) {
+        if (isset($this->get)) {
             return $this->get;
         }
     }
 
 
     /**
-     * Set the value of get
-     * 
+     * setGet function
+     *
      * @param string $name
-     * @param array|string $value
+     * @param mixed $value
+     * 
+     * @return void
      */
-    public function setGet($name, $value)
+    public function setGet(string $name, mixed $value): void
     {
         $this->get[$name] = $value;
     }
-
 }

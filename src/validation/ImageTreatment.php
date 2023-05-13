@@ -1,112 +1,178 @@
 <?php
 
 namespace App\Validation;
-// use FFI\Exception;
 use Exception;
 
+/**
+ * ImageTreatment file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class ImageTreatment
 {
-    public function fileExists($file)
+
+    /**
+     * fileExists function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function fileExists(array $file): bool
     {
-        if (!isset($file['name']) || empty($file['name'])){
+        if (!isset($file['name']) || empty($file['name'])) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public function isImage($file)
+
+    /**
+     * isImage function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function isImage(array $file): bool
     {
-        if (!getimagesize($file["tmp_name"])){
+        if (!getimagesize($file["tmp_name"])) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public function validExtension($file)
+
+    /**
+     * validExtension function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function validExtension(array $file): bool
     {
         // On récupère l'extension
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        if ($extension !== "jpg" && $extension !== "jpeg" && $extension !== "png" && $extension !== "gif"){
+        if ($extension !== "jpg" && $extension !== "jpeg" && $extension !== "png" && $extension !== "gif") {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-    public function alreadyExists($file, $dir)
+    /**
+     * alreadyExists function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @return boolean
+     */
+    public function alreadyExists(array $file, string $dir): bool
     {
-        $file['name'] = str_replace(" ", "_",$file['name']);
+        $file['name'] = str_replace(" ", "_", $file['name']);
         $target_file = $dir . $file['name'];
 
-        if (file_exists($target_file)){
+        if (file_exists($target_file)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-    public function sizeValid($file)
+    /**
+     * sizeValid function
+     *
+     * @param array $file
+     * 
+     * @return boolean
+     */
+    public function sizeValid(array $file): bool
     {
-        if ($file['size'] > 1000000){
+        if ($file['size'] > 1000000) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-    public function moveFile($file, $dir)
+    /**
+     * moveFile function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @return boolean
+     */
+    public function moveFile(array $file, string $dir): bool
     {
-        $file['name'] = str_replace(" ", "_",$file['name']);
+        $file['name'] = str_replace(" ", "_", $file['name']);
         $target_file = $dir . $file['name'];
 
-        if (!move_uploaded_file($file['tmp_name'], $target_file)){
+        if (!move_uploaded_file($file['tmp_name'], $target_file)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-    public function addFile($file, $dir)
+    /**
+     * addFile function
+     *
+     * @param array $file
+     * @param string $dir
+     * 
+     * @throws Exception
+     * 
+     * @return string
+     */
+    public function addFile(array $file, string $dir): string
     {
-        try{
-            if($this->fileExists($file) === false){
+        try {
+            if ($this->fileExists($file) === false) {
                 throw new Exception("You must select an image");
             }
 
-            if($this->isImage($file) === false){
+            if ($this->isImage($file) === false) {
                 throw new Exception("Le fichier sélectionné n'est pas une image.");
             }
 
-            if($this->validExtension($file) === false){
+            if ($this->validExtension($file) === false) {
                 throw new Exception("L'extension n'est pas valable.");
             }
 
-            if($this->alreadyExists($file, $dir) === false){
+            if ($this->alreadyExists($file, $dir) === false) {
                 throw new Exception("Le fichier existe déjà.");
             }
 
-            if($this->sizeValid($file) === false){
+            if ($this->sizeValid($file) === false) {
                 throw new Exception("Le fichier est trop volumineux.");
             }
 
-            if($this->moveFile($file, $dir) === false){
+            if ($this->moveFile($file, $dir) === false) {
                 throw new Exception("Ajouter l'image n'a pas fonctionné.");
             }
 
-            $file['name'] = str_replace(" ", "_",$file['name']);
+            $file['name'] = str_replace(" ", "_", $file['name']);
             return $file['name'];
 
         } catch (Exception $e) {
-            // add message to echo with an alert() method like flash in symfony.
+
+            return $e->getMessage();
             header("location: /");
-            exit;
         }
     }
 }

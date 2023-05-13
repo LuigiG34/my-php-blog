@@ -14,95 +14,107 @@ use App\Model\CommentaireModel;
 use App\Validation\ImageTreatment;
 use App\Validation\Validation;
 
-/**
- * ArticlesController
- */
+
 class ArticlesController extends Controller
 {
 
+    protected $files;
+    protected $post;
+    protected $allPosts;
+    protected $session;
+    protected null|array $userSession;
+    protected $form;
+    protected $articleModel;
+    protected $categorieModel;
+    protected $commentaireModel;
+    protected $imgTreatment;
+    protected $validation;
+
+
+    public function __construct()
+    {
+        $this->files = new Files;
+        $this->post = new Post;
+        $this->allPosts = $this->post->getAllPost();
+        $this->session = new Session;
+        $this->userSession = $this->session->getSession('user');
+        $this->form = new Form;
+        $this->articleModel = new ArticlesModel;
+        $this->categorieModel = new CategorieModel;
+        $this->commentaireModel = new CommentaireModel;
+        $this->imgTreatment = new ImageTreatment;
+        $this->validation = new Validation;
+    }
+
     public function unique($slug)
     {
-        $articleModel = new ArticlesModel;
-        $session = new Session;
-
-        $article = $articleModel->getArticleBySlug($slug);
+        $article = $this->articleModel->getArticleBySlug($slug);
 
         if ($article !== null) {
 
             $entity = new Articles;
-            $entity->setId_article($article->id_article)
+            $entity->setIdArticle($article->id_article)
                 ->setTitre($article->titre)
                 ->setChapo($article->chapo)
                 ->setContenu($article->contenu)
-                ->setCreated_at($article->created_at)
+                ->setCreatedAt($article->created_at)
                 ->setImg($article->img)
                 ->setCategorie($article->type)
                 ->setAuteur($article->prenom);
 
-            $user = $session->getSession('user');
-            // si utilisateur n'est pas connecté on le redirige
-
-            $commentaireModel = new CommentaireModel;
-
-            $commentaires = $commentaireModel->getCommentairesByArticleId($article->id_article);
+            $commentaires = $this->commentaireModel->getCommentairesByArticleId($article->id_article);
 
             $array = [];
 
-            if($commentaires !== null){
+            if ($commentaires !== null) {
                 foreach ($commentaires as $c) {
                     $ent = new Commentaires;
-                    $ent->setCreated_at($c->created_at)
+                    $ent->setCreatedAt($c->created_at)
                         ->setContenu($c->contenu)
                         ->setAuteur($c->prenom)
                         ->setStatut($c->type);
-    
+
                     $array[] = $ent;
                 }
             }
-            
 
             // On créer le formulaire
-            $form = new Form;
-
-            $form->debutForm('post', "/articles/addCommentaire/$article->id_article")
-
+            $this->form->debutForm('post', "/articles/addCommentaire/$article->id_article")
                 ->ajoutLabelFor('commentaire', 'Commentaire :')
                 ->ajoutTextarea('commentaire', "", ['class' => 'form-control mb-3', 'id' => 'commentaire', 'rows' => 5, 'required' => 'true'])
-
                 ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            if ($user === null) {
-                $this->render('articles/article-unique', [
+            if ($this->userSession === null) {
+                return $this->render('articles/article-unique', [
                     'article' => $entity,
                     'commentaires' => $array
                 ]);
-            } else {
-                $this->render('articles/article-unique', [
-                    'article' => $entity,
-                    'commentaires' => $array,
-                    'form' => $form->create()
-                ]);
             }
-        } else {
-            header('Location: /articles/all');
+
+            return $this->render('articles/article-unique', [
+                'article' => $entity,
+                'commentaires' => $array,
+                'form' => $this->form->create()
+            ]);
         }
+        $this->alert('danger', 'L\'article que vous cherchez n\'existe pas.');
+        header('Location: /articles/all');
     }
+
 
     public function all()
     {
-        $articleModel = new ArticlesModel;
+        $array = $this->articleModel->getAllArticles();
         $articles = [];
-
-        $array = $articleModel->getAllArticles();
 
         foreach ($array as $article) {
             $entity = new Articles;
-            $entity->setId_article($article->id_article)
+            $entity->setIdArticle($article->id_article)
                 ->setTitre($article->titre)
                 ->setChapo($article->chapo)
                 ->setContenu($article->contenu)
-                ->setCreated_at($article->created_at)
+                ->setCreatedAt($article->created_at)
                 ->setImg($article->img)
                 ->setSlug($article->slug)
                 ->setCategorie($article->type)
@@ -111,84 +123,58 @@ class ArticlesController extends Controller
             $articles[] = $entity;
         }
 
-        $this->render('articles/articles-archive', [
+        return $this->render('articles/articles-archive', [
             'articles' => $articles
         ]);
     }
 
+
     public function addValid()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
-
-                $articleModel = new ArticlesModel;
-                $validation = new Validation;
-                $post = new Post;
-                $file = new Files;
-
-                $allPosts = $post->getAllPost();
-
-                $verif = $validation->addArticleValid($allPosts);
+                $verif = $this->validation->addArticleValid($this->allPosts);
 
                 if ($verif !== true) {
-
                     $this->alert('danger', $verif);
                     header('Location: /articles/add');
-                } else {
-
-                    $img = new ImageTreatment;
-                    $articleModel = new ArticlesModel;
-
-                    $imgUrl = $img->addFile($file->getFiles('img'), 'uploads/');
-                    $slug = $this->generateSlug(strip_tags($post->getPost('titre')));
-
-                    $articleModel->addArticle(strip_tags($post->getPost('titre')), strip_tags($post->getPost('chapo')), strip_tags($post->getPost('contenu')), $imgUrl, $slug, strip_tags($post->getPost('categorie')), $user['id']);
-
-                    $this->alert('success', 'L\'article a bien été ajouté');
-                    header('Location: /');
                 }
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+
+                $imgUrl = $this->imgTreatment->addFile($this->files->getFiles('img'), 'uploads/');
+                $slug = $this->generateSlug(htmlspecialchars($this->post->getPost('titre')));
+
+                $this->articleModel->addArticle(htmlspecialchars($this->post->getPost('titre')), htmlspecialchars($this->post->getPost('chapo')), htmlspecialchars($this->post->getPost('contenu')), $imgUrl, $slug, htmlspecialchars($this->post->getPost('categorie')), $this->userSession['id']);
+
+                $this->alert('success', 'L\'article a bien été ajouté');
                 header('Location: /');
+                return;
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+            header('Location: /');
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
+
 
     public function add()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
-                $categories = new CategorieModel;
-                $array = $categories->getAllCategories();
+                $array = $this->categorieModel->getAllCategories();
 
                 $newArray = [];
                 foreach ($array as $a) {
                     $newArray[$a->id_categorie] =  $a->type;
                 }
 
-                // On créer le formulaire
-                $form = new Form;
-
-                $form->debutForm('post', '/articles/addValid', ["enctype" => "multipart/form-data"])
+                $this->form->debutForm('post', '/articles/addValid', ["enctype" => "multipart/form-data"])
                     ->ajoutLabelFor('categorie', 'Categorie :')
                     ->ajoutSelect('categorie', $newArray, ['class' => 'form-control mb-3', 'id' => 'categorie', 'required' => 'true'])
                     ->ajoutLabelFor('titre', 'Titre :')
@@ -202,52 +188,39 @@ class ArticlesController extends Controller
                     ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                $this->render('articles/add', [
-                    'form' => $form->create()
+                return $this->render('articles/add', [
+                    'form' => $this->form->create()
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
+            header('Location: /');
         }
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
+
 
     public function update($id)
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
-
-                $articleModel = new ArticlesModel;
-                $data = $articleModel->getArticleById($id);
+                $data = $this->articleModel->getArticleById($id);
 
                 if ($data === null) {
                     header('Location: /articles/all');
                 }
 
-                $categories = new CategorieModel;
-                $array = $categories->getAllCategories();
+                $array = $this->categorieModel->getAllCategories();
 
                 $newArray = [];
                 foreach ($array as $a) {
                     $newArray[$a->id_categorie] =  $a->type;
                 }
 
-
-
-                // On créer le formulaire
-                $form = new Form;
-
-                $form->debutForm('post', "/articles/updateValid/$id", ["enctype" => "multipart/form-data"])
+                $this->form->debutForm('post', "/articles/updateValid/$id", ["enctype" => "multipart/form-data"])
                     ->ajoutLabelFor('categorie', 'Categorie :')
                     ->ajoutSelect('categorie', $newArray, ['class' => 'form-control mb-3', 'id' => 'categorie', 'required' => 'true'], [$data->id_categorie, $data->type])
                     ->ajoutLabelFor('titre', 'Titre :')
@@ -261,158 +234,139 @@ class ArticlesController extends Controller
                     ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                $this->render('articles/update', [
-                    'form' => $form->create()
+                return $this->render('articles/update', [
+                    'form' => $this->form->create()
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
+            header('Location: /');
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
+
 
     public function updateValid($id)
     {
-        $session = new Session;
-        $post = new Post;
-        $file = new Files;
-        $img = new ImageTreatment;
-        $articleModel = new ArticlesModel;
 
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            if ($user['role'] === "ADMIN") {
-
-                $data = $articleModel->getArticleById($id);
+                $data = $this->articleModel->getArticleById($id);
 
                 if ($data === null) {
+                    $this->alert('danger', 'L\'article que vous cherchez n\'existe pas.');
                     header('Location: /articles/all');
                 }
 
-                if ($file->getFiles('img')['size'] > 0) {
+                if ($this->files->getFiles('img')['size'] > 0) {
                     unlink("uploads/$data->img");
-                    $imgUrl = $img->addFile($file->getFiles('img'), 'uploads/');
+                    $imgUrl = $this->imgTreatment->addFile($this->files->getFiles('img'), 'uploads/');
                 } else {
                     $imgUrl = $data->img;
                 }
 
-                $slug = $this->generateSlug(strip_tags($post->getPost('titre')));
+                $slug = $this->generateSlug(htmlspecialchars($this->post->getPost('titre')));
 
-                $articleModel->updateArticle($id, strip_tags($post->getPost('titre')), strip_tags($post->getPost('chapo')), strip_tags($post->getPost('contenu')), $imgUrl, $slug, strip_tags($post->getPost('categorie')));
+                $this->articleModel->updateArticle($id, htmlspecialchars($this->post->getPost('titre')), htmlspecialchars($this->post->getPost('chapo')), htmlspecialchars($this->post->getPost('contenu')), $imgUrl, $slug, htmlspecialchars($this->post->getPost('categorie')));
 
                 $this->alert('success', 'L\'article a bien été modifié !');
                 header("Location: /articles/unique/$slug");
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
+                return;
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
+            header('Location: /');
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
+
 
     public function delete($id)
     {
-        $session = new Session;
-        $user = $session->getSession('user');
-
         // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+        if ($this->userSession !== null) {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
+            if ($this->userSession['role'] === "ADMIN") {
                 // On créer le formulaire
-                $form = new Form;
-
-                $form->debutForm('post', "/articles/deleteValid/$id", ["enctype" => "multipart/form-data"])
-                    ->ajoutInput('hidden', 'token', ["value" => $user['token']])
+                $this->form->debutForm('post', "/articles/deleteValid/$id", ["enctype" => "multipart/form-data"])
+                    ->ajoutInput('hidden', 'token', ["value" => $this->userSession['token']])
                     ->ajoutBouton("Supprimer", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                $this->render('articles/delete', [
-                    'form' => $form->create()
+                return $this->render('articles/delete', [
+                    'form' => $this->form->create()
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
+            header('Location: /');
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
+
 
     public function deleteValid($id)
     {
-        $session = new Session;
-        $user = $session->getSession('user');
-        $post = new Post;
+        if ($this->userSession === null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
+                if ($this->userSession['token'] === $this->post->getPost('token')) {
 
-            if ($user['role'] === "ADMIN") {
-
-                if ($user['token'] === $post->getPost('token')) {
-                    $articleModel = new ArticlesModel;
-                    $data = $articleModel->getArticleById($id);
+                    $data = $this->articleModel->getArticleById($id);
                     $img = "uploads/$data->img";
 
                     if (file_exists($img)) {
 
                         unlink($img);
-                        $articleModel->deleteArticle($id);
+                        $this->articleModel->deleteArticle($id);
                         $this->alert('success', 'L\'article a été supprimé !');
                         header('Location: /articles/all');
-                    } else {
-                        // si utilisateur n'est pas connecté on le redirige
-                        $this->alert('danger', 'L\'image n\'existe pas');
-                        header('Location: /');
+                        return;
                     }
-                } else {
                     // si utilisateur n'est pas connecté on le redirige
-                    $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+                    $this->alert('danger', 'L\'image n\'existe pas');
                     header('Location: /');
                 }
-            } else {
                 // si utilisateur n'est pas connecté on le redirige
                 $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
                 header('Location: /');
             }
+            // si utilisateur n'est pas admin on le redirige
+            $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
+            header('Location: /');
         }
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
 
 
     public function addCommentaire($id)
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession === null) {
+            $article = $this->articleModel->getArticleById($id);
 
-        $articleModel = new ArticlesModel;
+            if ($article !== null) {
+                $slug = $article->slug;
+            }
 
-        $article = $articleModel->getArticleById($id);
+            $this->commentaireModel->addCommentaire($this->post->getPost('commentaire'), $this->userSession['id'], $id);
 
-        if($article !== null){
-            $slug = $article->slug;
+            // si utilisateur n'est pas connecté on le redirige
+            $this->alert('success', 'Votre commentaire à été publié, un administrateur le validera dans les 48h.');
+            header("Location: /articles/unique/$slug");
         }
-
-        $commentaireModel = new CommentaireModel;
-
-        $commentaireModel->addCommentaire($_POST['commentaire'], $user['id'], $id);
-
         // si utilisateur n'est pas connecté on le redirige
-        $this->alert('success', 'Votre commentaire à été publié, un administrateur le validera dans les 48h.');
-        header("Location: /articles/unique/$slug");
+        $this->alert('danger', 'Vous n\'êtes pas connecté.');
+        header('Location: /');
     }
 }

@@ -22,7 +22,7 @@
 
                 <?php foreach ($articles as $a) : ?>
                     <tr>
-                        <th scope="row"><?= $a->getId_article() ?></th>
+                        <th scope="row"><?= $a->getIdArticle() ?></th>
                         <td>
                             <img src="/uploads/<?= $a->getImg() ?>" alt="" width="45px">
                         </td>
@@ -30,10 +30,10 @@
                         <td><?= substr($a->getChapo(), 0, 124) ?>...</td>
                         <td><?= $a->getCategorie() ?></td>
                         <td><?= $a->getAuteur() ?></td>
-                        <td><?= date('d/m/Y', strtotime($a->getCreated_at())) ?></td>
+                        <td><?= date('d/m/Y', strtotime($a->getCreatedAt())) ?></td>
                         <td>
-                            <a class="btn btn-warning w-100 mb-1" href="/articles/update/<?= $a->getId_article() ?>">Modifier</a>
-                            <a class="btn btn-danger w-100 mt-1" href="/articles/delete/<?= $a->getId_article() ?>">Supprimer</a>
+                            <a class="btn btn-warning w-100 mb-1" href="/articles/update/<?= $a->getIdArticle() ?>">Modifier</a>
+                            <a class="btn btn-danger w-100 mt-1" href="/articles/delete/<?= $a->getIdArticle() ?>">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

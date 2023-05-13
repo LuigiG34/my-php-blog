@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
 function activer() {
     let xmlhttp = new XMLHttpRequest;
 
-    xmlhttp.open('GET', '/admin/activeCommentaire/' + this.dataset.id);
+    xmlhttp.open('GET', '/admin/activeUtilisateur/' + this.dataset.id);
 
     xmlhttp.send();
 }

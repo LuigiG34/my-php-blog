@@ -2,47 +2,67 @@
 
 namespace App\Entity;
 
+/**
+ * StatutCommentaire Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class StatutCommentaire
 {
-    protected $id_statut_commentaire;
-    protected $type;
+    protected string $idStatutCommentaire;
+    protected string $type;
+
+
+    /**
+     * Get the value of idStatutCommentaire
+     * 
+     * @return string
+     */ 
+    public function getIdStatutCommentaire(): string
+    {
+        return $this->idStatutCommentaire;
+    }
+
+
+    /**
+     * Set the value of idStatutCommentaire
+     * 
+     * @param string $idStatutCommentaire
+     *
+     * @return self
+     */ 
+    public function setIdStatutCommentaire(string $idStatutCommentaire): self
+    {
+        $this->idStatutCommentaire = $idStatutCommentaire;
+
+        return $this;
+    }
 
     /**
      * Get the value of type
+     * 
+     * @return string
      */ 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
      * Set the value of type
+     * 
+     * @param string $type
      *
      * @return  self
      */ 
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of id_statut_commentaire
-     */ 
-    public function getId_statut_commentaire()
-    {
-        return $this->id_statut_commentaire;
-    }
-
-    /**
-     * Set the value of id_statut_commentaire
-     *
-     * @return  self
-     */ 
-    public function setId_statut_commentaire($id_statut_commentaire)
-    {
-        $this->id_statut_commentaire = $id_statut_commentaire;
 
         return $this;
     }

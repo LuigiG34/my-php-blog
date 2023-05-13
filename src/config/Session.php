@@ -3,50 +3,64 @@
 namespace App\Config;
 
 /**
- * Class Session for $_SESSION
+ * Session Config file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
  */
 class Session
 {
-    private $session;
+    private array $session;
 
     public function __construct()
     {
         $this->session = $_SESSION;
     }
 
+
     /**
-     * Get the value of session
+     * getSession function
+     * 
+     * Get the $_SESSION with its name
      *
      * @param string $name
+     * 
+     * @return mixed
      */
-    public function getSession($name)
+    public function getSession(string $name): mixed
     {
-        if(isset($this->session[$name])) {
+        if (isset($this->session[$name])) {
             return $this->session[$name];
-        }else{
+        } else {
             return null;
         }
     }
 
 
     /**
-     * Set the value of session
-     * 
+     * setSession function
+     *
      * @param string $name
-     * @param array|string $value
+     * @param mixed $value
+     * @return void
      */
-    public function setSession($name, $value)
+    public function setSession(string $name, mixed $value): void
     {
         $this->session[$name] = $value;
     }
 
 
     /**
-     * Unset session
+     * unsetSession function
      *
      * @param string $name
+     * @return void
      */
-    public function unsetSession($name)
+    public function unsetSession(string $name): void
     {
         unset($this->session[$name]);
     }

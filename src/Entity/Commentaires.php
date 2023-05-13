@@ -2,195 +2,260 @@
 
 namespace App\Entity;
 
+use DateTime;
+
+/**
+ * Commentaires Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Commentaires
 {
-    protected $id_commentaire;
-    protected $contenu;
-    protected $created_at;
-    protected $id_article;
-    protected $article;
-    protected $auteur;
-    protected $statut;
-    protected $id_admin;
-    protected $id_statut_commentaire;
+    protected string $idCommentaire;
+    protected string $contenu;
+    protected DateTime|string $createdAt;
+    protected string $idArticle;
+    protected string $article;
+    protected string $auteur;
+    protected string $statut;
+    protected string $idAdmin;
+    protected string $idStatutCommentaire;
 
 
     /**
-     * Get the value of id_admin
+     * Get the value of idCommentaire
+     * 
+     * @return string
      */ 
-    public function getId_admin()
+    public function getIdCommentaire(): string
     {
-        return $this->id_admin;
+        return $this->idCommentaire;
     }
 
+
     /**
-     * Set the value of id_admin
+     * Set the value of idCommentaire
+     * 
+     * @param string $idCommentaire
      *
-     * @return  self
+     * @return self
      */ 
-    public function setId_admin($id_admin)
+    public function setIdCommentaire(string $idCommentaire): self
     {
-        $this->id_admin = $id_admin;
+        $this->idCommentaire = $idCommentaire;
 
         return $this;
     }
 
-    /**
-     * Get the value of id_article
-     */ 
-    public function getId_article()
-    {
-        return $this->id_article;
-    }
-
-    /**
-     * Set the value of id_article
-     *
-     * @return  self
-     */ 
-    public function setId_article($id_article)
-    {
-        $this->id_article = $id_article;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of created_at
-     */ 
-    public function getCreated_at()
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set the value of created_at
-     *
-     * @return  self
-     */ 
-    public function setCreated_at($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
 
     /**
      * Get the value of contenu
+     * 
+     * @return string
      */ 
-    public function getContenu()
+    public function getContenu(): string
     {
         return $this->contenu;
     }
 
+
     /**
      * Set the value of contenu
+     * 
+     * @param string $contenu Content of comment
      *
-     * @return  self
+     * @return self
      */ 
-    public function setContenu($contenu)
+    public function setContenu(string $contenu): self
     {
         $this->contenu = $contenu;
 
         return $this;
     }
 
-    /**
-     * Get the value of id_commentaire
-     */ 
-    public function getId_commentaire()
-    {
-        return $this->id_commentaire;
-    }
 
     /**
-     * Set the value of id_commentaire
-     *
-     * @return  self
+     * Get the value of createdAt
+     * 
+     * @return DateTime|string
      */ 
-    public function setId_commentaire($id_commentaire)
+    public function getCreatedAt(): DateTime|string
     {
-        $this->id_commentaire = $id_commentaire;
+        return $this->createdAt;
+    }
+
+
+    /**
+     * Set the value of createdAt
+     * 
+     * @param DateTime|string $createdAt Date of comments creation 
+     *
+     * @return self
+     */ 
+    public function setCreatedAt(DateTime|string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get the value of auteur
-     */ 
-    public function getAuteur()
-    {
-        return $this->auteur;
-    }
 
     /**
-     * Set the value of auteur
-     *
-     * @return  self
+     * Get the value of idArticle
+     * 
+     * @return string
      */ 
-    public function setAuteur($auteur)
+    public function getIdArticle(): string
     {
-        $this->auteur = $auteur;
+        return $this->idArticle;
+    }
+
+
+    /**
+     * Set the value of idArticle
+     *
+     * @param string $idArticle
+     * 
+     * @return self
+     */ 
+    public function setIdArticle(string $idArticle): self
+    {
+        $this->idArticle = $idArticle;
 
         return $this;
     }
 
-    /**
-     * Get the value of statut
-     */ 
-    public function getStatut()
-    {
-        return $this->statut;
-    }
-
-    /**
-     * Set the value of statut
-     *
-     * @return  self
-     */ 
-    public function setStatut($statut)
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
 
     /**
      * Get the value of article
+     * 
+     * @return string
      */ 
-    public function getArticle()
+    public function getArticle(): string
     {
         return $this->article;
     }
 
+
     /**
      * Set the value of article
+     * 
+     * @param string $article Title of article
      *
-     * @return  self
+     * @return self
      */ 
-    public function setArticle($article)
+    public function setArticle(string $article): self
     {
         $this->article = $article;
 
         return $this;
     }
 
-    /**
-     * Get the value of id_statut_commentaire
-     */ 
-    public function getId_statut_commentaire()
-    {
-        return $this->id_statut_commentaire;
-    }
 
     /**
-     * Set the value of id_statut_commentaire
-     *
-     * @return  self
+     * Get the value of auteur
+     * 
+     * @return string
      */ 
-    public function setId_statut_commentaire($id_statut_commentaire)
+    public function getAuteur(): string
     {
-        $this->id_statut_commentaire = $id_statut_commentaire;
+        return $this->auteur;
+    }
+
+
+    /**
+     * Set the value of auteur
+     * 
+     * @param string $auteur Author of comment
+     *
+     * @return self
+     */ 
+    public function setAuteur(string $auteur): self
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of statut
+     * 
+     * @return string
+     */ 
+    public function getStatut(): string
+    {
+        return $this->statut;
+    }
+
+
+    /**
+     * Set the value of statut
+     * 
+     * @param string $statut Status of the comment
+     *
+     * @return self
+     */ 
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of idAdmin
+     * 
+     * @return string
+     */ 
+    public function getIdAdmin(): string
+    {
+        return $this->idAdmin;
+    }
+
+    
+    /**
+     * Set the value of idAdmin
+     * 
+     * @param string $idAdmin
+     *
+     * @return self
+     */ 
+    public function setIdAdmin(string $idAdmin): self
+    {
+        $this->idAdmin = $idAdmin;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of idStatutCommentaire
+     * 
+     * @return string
+     */ 
+    public function getIdStatutCommentaire(): string
+    {
+        return $this->idStatutCommentaire;
+    }
+
+
+    /**
+     * Set the value of idStatutCommentaire
+     * 
+     * @param string $idStatutCommentaire
+     *
+     * @return self
+     */ 
+    public function setIdStatutCommentaire(string $idStatutCommentaire): self
+    {
+        $this->idStatutCommentaire = $idStatutCommentaire;
 
         return $this;
     }

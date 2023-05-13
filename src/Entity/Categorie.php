@@ -2,68 +2,96 @@
 
 namespace App\Entity;
 
+/**
+ * Categorie Entity file
+ *
+ * PHP Version 7.4
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Categorie
 {
-    protected $id_categorie;
-    protected $type;
-    protected $description;
+    protected string $idCategorie;
+    protected string $type;
+    protected string $description;
+
 
     /**
      * Get the value of description
-     */ 
-    public function getDescription()
+     * 
+     * @return string
+     */
+    public function getDescription(): string
     {
         return $this->description;
     }
 
+
     /**
      * Set the value of description
      *
-     * @return  self
-     */ 
-    public function setDescription($description)
+     * @param string $description contenu du commentaire
+     * 
+     * @return self
+     */
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
+
     /**
      * Get the value of type
-     */ 
-    public function getType()
+     * 
+     * @return string
+     */
+    public function getType(): string
     {
         return $this->type;
     }
 
+
     /**
      * Set the value of type
+     * 
+     * @param string $type Type of category
      *
-     * @return  self
-     */ 
-    public function setType($type)
+     * @return self
+     */
+    public function setType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get the value of id_categorie
-     */ 
-    public function getId_categorie()
-    {
-        return $this->id_categorie;
-    }
 
     /**
-     * Set the value of id_categorie
-     *
-     * @return  self
-     */ 
-    public function setId_categorie($id_categorie)
+     * Get the value of idCategorie
+     * 
+     * @return string
+     */
+    public function getIdCategorie(): string
     {
-        $this->id_categorie = $id_categorie;
+        return $this->idCategorie;
+    }
+
+
+    /**
+     * Set the value of idCategorie
+     * 
+     * @param string $idCategorie
+     *
+     * @return self
+     */
+    public function setIdCategorie(string $idCategorie): self
+    {
+        $this->idCategorie = $idCategorie;
 
         return $this;
     }

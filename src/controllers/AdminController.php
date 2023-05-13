@@ -12,86 +12,97 @@ use App\Model\UtilisateursModel;
 
 class AdminController extends Controller
 {
-    /**
-     * Appelle contact
-     */
+    protected $session;
+    protected $userSession;
+    protected $userModel;
+    protected $articleModel;
+    protected $commentaireModel;
+
+
+    public function __construct()
+    {
+        $this->session = new Session;
+        $this->userSession = $this->session->getSession('user');
+        $this->userModel = new UtilisateursModel;
+        $this->articleModel = new ArticlesModel;
+        $this->commentaireModel = new CommentaireModel;
+    }
+
+
     public function index()
     {
-        $this->render('admin/index');
+        if ($this->userSession !== null) {
+
+            if ($this->userSession['role'] === "ADMIN") {
+                
+                return $this->render('admin/index');
+            }
+        }
+
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
     }
+
 
     public function users()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+        if ($this->userSession !== null) {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            if ($user['role'] === "ADMIN") {
-
-                $userModel = new UtilisateursModel;
-
-                $users = $userModel->getAllUsers();
-
+                $users = $this->userModel->getAllUsers();
                 $array = [];
 
                 if ($users !== null) {
+
                     foreach ($users as $u) {
+
                         if ($u->role === "USER") {
+
                             $entity = new Utilisateurs;
-                            $entity->setId_utilisateur($u->id_utilisateur)
+
+                            $entity->setIdUtilisateur($u->id_utilisateur)
                                 ->setPrenom($u->prenom)
                                 ->setEmail($u->email)
-                                ->setCreated_at($u->created_at)
-                                ->setRole($u->role);
+                                ->setCreatedAt($u->created_at)
+                                ->setRole($u->role)
+                                ->setIsActif($u->is_actif);
 
                             $array[] = $entity;
                         }
                     }
                 }
 
-                $this->render('admin/users', [
+                return $this->render('admin/users', [
                     'users' => $array
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
         }
+
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
     }
+
 
     public function articles()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
-
-                $articleModel = new ArticlesModel;
+                $array = $this->articleModel->getAllArticles();
                 $articles = [];
 
-                $array = $articleModel->getAllArticles();
-
                 if ($array !== null) {
+
                     foreach ($array as $article) {
+
                         $entity = new Articles;
-                        $entity->setId_article($article->id_article)
+                        $entity->setIdArticle($article->id_article)
                             ->setTitre($article->titre)
                             ->setChapo($article->chapo)
-                            ->setCreated_at($article->created_at)
+                            ->setCreatedAt($article->created_at)
                             ->setImg($article->img)
                             ->setCategorie($article->type)
                             ->setAuteur($article->prenom);
@@ -100,96 +111,103 @@ class AdminController extends Controller
                     }
                 }
 
-                $this->render('admin/articles', [
+                return $this->render('admin/articles', [
                     'articles' => $articles
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
         }
+
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
     }
+
 
     public function comments()
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
-
-            if ($user['role'] === "ADMIN") {
-
-                $commentairesModel = new CommentaireModel;
-
-                $data = $commentairesModel->gettAllCommentaires();
+                $data = $this->commentaireModel->getAllCommentaires();
                 $array = [];
 
-                if($data !== null)
-                {
-                    foreach($data as $d){
+                if ($data !== null) {
+
+                    foreach ($data as $d) {
+
                         $entity = new Commentaires;
                         $entity->setArticle($d->titre)
-                        ->setContenu($d->contenu)
-                        ->setStatut($d->type)
-                        ->setAuteur($d->email)
-                        ->setId_statut_commentaire($d->id_statut_commentaire)
-                        ->setId_commentaire($d->id_commentaire);
+                            ->setContenu($d->contenu)
+                            ->setStatut($d->type)
+                            ->setAuteur($d->email)
+                            ->setIdStatutCommentaire($d->id_statut_commentaire)
+                            ->setIdCommentaire($d->id_commentaire);
 
                         $array[] = $entity;
                     }
                 }
 
-                $this->render('admin/comments', [
+                return $this->render('admin/comments', [
                     'comments' => $array
                 ]);
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
         }
+
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
     }
+
 
     public function activeCommentaire($id)
     {
-        $session = new Session;
-        $user = $session->getSession('user');
+        if ($this->userSession !== null) {
 
-        // si utilisateur n'est pas connecté on le redirige
-        if ($user === null) {
+            if ($this->userSession['role'] === "ADMIN") {
 
-            // si utilisateur n'est pas connecté on le redirige
-            header('Location: /');
-        } else {
+                $data = $this->commentaireModel->getCommentaireById($id);
 
-            if ($user['role'] === "ADMIN") {
+                if ($data !== null) {
 
-                $commentairesModel = new CommentaireModel;
-
-                $data = $commentairesModel->getCommentaireById($id);
-
-
-                if($data !== null)
-                {
-                    if($data->id_statut_commentaire === "1"){
-                        $commentairesModel->updateStatus($id, 2);
+                    if ($data->id_statut_commentaire === "1") {
+                        return $this->commentaireModel->updateStatus($id, 2);
                     }
-                    if($data->id_statut_commentaire === "2"){
-                        $commentairesModel->updateStatus($id, 1);
+
+                    if ($data->id_statut_commentaire === "2") {
+                        return $this->commentaireModel->updateStatus($id, 1);
                     }
                 }
-
-            } else {
-                // si utilisateur n'est pas connecté on le redirige
-                $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
-                header('Location: /');
             }
         }
+
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
+    }
+
+
+    public function activeUtilisateur($id)
+    {
+        if ($this->userSession !== null) {
+
+            if ($this->userSession['role'] === "ADMIN") {
+
+                $data = $this->userModel->getUserById($id);
+
+                if ($data !== null) {
+
+                    if ($data->is_actif === "1") {
+                        return $this->userModel->updateActif($id, 0);
+                    }
+
+                    if ($data->is_actif === "0") {
+                        return $this->userModel->updateActif($id, 1);
+                    }
+                }
+            }
+        }
+
+        // si utilisateur n'est pas connecté on le redirige
+        $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
+        header('Location: /');
     }
 }

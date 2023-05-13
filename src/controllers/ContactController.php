@@ -7,19 +7,27 @@ use App\Core\Form;
 use App\Core\Mailer;
 use App\Validation\Validation;
 
-/**
- * ContactController
- */
+
 class ContactController extends Controller
 {
-    /**
-     * Appelle contact
-     */
+    protected $mailer;
+    protected $post;
+    protected $form;
+    protected $validation;
+
+    
+    public function __construct()
+    {
+        $this->mailer = new Mailer;
+        $this->post = new Post;
+        $this->form = new Form;
+        $this->validation = new Validation;
+    }
+
+
     public function index()
     {
-        $form = new Form;
-
-        $form->debutForm('post', '/contact/valid')
+        $this->form->debutForm('post', '/contact/valid')
         ->ajoutLabelFor('prenom', 'Prénom :')
         ->ajoutInput('text', 'prenom', ['class' => 'form-control mb-3', 'id' => 'prenom', 'required' => 'true'])
         ->ajoutLabelFor('nom', 'Nom :')
@@ -32,33 +40,31 @@ class ContactController extends Controller
         ->ajoutBouton("Envoyer", ['class' => 'btn btn-primary w-100 mt-3'])
         ->finForm();
 
-        $this->render('contact/index', [
-            'form' => $form->create()
+        return $this->render('contact/index', [
+            'form' => $this->form->create()
         ]);
     }
 
+    
     public function valid()
     {
-        $mailer = new Mailer;
-        $post = new Post;
-        $validation = new Validation;
 
-        $from = strip_tags($post->getPost('prenom')) . ' ' . strip_tags($post->getPost('nom'));
-        $to = strip_tags($post->getPost('email'));
-        $description = strip_tags($post->getPost('message'));
+        $from = strip_tags($this->post->getPost('prenom')) . ' ' . strip_tags($this->post->getPost('nom'));
+        $email = strip_tags($this->post->getPost('email'));
+        $description = strip_tags($this->post->getPost('message'));
 
-        $valid = $validation->contactValid($to, $post->getAllPost(), $description);
+        $valid = $this->validation->contactValid($email, $this->post->getAllPost(), $description);
 
         if($valid !== true)
         {
             $this->alert('danger', $valid);
             header('Location: /contact');
-        }else{
-            $mailer->sendRequest($from, $description, $to);
-            $mailer->sendConfirmationContact($from, $to);
-    
-            $this->alert('success', 'Votre message a bien été envoyé !');
-            header('Location: /contact');
         }
+
+        $this->mailer->sendRequest($from, $description, $email);
+        $this->mailer->sendConfirmationContact($from, $email);
+    
+        $this->alert('success', 'Votre message a bien été envoyé !');
+        header('Location: /contact');
     }
 }

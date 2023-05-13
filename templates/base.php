@@ -48,20 +48,20 @@
 							<a class="nav-link" href="/contact">Contact</a>
 						</li>
 
-						<?php if(isset($_SESSION['user'])) : ?>
-						<li class="nav-item">
-							<a class="nav-link" href="/utilisateurs/profil">Mon Profil</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/utilisateurs/logout">Se déconnecter</a>
-						</li>
+						<?php if (isset($_SESSION['user'])) : ?>
+							<li class="nav-item">
+								<a class="nav-link" href="/utilisateurs/profil">Mon Profil</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/utilisateurs/logout">Se déconnecter</a>
+							</li>
 						<?php else : ?>
-						<li class="nav-item">
-							<a class="nav-link" href="/utilisateurs/signup">S'inscrire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/utilisateurs/signin">Se connecter</a>
-						</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/utilisateurs/signup">S'inscrire</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/utilisateurs/signin">Se connecter</a>
+							</li>
 						<?php endif; ?>
 					</ul>
 				</div>
@@ -94,7 +94,7 @@
 					<a class="small" href="#!">RGPD</a>
 					<span class="mx-1">&middot;</span>
 					<a class="small" href="/contact">Contact</a>
-					<?php if(isset($_SESSION['user']) && $_SESSION['user']['role'] === "ADMIN") : ?>
+					<?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === "ADMIN") : ?>
 						<span class="mx-1">&middot;</span>
 						<a class="small" href="/admin">Administration</a>
 					<?php endif; ?>
