@@ -42,15 +42,16 @@ class AdminController extends Controller
     /**
      * index function
      *
-     * @return mixed
+     * @return void
      */
-    public function index(): mixed
+    public function index(): void
     {
         if ($this->userSession !== null) {
 
             if ($this->userSession['role'] === "ADMIN") {
                 
-                return $this->render('admin/index');
+                $this->render('admin/index');
+                return;
             }
         }
 
@@ -62,9 +63,9 @@ class AdminController extends Controller
     /**
      * users function
      *
-     * @return mixed
+     * @return void
      */
-    public function users(): mixed
+    public function users(): void
     {
 
         if ($this->userSession !== null) {
@@ -94,9 +95,10 @@ class AdminController extends Controller
                     }
                 }
 
-                return $this->render('admin/users', [
+                $this->render('admin/users', [
                     'users' => $array
                 ]);
+                return;
             }
         }
 
@@ -108,9 +110,9 @@ class AdminController extends Controller
     /**
      * articles function
      *
-     * @return mixed
+     * @return void
      */
-    public function articles(): mixed
+    public function articles(): void
     {
         if ($this->userSession !== null) {
 
@@ -136,9 +138,10 @@ class AdminController extends Controller
                     }
                 }
 
-                return $this->render('admin/articles', [
+                $this->render('admin/articles', [
                     'articles' => $articles
                 ]);
+                return;
             }
         }
 
@@ -150,9 +153,9 @@ class AdminController extends Controller
     /**
      * comments function
      *
-     * @return mixed
+     * @return void
      */
-    public function comments(): mixed
+    public function comments(): void
     {
         if ($this->userSession !== null) {
 
@@ -177,9 +180,10 @@ class AdminController extends Controller
                     }
                 }
 
-                return $this->render('admin/comments', [
+                $this->render('admin/comments', [
                     'comments' => $array
                 ]);
+                return;
             }
         }
 

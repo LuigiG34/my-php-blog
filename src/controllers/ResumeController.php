@@ -17,11 +17,12 @@ class ResumeController extends Controller
     /**
      * index function
      *
-     * @return mixed
+     * @return void
      */
-    public function index(): mixed
+    public function index(): void
     {
-        return $this->render('resume/index');
+        $this->render('resume/index');
+        return;
     }
     
 }

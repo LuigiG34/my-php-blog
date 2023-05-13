@@ -37,9 +37,9 @@ class ContactController extends Controller
     /**
      * index function
      *
-     * @return mixed
+     * @return void
      */
-    public function index(): mixed
+    public function index(): void
     {
         $this->form->debutForm('post', '/contact/valid')
         ->ajoutLabelFor('prenom', 'Prénom :')
@@ -54,9 +54,10 @@ class ContactController extends Controller
         ->ajoutBouton("Envoyer", ['class' => 'btn btn-primary w-100 mt-3'])
         ->finForm();
 
-        return $this->render('contact/index', [
+        $this->render('contact/index', [
             'form' => $this->form->create()
         ]);
+        return;
     }
 
     
