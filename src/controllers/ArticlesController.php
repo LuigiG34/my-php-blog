@@ -166,11 +166,12 @@ class ArticlesController extends Controller
 
             if ($this->userSession['role'] === "ADMIN") {
 
-                $verif = $this->validation->addArticleValid($this->allPosts);
+                $verif = $this->validation->addArticleValid($this->allPosts, $this->post->getPost('chapo'), $this->post->getPost('titre'), $this->post->getPost('contenu'));
 
                 if ($verif !== true) {
                     $this->alert('danger', $verif);
                     header('Location: /articles/add');
+                    return;
                 }
 
                 $imgUrl = $this->imgTreatment->addFile($this->files->getFiles('img'), 'uploads/');
@@ -312,6 +313,7 @@ class ArticlesController extends Controller
                 if ($data === null) {
                     $this->alert('danger', 'L\'article que vous cherchez n\'existe pas.');
                     header('Location: /articles/all');
+                    return;
                 }
 
                 if ($this->files->getFiles('img')['size'] > 0) {
@@ -425,8 +427,17 @@ class ArticlesController extends Controller
      */
     public function addCommentaire(string $id): void
     {
-        if ($this->userSession === null) {
+        if ($this->userSession !== null) {
+
             $article = $this->articleModel->getArticleById($id);
+
+            $verif = $this->validation->addCommentValid($this->post->getPost('commentaire'));
+
+            if($verif !== true) {
+                $this->alert('danger', $verif);
+                header("Location: /articles/unique/$article->slug");
+                return;
+            }
 
             if ($article !== null) {
                 $slug = $article->slug;
