@@ -61,9 +61,9 @@ class ArticlesController extends Controller
      *
      * @param string $slug
      * 
-     * @return mixed
+     * @return void
      */
-    public function unique(string $slug): mixed
+    public function unique(string $slug): void
     {
         $article = $this->articleModel->getArticleBySlug($slug);
 
@@ -103,17 +103,20 @@ class ArticlesController extends Controller
                 ->finForm();
 
             if ($this->userSession === null) {
-                return $this->render('articles/article-unique', [
+                $this->render('articles/article-unique', [
                     'article' => $entity,
                     'commentaires' => $array
                 ]);
+
+                return;
             }
 
-            return $this->render('articles/article-unique', [
+            $this->render('articles/article-unique', [
                 'article' => $entity,
                 'commentaires' => $array,
                 'form' => $this->form->create()
             ]);
+            return;
         }
         $this->alert('danger', 'L\'article que vous cherchez n\'existe pas.');
         header('Location: /articles/all');
@@ -123,9 +126,9 @@ class ArticlesController extends Controller
     /**
      * all function
      *
-     * @return mixed
+     * @return void
      */
-    public function all(): mixed
+    public function all(): void
     {
         $array = $this->articleModel->getAllArticles();
         $articles = [];
@@ -145,9 +148,10 @@ class ArticlesController extends Controller
             $articles[] = $entity;
         }
 
-        return $this->render('articles/articles-archive', [
+        $this->render('articles/articles-archive', [
             'articles' => $articles
         ]);
+        return;
     }
 
 
@@ -191,9 +195,9 @@ class ArticlesController extends Controller
     /**
      * add function
      *
-     * @return mixed
+     * @return void
      */
-    public function add(): mixed
+    public function add(): void
     {
         if ($this->userSession !== null) {
 
@@ -220,9 +224,10 @@ class ArticlesController extends Controller
                     ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                return $this->render('articles/add', [
+                $this->render('articles/add', [
                     'form' => $this->form->create()
                 ]);
+                return;
             }
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
@@ -238,9 +243,9 @@ class ArticlesController extends Controller
      *
      * @param string $id
      * 
-     * @return mixed
+     * @return void
      */
-    public function update(string $id): mixed
+    public function update(string $id): void
     {
         if ($this->userSession !== null) {
 
@@ -273,9 +278,10 @@ class ArticlesController extends Controller
                     ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                return $this->render('articles/update', [
+                $this->render('articles/update', [
                     'form' => $this->form->create()
                 ]);
+                return;
             }
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
@@ -337,9 +343,9 @@ class ArticlesController extends Controller
      * delete function
      *
      * @param string $id
-     * @return mixed
+     * @return void
      */
-    public function delete(string $id): mixed
+    public function delete(string $id): void
     {
         // si utilisateur n'est pas connecté on le redirige
         if ($this->userSession !== null) {
@@ -351,9 +357,10 @@ class ArticlesController extends Controller
                     ->ajoutBouton("Supprimer", ['class' => 'btn btn-primary w-100 mt-3'])
                     ->finForm();
 
-                return $this->render('articles/delete', [
+                $this->render('articles/delete', [
                     'form' => $this->form->create()
                 ]);
+                return;
             }
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');

@@ -18,33 +18,36 @@ class ErreurController extends Controller
     /**
      * erreur401 function
      *
-     * @return mixed
+     * @return void
      */
-    public function erreur401(): mixed
+    public function erreur401(): void
     {
-        return $this->render('errors/401', [], 'erreur');
+        $this->render('errors/401', [], 'erreur');
+        return;
     }
 
 
     /**
      * erreur404 function
      *
-     * @return mixed
+     * @return void
      */
-    public function erreur404(): mixed
+    public function erreur404(): void
     {
-        return $this->render('errors/404', [], 'erreur');
+        $this->render('errors/404', [], 'erreur');
+        return;
     }
 
     
     /**
      * erreur500 function
      *
-     * @return mixed
+     * @return void
      */
-    public function erreur500(): mixed
+    public function erreur500(): void
     {
-        return $this->render('errors/500', [], 'erreur');
+        $this->render('errors/500', [], 'erreur');
+        return;
     }
 
 }

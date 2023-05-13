@@ -17,10 +17,11 @@ class HomepageController extends Controller
     /**
      * index function
      *
-     * @return mixed
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
-        return $this->render('homepage/index');
+        $this->render('homepage/index');
+        return;
     }
 }

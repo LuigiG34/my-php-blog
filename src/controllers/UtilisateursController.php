@@ -49,9 +49,9 @@ class UtilisateursController extends Controller
     /**
      * profil function
      *
-     * @return mixed
+     * @return void
      */
-    public function profil(): mixed
+    public function profil(): void
     {
         if ($this->userSession !== null) {
 
@@ -65,9 +65,10 @@ class UtilisateursController extends Controller
                 ->setRole($data->role)
                 ->setCreatedAt($data->created_at);
 
-            return $this->render('utilisateurs/index', [
+            $this->render('utilisateurs/index', [
                 'user' => $user
             ]);
+            return;
         }
 
         $this->alert('danger', 'Vous n\êtes pas connecté !');
@@ -129,9 +130,9 @@ class UtilisateursController extends Controller
     /**
      * signin function
      *
-     * @return mixed
+     * @return void
      */
-    public function signin(): mixed
+    public function signin(): void
     {
         if ($this->userSession === null) {
 
@@ -144,9 +145,10 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Me connecter", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            return $this->render('utilisateurs/signin', [
+            $this->render('utilisateurs/signin', [
                 'form' => $this->form->create()
             ]);
+            return;
         }
         // si utilisateur est connecté on le redirige
         $this->alert('danger', "Vous êtes déjà connecté !");
@@ -192,9 +194,9 @@ class UtilisateursController extends Controller
     /**
      * signup function
      *
-     * @return mixed
+     * @return void
      */
-    public function signup(): mixed
+    public function signup(): void
     {
         if ($this->userSession === null) {
 
@@ -212,9 +214,10 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("M'inscrire", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            return $this->render('utilisateurs/signup', [
+            $this->render('utilisateurs/signup', [
                 'form' => $this->form->create()
             ]);
+            return;
         }
         // si utilisateur est connecté on le redirige
         $this->alert('danger', 'Vous êtes déjà connecté !');
@@ -225,9 +228,9 @@ class UtilisateursController extends Controller
     /**
      * forgotPassword function
      *
-     * @return mixed
+     * @return void
      */
-    public function forgotPassword(): mixed
+    public function forgotPassword(): void
     {
         if ($this->userSession === null) {
 
@@ -237,9 +240,10 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            return $this->render('utilisateurs/forgot-password', [
+            $this->render('utilisateurs/forgot-password', [
                 'form' => $this->form->create()
             ]);
+            return;
         }
         // si utilisateur est connecté on le redirige
         $this->alert('danger', 'Vous êtes déjà connecté !');
@@ -286,9 +290,9 @@ class UtilisateursController extends Controller
      * newPassword function
      *
      * @param string $token
-     * @return mixed
+     * @return void
      */
-    public function newPassword(string $token): mixed
+    public function newPassword(string $token): void
     {
         if ($this->userSession === null) {
 
@@ -305,9 +309,10 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            return $this->render('utilisateurs/new-password', [
+            $this->render('utilisateurs/new-password', [
                 'form' => $this->form->create()
             ]);
+            return;
         }
         // si utilisateur est connecté on le redirige
         $this->alert('danger', 'Vous êtes déjà connecté !');
@@ -351,9 +356,9 @@ class UtilisateursController extends Controller
     /**
      * modifier function
      *
-     * @return mixed
+     * @return void
      */
-    public function modifier(): mixed
+    public function modifier(): void
     {
         if ($this->userSession !== null) {
 
@@ -377,9 +382,10 @@ class UtilisateursController extends Controller
                 ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
                 ->finForm();
 
-            return $this->render('utilisateurs/modifier', [
+            $this->render('utilisateurs/modifier', [
                 'form' => $this->form->create()
             ]);
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté !');
