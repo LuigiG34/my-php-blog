@@ -7,13 +7,22 @@ use App\Core\Form;
 use App\Core\Mailer;
 use App\Validation\Validation;
 
-
+/**
+ * Contact Controller file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class ContactController extends Controller
 {
-    protected $mailer;
-    protected $post;
-    protected $form;
-    protected $validation;
+    protected Mailer $mailer;
+    protected Post $post;
+    protected Form $form;
+    protected Validation $validation;
 
     
     public function __construct()
@@ -25,7 +34,12 @@ class ContactController extends Controller
     }
 
 
-    public function index()
+    /**
+     * index function
+     *
+     * @return mixed
+     */
+    public function index(): mixed
     {
         $this->form->debutForm('post', '/contact/valid')
         ->ajoutLabelFor('prenom', 'Prénom :')
@@ -46,7 +60,12 @@ class ContactController extends Controller
     }
 
     
-    public function valid()
+    /**
+     * valid function
+     *
+     * @return void
+     */
+    public function valid(): void
     {
 
         $from = strip_tags($this->post->getPost('prenom')) . ' ' . strip_tags($this->post->getPost('nom'));

@@ -5,7 +5,7 @@ namespace App\Validation;
 /**
  * Validation file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -27,6 +27,7 @@ class Validation
             if (empty($var)) {
                 return false;
             }
+            return true;
         }
     }
 
@@ -43,6 +44,7 @@ class Validation
         if (!filter_var($var, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
+        return true;
     }
 
 

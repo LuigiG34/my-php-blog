@@ -5,7 +5,7 @@ namespace App\Config;
 /**
  * Files Config file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -26,9 +26,9 @@ class Files
      * getFiles function
      *
      * @param string $name
-     * @return mixed
+     * @return array|string
      */
-    public function getFiles(string $name): mixed
+    public function getFiles(string $name): array|string
     {
         if (isset($this->files[$name])) {
             return $this->files[$name];
@@ -40,10 +40,10 @@ class Files
      * setFiles function
      *
      * @param string $name
-     * @param mixed $value
+     * @param array|string $value
      * @return void
      */
-    public function setFiles(string $name, mixed $value): void
+    public function setFiles(string $name, array|string $value): void
     {
         $this->files[$name] = $value;
     }

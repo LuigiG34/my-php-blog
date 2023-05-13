@@ -6,31 +6,51 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use Exception;
 
-
+/**
+ * Mailer file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class Mailer
 {
-    private $mail;
+    private PHPMailer $mail;
+    private $config;
 
     public function __construct()
     {
 
         $this->mail = new PHPmailer(true);
-        $config = parse_ini_file(ROOT . '/config.ini');
+        $this->config = parse_ini_file(ROOT . '/config.ini');
 
         $this->mail->isSMTP();
-        $this->mail->Host       = $config['MAIL_HOST'];
+        $this->mail->Host       = $this->config['MAIL_HOST'];
         $this->mail->SMTPAuth   = true;
-        $this->mail->Username   = $config['MAIL_USERNAME'];
-        $this->mail->Password   = $config['MAIL_PASSWORD'];
+        $this->mail->Username   = $this->config['MAIL_USERNAME'];
+        $this->mail->Password   = $this->config['MAIL_PASSWORD'];
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Port       = 587;
 
-        $this->mail->setFrom($config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
+        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
         $this->mail->CharSet = 'UTF-8';
     }
 
 
-    public function resetPassword(string $to, string $link)
+    /**
+     * resetPassword function
+     *
+     * @param string $to The recipient's email address
+     * @param string $link The password reset link
+     * 
+     * @throws Exception If the email could not be sent
+     * 
+     * @return void
+     */
+    public function resetPassword(string $to, string $link): void
     {
 
         $this->mail->addAddress($to);
@@ -44,11 +64,21 @@ class Mailer
     }
 
 
-    public function sendRequest(string $from, string $description, string $email)
+    /**
+     * sendRequest function
+     *
+     * @param string $from
+     * @param string $description
+     * @param string $email
+     * 
+     * @throws Exception if the email cannot be sent.
+     * 
+     * @return void
+     */
+    public function sendRequest(string $from, string $description, string $email): void
     {
 
-        $config = parse_ini_file(ROOT . '/config.ini');
-        $this->mail->setFrom($config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
+        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
         $this->mail->addAddress('contact@luigigandemer.fr');
 
         $this->mail->Subject = $from . ' vous a envoyé un message via le site Luigi Gandemer Blog.';
@@ -61,11 +91,19 @@ class Mailer
     }
 
 
-    public function sendConfirmationContact(string $from, string $to)
+    /**
+     * sendConfirmationContact function
+     *
+     * @param string $from
+     * @param string $to
+     * 
+     * @throws Exception if the email could not be sent.
+     * 
+     * @return void
+     */
+    public function sendConfirmationContact(string $from, string $to): void
     {
-
-        $config = parse_ini_file(ROOT . '/config.ini');
-        $this->mail->setFrom($config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
+        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
 
         $this->mail->addAddress($to);
 
@@ -89,10 +127,18 @@ class Mailer
     }
 
 
-    public function sendConfirmationSignUp(string $to)
+    /**
+     * sendConfirmationSignUp function
+     *
+     * @param string $to
+     * 
+     * @throws Exception if the email could not be sent.
+     * 
+     * @return void
+     */
+    public function sendConfirmationSignUp(string $to): void
     {
-        $config = parse_ini_file(ROOT . '/config.ini');
-        $this->mail->setFrom($config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
+        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
 
         $this->mail->addAddress($to);
 

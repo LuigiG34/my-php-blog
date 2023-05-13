@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Validation;
+
 use Exception;
 
 /**
  * ImageTreatment file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -27,9 +28,8 @@ class ImageTreatment
     {
         if (!isset($file['name']) || empty($file['name'])) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -44,9 +44,8 @@ class ImageTreatment
     {
         if (!getimagesize($file["tmp_name"])) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -64,9 +63,8 @@ class ImageTreatment
 
         if ($extension !== "jpg" && $extension !== "jpeg" && $extension !== "png" && $extension !== "gif") {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -85,9 +83,8 @@ class ImageTreatment
 
         if (file_exists($target_file)) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -102,9 +99,8 @@ class ImageTreatment
     {
         if ($file['size'] > 1000000) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -123,9 +119,8 @@ class ImageTreatment
 
         if (!move_uploaded_file($file['tmp_name'], $target_file)) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
 
@@ -168,7 +163,6 @@ class ImageTreatment
 
             $file['name'] = str_replace(" ", "_", $file['name']);
             return $file['name'];
-
         } catch (Exception $e) {
 
             return $e->getMessage();

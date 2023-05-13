@@ -14,21 +14,30 @@ use App\Model\CommentaireModel;
 use App\Validation\ImageTreatment;
 use App\Validation\Validation;
 
-
+/**
+ * Articles Controller file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class ArticlesController extends Controller
 {
 
-    protected $files;
-    protected $post;
-    protected $allPosts;
-    protected $session;
+    protected Files $files;
+    protected Post $post;
+    protected array $allPosts;
+    protected Session $session;
     protected null|array $userSession;
-    protected $form;
-    protected $articleModel;
-    protected $categorieModel;
-    protected $commentaireModel;
-    protected $imgTreatment;
-    protected $validation;
+    protected Form $form;
+    protected ArticlesModel $articleModel;
+    protected CategorieModel $categorieModel;
+    protected CommentaireModel $commentaireModel;
+    protected ImageTreatment $imgTreatment;
+    protected Validation $validation;
 
 
     public function __construct()
@@ -46,7 +55,15 @@ class ArticlesController extends Controller
         $this->validation = new Validation;
     }
 
-    public function unique($slug)
+
+    /**
+     * unique function
+     *
+     * @param string $slug
+     * 
+     * @return mixed
+     */
+    public function unique(string $slug): mixed
     {
         $article = $this->articleModel->getArticleBySlug($slug);
 
@@ -103,7 +120,12 @@ class ArticlesController extends Controller
     }
 
 
-    public function all()
+    /**
+     * all function
+     *
+     * @return mixed
+     */
+    public function all(): mixed
     {
         $array = $this->articleModel->getAllArticles();
         $articles = [];
@@ -129,7 +151,12 @@ class ArticlesController extends Controller
     }
 
 
-    public function addValid()
+    /**
+     * addValid function
+     *
+     * @return void
+     */
+    public function addValid(): void
     {
         if ($this->userSession !== null) {
 
@@ -161,7 +188,12 @@ class ArticlesController extends Controller
     }
 
 
-    public function add()
+    /**
+     * add function
+     *
+     * @return mixed
+     */
+    public function add(): mixed
     {
         if ($this->userSession !== null) {
 
@@ -201,7 +233,14 @@ class ArticlesController extends Controller
     }
 
 
-    public function update($id)
+    /**
+     * update function
+     *
+     * @param string $id
+     * 
+     * @return mixed
+     */
+    public function update(string $id): mixed
     {
         if ($this->userSession !== null) {
 
@@ -248,7 +287,14 @@ class ArticlesController extends Controller
     }
 
 
-    public function updateValid($id)
+    /**
+     * updateValid function
+     *
+     * @param string $id
+     * 
+     * @return void
+     */
+    public function updateValid(string $id): void
     {
 
         if ($this->userSession !== null) {
@@ -287,7 +333,13 @@ class ArticlesController extends Controller
     }
 
 
-    public function delete($id)
+    /**
+     * delete function
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function delete(string $id): mixed
     {
         // si utilisateur n'est pas connecté on le redirige
         if ($this->userSession !== null) {
@@ -313,7 +365,14 @@ class ArticlesController extends Controller
     }
 
 
-    public function deleteValid($id)
+    /**
+     * deleteValid function
+     *
+     * @param string $id
+     * 
+     * @return void
+     */
+    public function deleteValid(string $id): void
     {
         if ($this->userSession === null) {
 
@@ -350,7 +409,14 @@ class ArticlesController extends Controller
     }
 
 
-    public function addCommentaire($id)
+    /**
+     * addCommentaire function
+     *
+     * @param string $id
+     * 
+     * @return void
+     */
+    public function addCommentaire(string $id): void
     {
         if ($this->userSession === null) {
             $article = $this->articleModel->getArticleById($id);

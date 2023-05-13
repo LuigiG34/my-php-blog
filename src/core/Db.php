@@ -9,7 +9,7 @@ use PDOException;
 /**
  * Database file
  *
- * PHP Version 7.4
+ * PHP Version 8.0
  *
  * @category PHP
  * @package  Openclassrooms_P5_Blog
@@ -19,7 +19,7 @@ use PDOException;
 class Db extends PDO
 {
     // Instance unique de la classe.
-    private static PDO $instance;
+    private static $instance;
 
 
     private function __construct()

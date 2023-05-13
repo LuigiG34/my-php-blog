@@ -5,9 +5,19 @@ namespace App\Model;
 use App\Core\Db;
 use PDO;
 
+/**
+ * Utilisateurs Model file
+ *
+ * PHP Version 8.0
+ *
+ * @category PHP
+ * @package  Openclassrooms_P5_Blog
+ * @author   Luigi Gandemer <luigigandemer6@gmail.com>
+ * @license  MIT Licence
+ */
 class UtilisateursModel
 {
-    protected $table;
+    protected string $table;
     protected $db;
 
     public function __construct()
@@ -17,7 +27,16 @@ class UtilisateursModel
     }
 
 
-    public function createUser($email, $password, $prenom)
+    /**
+     * createUser function
+     *
+     * @param string $email
+     * @param string $password
+     * @param string $prenom
+     * 
+     * @return void
+     */
+    public function createUser(string $email, string $password, string $prenom): void
     {
         $sql = "INSERT INTO $this->table (prenom, email, mot_de_passe) 
                 VALUES (:prenom, :email, :mot_de_passe)";
@@ -32,7 +51,14 @@ class UtilisateursModel
     }
 
 
-    public function getUserByEmail($email)
+    /**
+     * getUserByEmail function
+     *
+     * @param string $email
+     * 
+     * @return array|object|null
+     */
+    public function getUserByEmail(string $email): array|object|null
     {
         $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role 
                 FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role 
@@ -54,7 +80,14 @@ class UtilisateursModel
     }
 
 
-    public function getUserById($id)
+    /**
+     * getUserById function
+     *
+     * @param string $id
+     * 
+     * @return array|object|null
+     */
+    public function getUserById(string $id): array|object|null
     {
         $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, created_at 
                 FROM $this->table 
@@ -77,7 +110,12 @@ class UtilisateursModel
     }
 
 
-    public function getAllUsers()
+    /**
+     * getAllUsers function
+     *
+     * @return array|object|null
+     */
+    public function getAllUsers(): array|object|null
     {
         $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, created_at 
                 FROM $this->table 
@@ -95,7 +133,17 @@ class UtilisateursModel
     }
 
 
-    public function updateUserById($id, $prenom, $email, $mot_de_passe)
+    /**
+     * updateUserById function
+     *
+     * @param string $id
+     * @param string $prenom
+     * @param string $email
+     * @param string $mot_de_passe
+     * 
+     * @return void
+     */
+    public function updateUserById(string $id, string $prenom, string $email, string $mot_de_passe): void
     {
         $sql = "UPDATE $this->table 
                 SET prenom = :prenom, email = :email, mot_de_passe = :mot_de_passe 
@@ -112,7 +160,15 @@ class UtilisateursModel
     }
 
 
-    public function updateToken($token_reset, $email)
+    /**
+     * updateToken function
+     *
+     * @param string $token_reset
+     * @param string $email
+     * 
+     * @return void
+     */
+    public function updateToken(string $token_reset, string $email): void
     {
         $sql = "UPDATE $this->table SET token_reset = :token_reset WHERE email = :email";
 
@@ -125,7 +181,16 @@ class UtilisateursModel
     }
 
 
-    public function updateTokenAndPasswordByToken($password, $token_reset, $token_reset_db)
+    /**
+     * updateTokenAndPasswordByToken function
+     *
+     * @param string $password
+     * @param string $token_reset
+     * @param string $token_reset_db
+     * 
+     * @return void
+     */
+    public function updateTokenAndPasswordByToken(string $password, string $token_reset, string $token_reset_db): void
     {
         $sql = "UPDATE $this->table SET token_reset = :token_reset, mot_de_passe = :mot_de_passe WHERE token_reset = :token_reset_db";
 
@@ -139,7 +204,14 @@ class UtilisateursModel
     }
 
 
-    public function getUserByToken($token_reset)
+    /**
+     * getUserByToken function
+     *
+     * @param string $token_reset
+     * 
+     * @return null|array|object
+     */
+    public function getUserByToken(string $token_reset): null|array|object
     {
         $sql = "SELECT * FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE token_reset = :token_reset";
 
@@ -158,7 +230,16 @@ class UtilisateursModel
         }
     }
 
-    public function updateActif($id, $is_actif)
+
+    /**
+     * updateActif function
+     *
+     * @param string $id
+     * @param integer $is_actif
+     * 
+     * @return void
+     */
+    public function updateActif(string $id, int $is_actif): void
     {
         $sql = "UPDATE $this->table SET is_actif = :is_actif WHERE id_utilisateur = :id";
 
