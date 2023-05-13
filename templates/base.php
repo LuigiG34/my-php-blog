@@ -91,7 +91,7 @@
 				<div class="col-auto">
 					<a class="small" href="https://www.luigigandemer.fr/">Portfolio</a>
 					<span class="mx-1">&middot;</span>
-					<a class="small" href="#!">RGPD</a>
+					<a class="small" href="/rgpd">RGPD</a>
 					<span class="mx-1">&middot;</span>
 					<a class="small" href="/contact">Contact</a>
 					<?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === "ADMIN") : ?>
