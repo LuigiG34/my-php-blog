@@ -13,8 +13,10 @@
             "App\\": "src/"
         }
     },
+    
     "require": {
         "phpmailer/phpmailer": "^6.8",
+        "phpmd/phpmd" : "@stable",
         "twig/twig": "^3.5"
     }
 }
