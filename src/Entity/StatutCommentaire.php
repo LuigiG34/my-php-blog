@@ -11,8 +11,8 @@ namespace App\Entity;
  * @package  Openclassrooms_P5_Blog
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
- */
-class StatutCommentaire
+ */ 
+class StatutCommentaire extends Entity
 {
     protected string $idStatutCommentaire;
     protected string $type;

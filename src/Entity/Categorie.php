@@ -12,7 +12,7 @@ namespace App\Entity;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Categorie
+class Categorie extends Entity
 {
     protected string $idCategorie;
     protected string $type;

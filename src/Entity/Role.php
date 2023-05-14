@@ -12,7 +12,7 @@ namespace App\Entity;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Role
+class Role extends Entity
 {
     protected string $idRole;
     protected string $role;

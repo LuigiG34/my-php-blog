@@ -34,7 +34,7 @@ class ArticlesModel
      */
     public function getAllArticles(): null|array|object
     {
-        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, articles.slug, categorie.type, utilisateurs.prenom 
+        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, articles.slug, categorie.type AS categorie, utilisateurs.prenom AS auteur
                 FROM $this->table 
                 INNER JOIN categorie ON articles.id_categorie=categorie.id_categorie 
                 INNER JOIN utilisateurs ON articles.id_utilisateur=utilisateurs.id_utilisateur 
@@ -60,7 +60,7 @@ class ArticlesModel
      */
     public function getArticleBySlug(string $slug): null|array|object
     {
-        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, type, prenom 
+        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, type AS categorie, prenom AS auteur
                 FROM $this->table INNER JOIN categorie ON articles.id_categorie=categorie.id_categorie 
                 INNER JOIN utilisateurs ON articles.id_utilisateur=utilisateurs.id_utilisateur 
                 WHERE articles.slug = :slug";

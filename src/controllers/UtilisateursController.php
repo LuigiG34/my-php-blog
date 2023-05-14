@@ -58,12 +58,7 @@ class UtilisateursController extends Controller
             $data = $this->userModel->getUserById($_SESSION['user']['id']);
 
             $user = new Utilisateurs;
-            $user->setIdUtilisateur($data->id_utilisateur)
-                ->setPrenom($data->prenom)
-                ->setEmail($data->email)
-                ->setMotDePasse($data->mot_de_passe)
-                ->setRole($data->role)
-                ->setCreatedAt($data->created_at);
+            $user->hydrate($data);
 
             $this->render('utilisateurs/index', [
                 'user' => $user
@@ -365,10 +360,7 @@ class UtilisateursController extends Controller
             $data = $this->userModel->getUserById($_SESSION['user']['id']);
 
             $user = new Utilisateurs;
-            $user->setIdUtilisateur($data->id_utilisateur)
-                ->setPrenom($data->prenom)
-                ->setEmail($data->email)
-                ->setMotDePasse($data->mot_de_passe);
+            $user->hydrate($data);
 
             $this->form->debutForm('post', '/utilisateurs/modifierValid')
                 ->ajoutLabelFor('prenom', 'Prénom :')
