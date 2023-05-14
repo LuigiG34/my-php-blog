@@ -3,3 +3,4 @@ vendor/
 node_modules/
 public/theme
 config.ini
+report.html
