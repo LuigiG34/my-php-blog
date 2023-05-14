@@ -36,7 +36,7 @@ class CommentaireModel
      */
     public function getCommentairesByArticleId(string $id): array|object|null
     {
-        $sql = "SELECT commentaires.contenu, commentaires.created_at, utilisateurs.prenom, statut_commentaire.type 
+        $sql = "SELECT commentaires.contenu, commentaires.created_at, utilisateurs.prenom AS auteur, statut_commentaire.type AS statut
                 FROM $this->table 
                 INNER JOIN utilisateurs ON commentaires.id_utilisateur = utilisateurs.id_utilisateur 
                 INNER JOIN statut_commentaire ON commentaires.id_statut_commentaire = statut_commentaire.id_statut_commentaire 
@@ -65,7 +65,7 @@ class CommentaireModel
      */
     public function getAllCommentaires(): array|object|null
     {
-        $sql = "SELECT c.id_statut_commentaire, c.id_commentaire, c.contenu, c.created_at, utilisateurs.email, statut_commentaire.type, articles.titre
+        $sql = "SELECT c.id_statut_commentaire, c.id_commentaire, c.contenu, c.created_at, utilisateurs.email AS auteur, statut_commentaire.type AS statut, articles.titre AS article
                 FROM $this->table AS c 
                 INNER JOIN utilisateurs ON c.id_utilisateur = utilisateurs.id_utilisateur 
                 INNER JOIN articles ON c.id_article = articles.id_article
@@ -141,14 +141,15 @@ class CommentaireModel
      * 
      * @return void
      */
-    public function updateStatus(string $id, string $id_statut): void
+    public function updateStatus(string $id, string $id_statut, string $id_admin): void
     {
-        $sql = "UPDATE $this->table SET id_statut_commentaire = :id_statut WHERE id_commentaire = :id";
+        $sql = "UPDATE $this->table SET id_statut_commentaire = :id_statut, id_admin = :id_admin WHERE id_commentaire = :id";
 
         $query = $this->db->prepare($sql);
 
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->bindParam(':id_statut', $id_statut, PDO::PARAM_INT);
+        $query->bindParam(':id_admin', $id_admin, PDO::PARAM_INT);
 
         $query->execute();
     }

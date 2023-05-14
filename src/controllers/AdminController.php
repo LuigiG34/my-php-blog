@@ -82,13 +82,7 @@ class AdminController extends Controller
                         if ($u->role === "USER") {
 
                             $entity = new Utilisateurs;
-
-                            $entity->setIdUtilisateur($u->id_utilisateur)
-                                ->setPrenom($u->prenom)
-                                ->setEmail($u->email)
-                                ->setCreatedAt($u->created_at)
-                                ->setRole($u->role)
-                                ->setIsActif($u->is_actif);
+                            $entity->hydrate($u);
 
                             $array[] = $entity;
                         }
@@ -126,13 +120,7 @@ class AdminController extends Controller
                     foreach ($array as $article) {
 
                         $entity = new Articles;
-                        $entity->setIdArticle($article->id_article)
-                            ->setTitre($article->titre)
-                            ->setChapo($article->chapo)
-                            ->setCreatedAt($article->created_at)
-                            ->setImg($article->img)
-                            ->setCategorie($article->type)
-                            ->setAuteur($article->prenom);
+                        $entity->hydrate($article);
 
                         $articles[] = $entity;
                     }
@@ -169,12 +157,7 @@ class AdminController extends Controller
                     foreach ($data as $d) {
 
                         $entity = new Commentaires;
-                        $entity->setArticle($d->titre)
-                            ->setContenu($d->contenu)
-                            ->setStatut($d->type)
-                            ->setAuteur($d->email)
-                            ->setIdStatutCommentaire($d->id_statut_commentaire)
-                            ->setIdCommentaire($d->id_commentaire);
+                        $entity->hydrate($d);
 
                         $array[] = $entity;
                     }
@@ -209,11 +192,11 @@ class AdminController extends Controller
                 if ($data !== null) {
 
                     if ($data->id_statut_commentaire === "1") {
-                        return $this->commentaireModel->updateStatus($id, 2);
+                        return $this->commentaireModel->updateStatus($id, 2, $this->userSession['id']);
                     }
 
                     if ($data->id_statut_commentaire === "2") {
-                        return $this->commentaireModel->updateStatus($id, 1);
+                        return $this->commentaireModel->updateStatus($id, 1, $this->userSession['id']);
                     }
                 }
             }

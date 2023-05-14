@@ -70,14 +70,7 @@ class ArticlesController extends Controller
         if ($article !== null) {
 
             $entity = new Articles;
-            $entity->setIdArticle($article->id_article)
-                ->setTitre($article->titre)
-                ->setChapo($article->chapo)
-                ->setContenu($article->contenu)
-                ->setCreatedAt($article->created_at)
-                ->setImg($article->img)
-                ->setCategorie($article->type)
-                ->setAuteur($article->prenom);
+            $entity->hydrate($article);
 
             $commentaires = $this->commentaireModel->getCommentairesByArticleId($article->id_article);
 
@@ -86,10 +79,7 @@ class ArticlesController extends Controller
             if ($commentaires !== null) {
                 foreach ($commentaires as $c) {
                     $ent = new Commentaires;
-                    $ent->setCreatedAt($c->created_at)
-                        ->setContenu($c->contenu)
-                        ->setAuteur($c->prenom)
-                        ->setStatut($c->type);
+                    $ent->hydrate($c);
 
                     $array[] = $ent;
                 }
@@ -135,15 +125,7 @@ class ArticlesController extends Controller
 
         foreach ($array as $article) {
             $entity = new Articles;
-            $entity->setIdArticle($article->id_article)
-                ->setTitre($article->titre)
-                ->setChapo($article->chapo)
-                ->setContenu($article->contenu)
-                ->setCreatedAt($article->created_at)
-                ->setImg($article->img)
-                ->setSlug($article->slug)
-                ->setCategorie($article->type)
-                ->setAuteur($article->prenom);
+            $entity->hydrate($article);
 
             $articles[] = $entity;
         }

@@ -14,7 +14,7 @@ use DateTime;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Commentaires
+class Commentaires extends Entity
 {
     protected string $idCommentaire;
     protected string $contenu;
