@@ -26,13 +26,11 @@ class Get
      * getGet function
      *
      * @param string $name
-     * @return array|string
+     * @return array|string|null
      */
-    public function getGet(string $name): array|string
+    public function getGet(string $name): array|string|null
     {
-        if (isset($this->get[$name])) {
-            return $this->get[$name];
-        }
+        return $this->get[$name]??null;
     }
 
 
