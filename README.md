@@ -4,7 +4,7 @@
 
 Pour installer le projet et le lancer il faut : 
 - Créer le container avec Docker
-- Importer le fichier .sql dans phpMyAdmin dans un bdd "my_blog_db"
+- Importer le fichier .sql à la racine dans phpMyAdmin dans un bdd "my_blog_db"
 - Lancer un composer install
 - Créer un fichier "config.ini" à la racine du projet avec votre config BDD et SMTP :
 
