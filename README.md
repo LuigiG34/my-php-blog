@@ -20,4 +20,4 @@ DB_PASSWORD = ''
 ```
 
 - Créer un compte utilisateur pour tester les fonctionnalités accessibles pour un User
-- Pour l'administation : admin@admin.fr | mot de passe : Adminpass123!
+- Pour l'administation : admin@admin.com | mot de passe : Adminpass123!
