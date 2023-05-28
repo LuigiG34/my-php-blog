@@ -26,13 +26,11 @@ class Files
      * getFiles function
      *
      * @param string $name
-     * @return array|string
+     * @return array|string|null
      */
-    public function getFiles(string $name): array|string
+    public function getFiles(string $name): array|string|null
     {
-        if (isset($this->files[$name])) {
-            return $this->files[$name];
-        }
+        return $this->files[$name]??null;
     }
 
 

@@ -3,10 +3,11 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Entity\Article;
 use PDO;
 
 /**
- * Articles Model file
+ * Article Model file
  *
  * PHP Version 8.0
  *
@@ -15,7 +16,7 @@ use PDO;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class ArticlesModel
+class ArticleModel
 {
     protected string $table;
     protected $db;
@@ -44,7 +45,13 @@ class ArticlesModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $articles = [];
+            foreach ($data as $datum) {
+                $article = new Article();
+                $article->hydrate($datum);
+                $articles[] = $article;
+            }
+            return $articles;
         } else {
             return null;
         }
@@ -74,7 +81,10 @@ class ArticlesModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $article = new Article();
+            $article->hydrate($data);
+
+            return $article;
         } else {
             return null;
         }
@@ -90,7 +100,7 @@ class ArticlesModel
      */
     public function getArticleById(string $id): null|array|object
     {
-        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, articles.slug, type, articles.id_categorie 
+        $sql = "SELECT articles.id_article, articles.titre, articles.chapo, articles.contenu, articles.created_at, articles.img, articles.slug, type AS categorie, articles.id_categorie 
                 FROM $this->table 
                 INNER JOIN categorie ON articles.id_categorie=categorie.id_categorie 
                 INNER JOIN utilisateurs ON articles.id_utilisateur=utilisateurs.id_utilisateur 
@@ -105,7 +115,10 @@ class ArticlesModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $article = new Article();
+            $article->hydrate($data);
+
+            return $article;
         } else {
             return null;
         }
@@ -135,7 +148,13 @@ class ArticlesModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $articles = [];
+            foreach ($data as $datum) {
+                $article = new Article();
+                $article->hydrate($datum);
+                $articles[] = $article;
+            }
+            return $articles;
         } else {
             return null;
         }

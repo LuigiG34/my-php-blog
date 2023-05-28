@@ -78,20 +78,31 @@ class Validation
      * signUpValid function
      *
      * @param string $email
-     * @param array $posts
      * @param string $password
      * @param string $passwordVerif
-     * @param object $data
+     * @param string $prenom
      * @return string|boolean
      */
-    public function signUpValid(string $email, array $posts, string $password, string $passwordVerif, object $data): string|bool
+    public function signUpValid(string $email, string $password, string $passwordVerif, string $prenom): string|bool
     {
-        if ($this->validEmail($email) === false) {
-            return "L'adresse mail n'est pas valide.";
+        if (empty($email)) {
+            return "L'adresse mail est vide.";
         }
 
-        if ($this->notEmpty($posts) === false) {
-            return "Un ou plusieurs champs sont vides.";
+        if (empty($passwordVerif)) {
+            return "Le mot de passe est vide.";
+        }
+
+        if (empty($prenom)) {
+            return "Le prénom est vide.";
+        }
+
+        if (empty($password)) {
+            return "Le mot de passe est vide.";
+        }
+
+        if ($this->validEmail($email) === false) {
+            return "L'adresse mail n'est pas valide.";
         }
 
         $passwordRegex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!(){}[\]<>?|]).{8,}$/';
@@ -103,10 +114,6 @@ class Validation
             return "Les mots de passes ne coresspondent pas.";
         }
 
-        if ($data !== null) {
-            return "L'adresse mail indiqué existe déjà en base de données.";
-        }
-
         return true;
     }
 
@@ -115,17 +122,21 @@ class Validation
      * modifierValid function
      *
      * @param string $email
-     * @param array $posts
+     * @param string $prenom
      * @return string|boolean
      */
-    public function modifierValid(string $email, array $posts): string|bool
+    public function modifierValid(string $email, string $prenom): string|bool
     {
         if ($this->validEmail($email) === false) {
             return "L'adresse mail n'est pas valide.";
         }
 
-        if ($this->notEmpty($posts) === false) {
-            return "Prénom et/ou email sont vides.";
+        if (empty($email)) {
+            return "L'adresse mail est vide.";
+        }
+
+        if (empty($prenom)) {
+            return "Le prénom est vide.";
         }
 
         return true;
@@ -136,28 +147,21 @@ class Validation
      * signInValid function
      *
      * @param string $email
-     * @param array $posts
      * @param string $password
-     * @param string $passwordVerif
-     * @param object $data
      * @return string|boolean
      */
-    public function signInValid(string $email, array $posts, string $password, string $passwordVerif, object $data): string|bool
+    public function signInValid(string $email, string $password): string|bool
     {
+        if (empty($email)) {
+            return "L'adresse mail est vide.";
+        }
+
         if ($this->validEmail($email) === false) {
             return "L'adresse mail n'est pas valide.";
         }
 
-        if ($this->notEmpty($posts) === false) {
-            return "Un ou plusieurs champs sont vides.";
-        }
-
-        if (password_verify($password, $passwordVerif) === false) {
-            return "L'adresse mail et/ou le mot de passe est incorrect.";
-        }
-
-        if ($data === null) {
-            return "L'adresse mail et/ou le mot de passe est incorrect.";
+        if (empty($password)) {
+            return "Le mot de passe est vide.";
         }
 
         return true;
@@ -168,22 +172,16 @@ class Validation
      * forgotPassValid function
      *
      * @param string $email
-     * @param array $posts
-     * @param object $data
      * @return string|boolean
      */
-    public function forgotPassValid(string $email, array $posts, object $data): string|bool
+    public function forgotPassValid(string $email): string|bool
     {
         if ($this->validEmail($email) === false) {
             return "L'adresse mail n'est pas valide.";
         }
 
-        if ($this->notEmpty($posts) === false) {
-            return "Un ou plusieurs champs sont vides.";
-        }
-
-        if ($data === null) {
-            return "L'adresse mail indiqué existe pas en base de données.";
+        if (empty($email)) {
+            return "L'adresse mail est vide.";
         }
 
         return true;
@@ -194,18 +192,17 @@ class Validation
      * newPassValid function
      *
      * @param string $password
-     * @param array $posts
      * @return string|boolean
      */
-    public function newPassValid(string $password, array $posts): string|bool
+    public function newPassValid(string $password): string|bool
     {
+        if (empty($password)) {
+            return "Le mot de passe est vide.";
+        }
+
         $passwordRegex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!(){}[\]<>?|]).{8,}$/';
         if (!preg_match($passwordRegex, $password)) {
             return 'Le mot de passe doit contenir au moins 8 caractères dont 1 lettre majuscule, 1 lettre minuscule, 1 symbole et 1 chiffre';
-        }
-
-        if ($this->notEmpty($posts) === false) {
-            return "Un ou plusieurs champs sont vides.";
         }
 
         return true;
@@ -215,13 +212,23 @@ class Validation
     /**
      * addArticleValid function
      *
-     * @param array $posts
+     * @param string $chapo
+     * @param string $title
+     * @param string $content
      * @return string|boolean
      */
-    public function addArticleValid(array $posts, string $chapo,string $title, string $content): string|bool
+    public function addArticleValid(string $chapo,string $title, string $content): string|bool
     {
-        if ($this->notEmpty($posts) === false) {
-            return "Un ou plusieurs champs sont vides.";
+        if(empty($content)) {
+            return "Le contenu de votre article est vide.";
+        }
+
+        if(empty($chapo)) {
+            return "Le chapô de votre article est vide.";
+        }
+
+        if(empty($title)) {
+            return "Le titre de votre article est vide.";
         }
 
         if(strlen($content) < 150) {
@@ -229,7 +236,7 @@ class Validation
         }
 
         if(strlen($chapo) < 50) {
-            return "Le contenu de votre article doit dépasser 50 caractères.";
+            return "Le chapô de votre article doit dépasser 50 caractères.";
         }
 
         if(strlen($title) > 255) {
@@ -248,8 +255,8 @@ class Validation
      */
     public function addCommentValid(string $contenu): string|bool
     {
-        if (empty($contenu) === false) {
-            return "Un ou plusieurs champs sont vides.";
+        if (empty($contenu) === true) {
+            return "Le commentaire est vide.";
         }
 
         if(strlen($contenu) < 15) {

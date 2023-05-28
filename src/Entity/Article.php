@@ -5,7 +5,7 @@ namespace App\Entity;
 use DateTime;
 
 /**
- * Articles Entity file
+ * Article Entity file
  *
  * PHP Version 8.0
  *
@@ -14,9 +14,10 @@ use DateTime;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Articles extends Entity
+class Article extends Entity
 {
     protected string $idArticle;
+    protected string $idCategorie;
     protected string $titre;
     protected string $chapo;
     protected string $contenu;
@@ -283,6 +284,28 @@ class Articles extends Entity
     public function setIdArticle(string $idArticle): self
     {
         $this->idArticle = $idArticle;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idCategorie
+     */ 
+    public function getIdCategorie(): string
+    {
+        return $this->idCategorie;
+    }
+
+    /**
+     * Set the value of idCategorie
+     *
+     * @param string $idCategorie
+     * 
+     * @return  self
+     */ 
+    public function setIdCategorie(string $idCategorie): self
+    {
+        $this->idCategorie = $idCategorie;
 
         return $this;
     }

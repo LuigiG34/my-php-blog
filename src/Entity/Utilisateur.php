@@ -5,7 +5,7 @@ namespace App\Entity;
 use DateTime;
 
 /**
- * Utilisateurs Entity file
+ * Utilisateur Entity file
  *
  * PHP Version 8.0
  *
@@ -14,17 +14,18 @@ use DateTime;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Utilisateurs extends Entity
+class Utilisateur extends Entity
 {
     protected string $idUtilisateur;
     protected string $prenom;
     protected string $email;
     protected string $motDePasse;
-    protected string $tokenReset;
+    protected ?string $tokenReset;
     protected DateTime|string $createdAt;
     protected DateTime|string $rgpdDate;
     protected string $role;
     protected string $isActif;
+    protected ?string $verifToken;
 
 
     /**
@@ -136,7 +137,7 @@ class Utilisateurs extends Entity
      * 
      * @return string
      */ 
-    public function getTokenReset(): string
+    public function getTokenReset(): ?string
     {
         return $this->tokenReset;
     }
@@ -149,7 +150,7 @@ class Utilisateurs extends Entity
      * 
      * @return self
      */ 
-    public function setTokenReset($tokenReset): self
+    public function setTokenReset(?string $tokenReset): self
     {
         $this->tokenReset = $tokenReset;
 
@@ -255,6 +256,29 @@ class Utilisateurs extends Entity
     public function setIsActif(string $isActif): self
     {
         $this->isActif = $isActif;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of verifToken
+     * 
+     * @return ?string
+     */ 
+    public function getVerifToken(): ?string
+    {
+        return $this->verifToken;
+    }
+
+    /**
+     * Set the value of verifToken
+     *
+     * @param ?string $verifToken
+     * @return self
+     */ 
+    public function setVerifToken(?string $verifToken): self
+    {
+        $this->verifToken = $verifToken;
 
         return $this;
     }

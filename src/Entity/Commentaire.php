@@ -5,7 +5,7 @@ namespace App\Entity;
 use DateTime;
 
 /**
- * Commentaires Entity file
+ * Commentaire Entity file
  *
  * PHP Version 8.0
  *
@@ -14,7 +14,7 @@ use DateTime;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class Commentaires extends Entity
+class Commentaire extends Entity
 {
     protected string $idCommentaire;
     protected string $contenu;
@@ -23,7 +23,7 @@ class Commentaires extends Entity
     protected string $article;
     protected string $auteur;
     protected string $statut;
-    protected string $idAdmin;
+    protected ?string $idAdmin;
     protected string $idStatutCommentaire;
 
 
@@ -212,9 +212,9 @@ class Commentaires extends Entity
     /**
      * Get the value of idAdmin
      * 
-     * @return string
+     * @return ?string
      */ 
-    public function getIdAdmin(): string
+    public function getIdAdmin(): ?string
     {
         return $this->idAdmin;
     }
@@ -223,11 +223,11 @@ class Commentaires extends Entity
     /**
      * Set the value of idAdmin
      * 
-     * @param string $idAdmin
+     * @param ?string $idAdmin
      *
      * @return self
      */ 
-    public function setIdAdmin(string $idAdmin): self
+    public function setIdAdmin(?string $idAdmin): self
     {
         $this->idAdmin = $idAdmin;
 

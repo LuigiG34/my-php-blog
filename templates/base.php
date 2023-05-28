@@ -7,7 +7,7 @@
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 	<title>
-
+		Luigi Gandemer Blog
 	</title>
 	<!-- Favicon-->
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">

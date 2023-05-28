@@ -5,10 +5,9 @@ namespace App\Controllers;
 use App\Config\Post;
 use App\Config\Session;
 use App\Core\Form;
-use App\Model\UtilisateursModel;
+use App\Model\UtilisateurModel;
 use App\Validation\Validation;
 use App\Core\Mailer;
-use App\Entity\Utilisateurs;
 
 /**
  * Utilisateurs Controller file
@@ -24,11 +23,10 @@ class UtilisateursController extends Controller
 {
 
     protected Post $post;
-    protected array $allPosts;
     protected Session $session;
     protected null|array $userSession;
     protected Form $form;
-    protected UtilisateursModel $userModel;
+    protected UtilisateurModel $userModel;
     protected Validation $validation;
     protected Mailer $mailer;
 
@@ -36,11 +34,10 @@ class UtilisateursController extends Controller
     public function __construct()
     {
         $this->post = new Post;
-        $this->allPosts = $this->post->getAllPost();
         $this->session = new Session;
         $this->userSession = $this->session->getSession('user');
         $this->form = new Form;
-        $this->userModel = new UtilisateursModel;
+        $this->userModel = new UtilisateurModel;
         $this->validation = new Validation;
         $this->mailer = new Mailer;
     }
@@ -55,10 +52,7 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession !== null) {
 
-            $data = $this->userModel->getUserById($_SESSION['user']['id']);
-
-            $user = new Utilisateurs;
-            $user->hydrate($data);
+            $user = $this->userModel->getUserById($_SESSION['user']['id']);
 
             $this->render('utilisateurs/index', [
                 'user' => $user
@@ -80,39 +74,46 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession === null) {
 
-            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
-            $password = $data->mot_de_passe;
-
-            if ($data->is_actif === "0") {
-                $this->alert('danger', "Votre compte à été désactivé par un administrateur.");
-                header('Location: /utilisateurs/signin');
-            }
-
-            $verif = $this->validation->signInValid($this->post->getPost('email'), $this->allPosts, $this->post->getPost('password'), $password, $data);
+            $verif = $this->validation->signInValid($this->post->getPost('email'), $this->post->getPost('password'));
 
             if ($verif !== true) {
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/signin');
+                return;
+            }
+
+            $user = $this->userModel->getUserByEmail($this->post->getPost('email'));
+
+            if (is_null($user) || password_verify($this->post->getPost('password'), $user->getMotDePasse()) === false) {
+                $this->alert('danger', "L'adresse mail et/ou le mot de passe est incorrect.");
+                header('Location: /utilisateurs/signin');
+                return;
+            }
+
+            if ($user->getIsActif() === "0") {
+                $this->alert('danger', "Votre compte à été désactivé par un administrateur.");
+                header('Location: /utilisateurs/signin');
+                return;
+            }
+
+            if ($user->getVerifToken() === null) {
+                $this->alert('danger', "Votre compte n'est pas vérifié. Veuillez accéder à votre boite mail et valider votre compte.");
+                header('Location: /utilisateurs/signin');
+                return;
             }
 
             $_SESSION['user'] = [
-                'id' => $data->id_utilisateur,
-                'email' => $data->email,
-                'prenom' => $data->prenom,
-                'role' => $data->role
+                'id' => $user->getIdUtilisateur(),
+                'email' => $user->getEmail(),
+                'prenom' => $user->getPrenom(),
+                'role' => $user->getRole()
             ];
 
-            if ($data->role === 'ADMIN') {
-                $_SESSION['user'] = [
-                    'id' => $data->id_utilisateur,
-                    'email' => $data->email,
-                    'prenom' => $data->prenom,
-                    'role' => $data->role,
-                    'token' => bin2hex(random_bytes(32))
-                ];
+            if ($user->getRole() === 'ADMIN') {
+                $_SESSION['user']['token'] = bin2hex(random_bytes(32));
             }
 
-            $this->alert('success', 'Bienvenue ' . $data->prenom . ' sur mon blog !');
+            $this->alert('success', 'Bienvenue ' . $user->getPrenom() . ' sur mon blog !');
             header('Location: /');
             return;
         }
@@ -160,13 +161,25 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession === null) {
 
-            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
+            $user = $this->userModel->getUserByEmail($this->post->getPost('email'));
 
-            $verif = $this->validation->signUpValid($this->post->getPost('email'), $this->allPosts, $this->post->getPost('password'), $this->post->getPost('password-again'), $data);
+            if (is_null($user) === false) {
+                $this->alert('danger', "L'adresse mail existe déjà en base de données.");
+                return;
+            }
+
+            $verif = $this->validation->signUpValid($this->post->getPost('email'), $this->post->getPost('password'), $this->post->getPost('password-again'), $this->post->getPost('prenom'));
 
             if ($verif !== true) {
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/signup');
+                return;
+            }
+
+            $rgpd = $this->post->getPost('rgpd');
+            if(isset($rgpd) === false) {
+                $this->alert('danger', "Vous devez accepter les RGPD pour vous inscrire.");
+                return;
             }
 
             $email = htmlspecialchars($this->post->getPost('email'));
@@ -174,9 +187,10 @@ class UtilisateursController extends Controller
             $pswd = password_hash(htmlspecialchars($this->post->getPost('password')), PASSWORD_ARGON2I);
 
             $this->userModel->createUser($email, $pswd, $prenom);
+            $this->alert('success', 'Votre inscription a bien fonctionné ! Veuillez vérifier vos mails pour valdier votre compte.');
 
-            $this->alert('success', 'Votre inscription a bien fonctionné !');
-            $this->mailer->sendConfirmationSignUp($email);
+            $user = $this->userModel->getUserByEmail($this->post->getPost('email'));
+            $this->mailer->sendConfirmationSignUp($user);
             header('Location: /utilisateurs/signin');
             return;
         }
@@ -255,21 +269,21 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession === null) {
 
-            $data = $this->userModel->getUserByEmail($this->post->getPost('email'));
-
-            $verif = $this->validation->forgotPassValid($this->post->getPost('email'), $this->allPosts, $data);
+            $verif = $this->validation->forgotPassValid($this->post->getPost('email'));
 
             if ($verif !== true) {
-
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
+                return;
             }
 
             $token = bin2hex(random_bytes(32));
             $email = htmlspecialchars($this->post->getPost('email'));
-
+            
             $this->userModel->updateToken($token, $email);
-            $this->mailer->resetPassword($email, "http://localhost:8000/utilisateurs/newPassword/$token");
+            $user = $this->userModel->getUserByEmail($this->post->getPost('email'));
+
+            $this->mailer->resetPassword($user);
 
             $this->alert('success', 'Un mail vient de vous être envoyé. (Vérifié vos spams)');
             header("Location: /utilisateurs/forgotPassword");
@@ -291,11 +305,12 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession === null) {
 
-            $data = $this->userModel->getUserByToken($token);
+            $user = $this->userModel->getUserByToken($token);
 
-            if ($data === null) {
+            if ($user === null) {
                 $this->alert('danger', 'Vous n\'avez pas accès à cette page.');
                 header("Location: /");
+                return;
             }
 
             $this->form->debutForm('post', "/utilisateurs/newPasswordValidation/$token")
@@ -326,12 +341,12 @@ class UtilisateursController extends Controller
         // si utilisateur est connecté on le redirige
         if ($this->userSession === null) {
 
-            $verif = $this->validation->newPassValid($this->post->getPost('password'), $this->allPosts);
+            $verif = $this->validation->newPassValid($this->post->getPost('password'));
 
             if ($verif !== true) {
-
                 $this->alert('danger', $verif);
                 header('Location: /utilisateurs/forgotPassword');
+                return;
             }
 
             $pswd = password_hash(htmlspecialchars($this->post->getPost('password')), PASSWORD_ARGON2I);
@@ -357,10 +372,7 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession !== null) {
 
-            $data = $this->userModel->getUserById($_SESSION['user']['id']);
-
-            $user = new Utilisateurs;
-            $user->hydrate($data);
+            $user = $this->userModel->getUserById($this->userSession['id']);
 
             $this->form->debutForm('post', '/utilisateurs/modifierValid')
                 ->ajoutLabelFor('prenom', 'Prénom :')
@@ -394,7 +406,7 @@ class UtilisateursController extends Controller
     {
         if ($this->userSession !== null) {
 
-            $verif = $this->validation->modifierValid($this->post->getPost('email'), [$this->post->getPost('email'), $this->post->getPost('prenom')]);
+            $verif = $this->validation->modifierValid($this->post->getPost('email'), $this->post->getPost('prenom'));
 
             if ($verif !== true) {
 
@@ -422,14 +434,68 @@ class UtilisateursController extends Controller
 
 
     /**
+     * verify function
+     *
+     * @param string $token
+     * @return void
+     */
+    public function verify(string $token): void
+    {
+        if ($this->userSession === null) {
+
+            $user = $this->userModel->getUserByVerifToken($token);
+
+            if ($user === null) {
+                $this->alert('danger', 'Vous n\'avez pas accès à cette page.');
+                header("Location: /");
+                return;
+            }
+
+            $this->form->debutForm('post', "/utilisateurs/verifyValidation/{$user->getidUtilisateur()}")
+                ->ajoutBouton("Soumettre", ['class' => 'btn btn-primary w-100 mt-3'])
+                ->finForm();
+
+            $this->render('utilisateurs/verify-account', [
+                'form' => $this->form->create()
+            ]);
+            return;
+        }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
+    }
+
+
+    /**
+     * verifyValidation function
+     *
+     * @param string $id
+     * @return void
+     */
+    public function verifyValidation(string $id): void
+    {
+        // si utilisateur est connecté on le redirige
+        if ($this->userSession === null) {
+
+            $this->userModel->updateVerifToken($id);
+
+            $this->alert('success', 'Votre compte à été vérifié.');
+            header("Location: /utilisateurs/signin");
+            return;
+        }
+        // si utilisateur est connecté on le redirige
+        $this->alert('danger', 'Vous êtes déjà connecté !');
+        header('Location: /');
+    }
+
+
+    /**
      * logout function
      *
      * @return void
      */
     public function logout(): void
     {
-        session_start(); // start the session if it hasn't been started already
-
         session_unset(); // unset all session variables
 
         session_destroy(); // destroy the session

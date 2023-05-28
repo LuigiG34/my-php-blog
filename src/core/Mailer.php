@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Entity\Utilisateur;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use Exception;
@@ -20,6 +21,7 @@ class Mailer
 {
     private PHPMailer $mail;
     private $config;
+    private $mainPath;
 
     public function __construct()
     {
@@ -32,32 +34,34 @@ class Mailer
         $this->mail->SMTPAuth   = true;
         $this->mail->Username   = $this->config['MAIL_USERNAME'];
         $this->mail->Password   = $this->config['MAIL_PASSWORD'];
-        $this->mail->SMTPSecure = 'tls';
-        $this->mail->Port       = 587;
+        // $this->mail->SMTPSecure = 'tls';
+        $this->mail->Port       = $this->config['MAIL_PORT'];
 
-        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
+        $this->mail->setFrom($this->config['MAIL_FROM_ADDRESS'], $this->config['MAIL_FROM_NAME']);
         $this->mail->CharSet = 'UTF-8';
+        $host = $_SERVER['HTTP_HOST'];
+        $protocol=$_SERVER['PROTOCOL'] = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+        $this->mainPath = $protocol . '://' . $host . '/';
     }
 
 
     /**
      * resetPassword function
      *
-     * @param string $to The recipient's email address
-     * @param string $link The password reset link
+     * @param Utilisateur $user
      * 
      * @throws Exception If the email could not be sent
      * 
      * @return void
      */
-    public function resetPassword(string $to, string $link): void
+    public function resetPassword(Utilisateur $user): void
     {
+        
+        $this->mail->addAddress($user->getEmail());
 
-        $this->mail->addAddress($to);
-
-        $this->mail->Subject = 'Mettez à jour votre mot de passe';
-        $this->mail->Body = "Veuillez vous rendre à l'adresse suivante pour mettre à jour votre mot de passe : $link";
-
+        $this->mail->Subject = '<p>Mettez à jour votre mot de passe</p>';
+        $this->mail->Body = "<p>Veuillez vous rendre à l'adresse suivante pour mettre à jour votre mot de passe : <a href='".$this->mainPath."utilisateurs/newPassword/{$user->getTokenReset()}'>".$this->mainPath."utilisateurs/newPassword/{$user->getTokenReset()}</a>.</p>";
+        $this->mail->isHTML(true);
         if (!$this->mail->send()) {
             throw new Exception("Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}");
         }
@@ -78,12 +82,13 @@ class Mailer
     public function sendRequest(string $from, string $description, string $email): void
     {
 
-        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Blog Luigi Gandemer');
-        $this->mail->addAddress('contact@luigigandemer.fr');
+        $this->mail->setFrom($this->config['MAIL_FROM_ADDRESS'], $this->config['MAIL_FROM_NAME']);
+        $this->mail->addAddress($this->config['MAIL_NOTIFICATION_ADDRESS']);
 
-        $this->mail->Subject = $from . ' vous a envoyé un message via le site Luigi Gandemer Blog.';
-        $this->mail->Body = 'Email : ' . $email . ' ';
-        $this->mail->Body .= 'Message : ' . $description;
+        $this->mail->Subject = '<p>'. $from . ' vous a envoyé un message via le site Luigi Gandemer Blog.</p>';
+        $this->mail->Body = '<p>Email : ' . $email . '</p>';
+        $this->mail->Body .= '<p>Message : ' . $description . '</p>';
+        $this->mail->isHTML(true);
 
         if (!$this->mail->send()) {
             throw new Exception("Votre message n'a pas pu être envoyé. Mailer Error: {$this->mail->ErrorInfo}");
@@ -103,7 +108,7 @@ class Mailer
      */
     public function sendConfirmationContact(string $from, string $to): void
     {
-        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
+        $this->mail->setFrom($this->config['MAIL_FROM_ADDRESS'], $this->config['MAIL_FROM_NAME']);
 
         $this->mail->addAddress($to);
 
@@ -115,12 +120,6 @@ class Mailer
         $this->mail->Body .= "<div><img style='height: 100%;min-width:50px; max-width: 250px;' src='https://i.ibb.co/LPH83Vt/Luigi-Gandemer-Freelance-Web-Dev.png'>";
         $this->mail->isHTML(true);
 
-        $this->mail->AltBody = "Bonjour,";
-        $this->mail->AltBody .= "Nous avons bien reçu votre demande de contact. Vous recevrez une réponse sous 72 heures.";
-        $this->mail->AltBody .= "Cordialement,";
-        $this->mail->AltBody .= "Luigi Gandemer";
-
-
         if (!$this->mail->send()) {
             throw new Exception("Notre mail de confirmation n'a pas pu être envoyé. Mailer Error: {$this->mail->ErrorInfo}");
         }
@@ -130,31 +129,25 @@ class Mailer
     /**
      * sendConfirmationSignUp function
      *
-     * @param string $to
+     * @param Utilisateur $user
      * 
      * @throws Exception if the email could not be sent.
      * 
      * @return void
      */
-    public function sendConfirmationSignUp(string $to): void
+    public function sendConfirmationSignUp(Utilisateur $user): void
     {
-        $this->mail->setFrom($this->config['MAIL_USERNAME'], 'Luigi Gandemer Blog');
+        $this->mail->setFrom($this->config['MAIL_FROM_ADDRESS'], $this->config['MAIL_FROM_NAME']);
 
-        $this->mail->addAddress($to);
+        $this->mail->addAddress($user->getEmail());
 
         $this->mail->Subject = "Confirmation d'inscription sur le site Luigi Gandemer Blog.";
 
-        $this->mail->Body = "<p>Bonjour " . $to . "</p>";
-        $this->mail->Body .= "<p>Nous confirmons votre inscription au site de Luigi Gandemer - Blog.</p>";
+        $this->mail->Body = "<p>Bonjour " . $user->getEmail()  . "</p>";
+        $this->mail->Body .= "<p>Merci de valider votre email en cliquant sur ce lien : <a href='".$this->mainPath."utilisateurs/verify/{$user->getVerifToken()}'>".$this->mainPath."/confirm-email/{$user->getVerifToken()}</a>.</p>";
         $this->mail->Body .= "<p>Cordialement,</p>";
         $this->mail->Body .= "<div><img style='height: 100%;min-width:50px; max-width: 250px;' src='https://i.ibb.co/LPH83Vt/Luigi-Gandemer-Freelance-Web-Dev.png'>";
         $this->mail->isHTML(true);
-
-        $this->mail->AltBody = "Bonjour,";
-        $this->mail->AltBody .= "Nous confirmons votre inscription au site de Luigi Gandemer - Blog.";
-        $this->mail->AltBody .= "Cordialement,";
-        $this->mail->AltBody .= "Luigi Gandemer";
-
 
         if (!$this->mail->send()) {
             throw new Exception("Notre mail de confirmation n'a pas pu être envoyé. Mailer Error: {$this->mail->ErrorInfo}");

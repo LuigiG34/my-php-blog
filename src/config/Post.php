@@ -26,26 +26,22 @@ class Post
      * getPost function
      *
      * @param string $name
-     * @return array|string
+     * @return array|string|null
      */
-    public function getPost(string $name): array|string
+    public function getPost(string $name): array|string|null
     {
-        if (isset($this->post[$name])) {
-            return $this->post[$name];
-        }
+        return $this->post[$name]??null;
     }
 
 
     /**
      * getAllPost function
      *
-     * @return array
+     * @return array|null
      */
-    public function getAllPost(): array
+    public function getAllPost(): array|null
     {
-        if (isset($this->post)) {
-            return $this->post;
-        }
+        return $this->post??null;
     }
 
 

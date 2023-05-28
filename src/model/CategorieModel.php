@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Entity\Categorie;
 
 /**
  * Categorie Model file
@@ -38,7 +39,13 @@ class CategorieModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $categories = [];
+            foreach($data as $datum){
+                $categorie = new Categorie;
+                $categorie->hydrate($datum);
+                $categories[] = $categorie;
+            }
+            return $categories;
         } else {
             return null;
         }

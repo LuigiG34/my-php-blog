@@ -1,0 +1,12 @@
+MAIL_HOST = 'mailhog'
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+MAIL_PORT = 1025
+MAIL_FROM_ADDRESS = 'no-reply@luigi-blog.io'
+MAIL_FROM_NAME = 'Blog Luigi Gandemer'
+MAIL_NOTIFICATION_ADDRESS = 'admin@luigi-blog.io'
+
+DB_HOST = 'db'
+DB_NAME = 'my_blog_db'
+DB_USERNAME = 'root'
+DB_PASSWORD = 'root'

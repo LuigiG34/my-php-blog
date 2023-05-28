@@ -41,9 +41,7 @@ class Get
      */
     public function getAllGet(): array
     {
-        if (isset($this->get)) {
-            return $this->get;
-        }
+        return $this->get??null;
     }
 
 

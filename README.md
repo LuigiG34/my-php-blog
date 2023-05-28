@@ -1,23 +1,22 @@
-### BLOG PHP OPENCLASSROOMS
+# BLOG PHP OPENCLASSROOMS V1.0
 
 [![SymfonyInsight](https://insight.symfony.com/projects/9d86c1a1-9311-4820-8a49-7d9e5c75d757/big.svg)](https://insight.symfony.com/projects/9d86c1a1-9311-4820-8a49-7d9e5c75d757)
 
-Pour installer le projet et le lancer il faut : 
-- Créer le container avec Docker
-- Importer le fichier .sql à la racine dans phpMyAdmin dans un bdd "my_blog_db"
-- Lancer un composer install
-- Créer un fichier "config.ini" à la racine du projet avec votre config BDD et SMTP :
 
-```
-MAIL_HOST = ''
-MAIL_USERNAME = ''
-MAIL_PASSWORD = ''
-
-DB_HOST = ''
-DB_NAME = ''
-DB_USERNAME = ''
-DB_PASSWORD = ''
-```
-
-- Créer un compte utilisateur pour tester les fonctionnalités accessibles pour un User
 - Pour l'administation : admin@admin.com | mot de passe : Adminpass123!
+
+### 1. Requirements
+1. Docker
+2. Docker compose
+
+### 2. Installation
+1. Lancer les container : ```docker compose up -d```
+2. Installer les dépendances : ```docker compose exec app composer install```
+3. Renommer le fichier config.ini.dist à config.ini à la racine du projet
+4. Importer le données de la BDD avec : ```docker compose exec -T db mysql -uroot -proot my_blog_db < my_blog_db.sql```
+
+### 3. Accès
+1. Accéder au projet : ```http:/localhost:8000```
+2. Accéder à phpMyAdmin : ```http://localhost:8080``` user : root | password : root 
+3. Accéder aux emails : ```http://localhost:8025```
+4. Accéder à l'administration : ```http://localhost:8000/admin``` identifiants fournis dans credentials.txt

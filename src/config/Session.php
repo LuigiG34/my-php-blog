@@ -33,11 +33,7 @@ class Session
      */
     public function getSession(array|string $name): array|string|null
     {
-        if (isset($this->session[$name])) {
-            return $this->session[$name];
-        } else {
-            return null;
-        }
+        return $this->session[$name]??null;
     }
 
 

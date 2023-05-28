@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Entity\Commentaire;
 use PDO;
 
 /**
@@ -51,7 +52,13 @@ class CommentaireModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $commentaires = [];
+            foreach($data as $datum){
+                $commentaire = new Commentaire;
+                $commentaire->hydrate($datum);
+                $commentaires[] = $commentaire;
+            }
+            return $commentaires;
         } else {
             return null;
         }
@@ -76,7 +83,13 @@ class CommentaireModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $commentaires = [];
+            foreach($data as $datum){
+                $commentaire = new Commentaire;
+                $commentaire->hydrate($datum);
+                $commentaires[] = $commentaire;
+            }
+            return $commentaires;
         } else {
             return null;
         }
@@ -126,7 +139,10 @@ class CommentaireModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $commentaire = new Commentaire;
+            $commentaire->hydrate($data);
+            
+            return $commentaire;
         } else {
             return null;
         }

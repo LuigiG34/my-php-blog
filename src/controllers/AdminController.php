@@ -3,12 +3,9 @@
 namespace App\Controllers;
 
 use App\Config\Session;
-use App\Entity\Articles;
-use App\Entity\Commentaires;
-use App\Entity\Utilisateurs;
-use App\Model\ArticlesModel;
+use App\Model\ArticleModel;
 use App\Model\CommentaireModel;
-use App\Model\UtilisateursModel;
+use App\Model\UtilisateurModel;
 
 /**
  * Admin Controller file
@@ -24,8 +21,8 @@ class AdminController extends Controller
 {
     protected Session $session;
     protected null|array $userSession;
-    protected UtilisateursModel $userModel;
-    protected ArticlesModel $articleModel;
+    protected UtilisateurModel $userModel;
+    protected ArticleModel $articleModel;
     protected CommentaireModel $commentaireModel;
 
 
@@ -33,8 +30,8 @@ class AdminController extends Controller
     {
         $this->session = new Session;
         $this->userSession = $this->session->getSession('user');
-        $this->userModel = new UtilisateursModel;
-        $this->articleModel = new ArticlesModel;
+        $this->userModel = new UtilisateurModel;
+        $this->articleModel = new ArticleModel;
         $this->commentaireModel = new CommentaireModel;
     }
 
@@ -73,24 +70,13 @@ class AdminController extends Controller
             if ($this->userSession['role'] === "ADMIN") {
 
                 $users = $this->userModel->getAllUsers();
-                $array = [];
 
-                if ($users !== null) {
-
-                    foreach ($users as $u) {
-
-                        if ($u->role === "USER") {
-
-                            $entity = new Utilisateurs;
-                            $entity->hydrate($u);
-
-                            $array[] = $entity;
-                        }
-                    }
+                if ($users == null) {
+                    $this->alert('danger', 'Aucun utilisateurs trouvé.');
                 }
 
                 $this->render('admin/users', [
-                    'users' => $array
+                    'users' => $users
                 ]);
                 return;
             }
@@ -112,18 +98,10 @@ class AdminController extends Controller
 
             if ($this->userSession['role'] === "ADMIN") {
 
-                $array = $this->articleModel->getAllArticles();
-                $articles = [];
+                $articles = $this->articleModel->getAllArticles();
 
-                if ($array !== null) {
-
-                    foreach ($array as $article) {
-
-                        $entity = new Articles;
-                        $entity->hydrate($article);
-
-                        $articles[] = $entity;
-                    }
+                if ($articles == null) {
+                    $this->alert('danger', 'Aucun articles trouvé.');
                 }
 
                 $this->render('admin/articles', [
@@ -149,22 +127,14 @@ class AdminController extends Controller
 
             if ($this->userSession['role'] === "ADMIN") {
 
-                $data = $this->commentaireModel->getAllCommentaires();
-                $array = [];
+                $commentaires = $this->commentaireModel->getAllCommentaires();
 
-                if ($data !== null) {
-
-                    foreach ($data as $d) {
-
-                        $entity = new Commentaires;
-                        $entity->hydrate($d);
-
-                        $array[] = $entity;
-                    }
+                if ($commentaires == null) {
+                    $this->alert('danger', 'Aucun comentaires trouvé.');
                 }
 
                 $this->render('admin/comments', [
-                    'comments' => $array
+                    'comments' => $commentaires
                 ]);
                 return;
             }
@@ -182,20 +152,20 @@ class AdminController extends Controller
      * @return mixed
      */
     public function activeCommentaire(string $id): mixed
-    {
+    {                 
         if ($this->userSession !== null) {
 
             if ($this->userSession['role'] === "ADMIN") {
 
                 $data = $this->commentaireModel->getCommentaireById($id);
 
-                if ($data !== null) {
+                if ($data !== null) {                    
 
-                    if ($data->id_statut_commentaire === "1") {
+                    if ($data->getIdStatutCommentaire() === "1") {
                         return $this->commentaireModel->updateStatus($id, 2, $this->userSession['id']);
                     }
 
-                    if ($data->id_statut_commentaire === "2") {
+                    if ($data->getIdStatutCommentaire() === "2") {
                         return $this->commentaireModel->updateStatus($id, 1, $this->userSession['id']);
                     }
                 }
@@ -224,11 +194,11 @@ class AdminController extends Controller
 
                 if ($data !== null) {
 
-                    if ($data->is_actif === "1") {
+                    if ($data->getIsActif() === "1") {
                         return $this->userModel->updateActif($id, 0);
                     }
 
-                    if ($data->is_actif === "0") {
+                    if ($data->getIsActif() === "0") {
                         return $this->userModel->updateActif($id, 1);
                     }
                 }
@@ -239,4 +209,5 @@ class AdminController extends Controller
         $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
         header('Location: /');
     }
+    
 }

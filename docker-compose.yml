@@ -3,7 +3,7 @@ version: "3.9"
 services:
   db:
     image: mysql:8.0
-    container_name: db_v2
+    container_name: db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -15,7 +15,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin_v2
+    container_name: phpmyadmin
     restart: always
     environment:
       PMA_HOST: db
@@ -30,14 +30,23 @@ services:
       context: .
       dockerfile: Dockerfile
     image: php-blog
-    container_name: app_v2
+    container_name: app
     restart: always
     ports:
       - "8000:80"
     depends_on:
       - db
+      - mailhog
     volumes:
       - .:/var/www/html
-      
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
 volumes:
   mysql-data:

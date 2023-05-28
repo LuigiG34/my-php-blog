@@ -3,10 +3,11 @@
 namespace App\Model;
 
 use App\Core\Db;
+use App\Entity\Utilisateur;
 use PDO;
 
 /**
- * Utilisateurs Model file
+ * Utilisateur Model file
  *
  * PHP Version 8.0
  *
@@ -15,7 +16,7 @@ use PDO;
  * @author   Luigi Gandemer <luigigandemer6@gmail.com>
  * @license  MIT Licence
  */
-class UtilisateursModel
+class UtilisateurModel
 {
     protected string $table;
     protected $db;
@@ -38,14 +39,16 @@ class UtilisateursModel
      */
     public function createUser(string $email, string $password, string $prenom): void
     {
-        $sql = "INSERT INTO $this->table (prenom, email, mot_de_passe) 
-                VALUES (:prenom, :email, :mot_de_passe)";
+        $sql = "INSERT INTO $this->table (prenom, email, mot_de_passe, verif_token) 
+                VALUES (:prenom, :email, :mot_de_passe, :verif_token)";
 
         $query = $this->db->prepare($sql);
 
+        $token = bin2hex(random_bytes(32));
         $query->bindParam(':prenom', $prenom, PDO::PARAM_STR);
         $query->bindParam(':email', $email, PDO::PARAM_STR);
         $query->bindParam(':mot_de_passe', $password, PDO::PARAM_STR);
+        $query->bindParam(':verif_token', $token, PDO::PARAM_STR);
 
         $query->execute();
     }
@@ -60,7 +63,7 @@ class UtilisateursModel
      */
     public function getUserByEmail(string $email): array|object|null
     {
-        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role 
+        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, token_reset, verif_token, role 
                 FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role 
                 WHERE email = :email";
 
@@ -73,7 +76,10 @@ class UtilisateursModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $user = new Utilisateur;
+            $user->hydrate($data);
+            
+            return $user;
         } else {
             return null;
         }
@@ -89,7 +95,7 @@ class UtilisateursModel
      */
     public function getUserById(string $id): array|object|null
     {
-        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, created_at 
+        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, verif_token, created_at 
                 FROM $this->table 
                 INNER JOIN role ON utilisateurs.id_role=role.id_role 
                 WHERE id_utilisateur = :id";
@@ -103,7 +109,10 @@ class UtilisateursModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $user = new Utilisateur;
+            $user->hydrate($data);
+            
+            return $user;
         } else {
             return null;
         }
@@ -117,7 +126,7 @@ class UtilisateursModel
      */
     public function getAllUsers(): array|object|null
     {
-        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, created_at 
+        $sql = "SELECT id_utilisateur, prenom, email, mot_de_passe, is_actif, role, verif_token, created_at 
                 FROM $this->table 
                 INNER JOIN role ON utilisateurs.id_role=role.id_role";
 
@@ -126,7 +135,13 @@ class UtilisateursModel
         $data = $query->fetchAll();
 
         if ($data) {
-            return $data;
+            $users = [];
+            foreach($data as $datum){
+                $user = new Utilisateur;
+                $user->hydrate($datum);
+                $users[] = $user;
+            }
+            return $users;
         } else {
             return null;
         }
@@ -224,10 +239,62 @@ class UtilisateursModel
         $data = $query->fetch();
 
         if ($data) {
-            return $data;
+            $user = new Utilisateur;
+            $user->hydrate($data);
+            
+            return $user;
         } else {
             return null;
         }
+    }
+
+
+    /**
+     * getUserByVerifToken function
+     *
+     * @param string $verif_token
+     * @return null|array|object
+     */
+    public function getUserByVerifToken(string $verif_token): null|array|object
+    {
+        $sql = "SELECT * FROM $this->table INNER JOIN role ON utilisateurs.id_role=role.id_role WHERE verif_token = :verif_token";
+
+        $query = $this->db->prepare($sql);
+
+        $query->bindParam(':verif_token', $verif_token, PDO::PARAM_STR);
+
+        $query->execute();
+
+        $data = $query->fetch();
+
+        if ($data) {
+            $user = new Utilisateur;
+            $user->hydrate($data);
+
+            return $user;
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * updateVerifToken function
+     *
+     * @param string $id
+     * @return void
+     */
+    public function updateVerifToken(string $id_utilisateur): void
+    {
+        $sql = "UPDATE $this->table SET verif_token = :verif_token WHERE id_utilisateur = :id_utilisateur";
+
+        $query = $this->db->prepare($sql);
+
+        $verified = "VERIFIED";
+        $query->bindParam(':verif_token', $verified, PDO::PARAM_STR);
+        $query->bindParam(':id_utilisateur', $id_utilisateur, PDO::PARAM_INT);
+
+        $query->execute();
     }
 
 

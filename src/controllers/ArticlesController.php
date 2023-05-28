@@ -6,9 +6,7 @@ use App\Config\Files;
 use App\Config\Post;
 use App\Config\Session;
 use App\Core\Form;
-use App\Entity\Articles;
-use App\Entity\Commentaires;
-use App\Model\ArticlesModel;
+use App\Model\ArticleModel;
 use App\Model\CategorieModel;
 use App\Model\CommentaireModel;
 use App\Validation\ImageTreatment;
@@ -29,11 +27,10 @@ class ArticlesController extends Controller
 
     protected Files $files;
     protected Post $post;
-    protected array $allPosts;
     protected Session $session;
     protected null|array $userSession;
     protected Form $form;
-    protected ArticlesModel $articleModel;
+    protected ArticleModel $articleModel;
     protected CategorieModel $categorieModel;
     protected CommentaireModel $commentaireModel;
     protected ImageTreatment $imgTreatment;
@@ -44,11 +41,10 @@ class ArticlesController extends Controller
     {
         $this->files = new Files;
         $this->post = new Post;
-        $this->allPosts = $this->post->getAllPost();
         $this->session = new Session;
         $this->userSession = $this->session->getSession('user');
         $this->form = new Form;
-        $this->articleModel = new ArticlesModel;
+        $this->articleModel = new ArticleModel;
         $this->categorieModel = new CategorieModel;
         $this->commentaireModel = new CommentaireModel;
         $this->imgTreatment = new ImageTreatment;
@@ -69,24 +65,11 @@ class ArticlesController extends Controller
 
         if ($article !== null) {
 
-            $entity = new Articles;
-            $entity->hydrate($article);
+            $commentaires = $this->commentaireModel->getCommentairesByArticleId($article->getIdArticle());
 
-            $commentaires = $this->commentaireModel->getCommentairesByArticleId($article->id_article);
-
-            $array = [];
-
-            if ($commentaires !== null) {
-                foreach ($commentaires as $c) {
-                    $ent = new Commentaires;
-                    $ent->hydrate($c);
-
-                    $array[] = $ent;
-                }
-            }
 
             // On créer le formulaire
-            $this->form->debutForm('post', "/articles/addCommentaire/$article->id_article")
+            $this->form->debutForm('post', "/articles/addCommentaire/{$article->getIdArticle()}")
                 ->ajoutLabelFor('commentaire', 'Commentaire :')
                 ->ajoutTextarea('commentaire', "", ['class' => 'form-control mb-3', 'id' => 'commentaire', 'rows' => 5, 'required' => 'true'])
                 ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
@@ -94,22 +77,22 @@ class ArticlesController extends Controller
 
             if ($this->userSession === null) {
                 $this->render('articles/article-unique', [
-                    'article' => $entity,
-                    'commentaires' => $array
+                    'article' => $article,
+                    'commentaires' => $commentaires
                 ]);
-
                 return;
             }
 
             $this->render('articles/article-unique', [
-                'article' => $entity,
-                'commentaires' => $array,
+                'article' => $article,
+                'commentaires' => $commentaires,
                 'form' => $this->form->create()
             ]);
             return;
         }
         $this->alert('danger', 'L\'article que vous cherchez n\'existe pas.');
         header('Location: /articles/all');
+        return;
     }
 
 
@@ -120,15 +103,7 @@ class ArticlesController extends Controller
      */
     public function all(): void
     {
-        $array = $this->articleModel->getAllArticles();
-        $articles = [];
-
-        foreach ($array as $article) {
-            $entity = new Articles;
-            $entity->hydrate($article);
-
-            $articles[] = $entity;
-        }
+        $articles = $this->articleModel->getAllArticles();
 
         $this->render('articles/articles-archive', [
             'articles' => $articles
@@ -148,7 +123,7 @@ class ArticlesController extends Controller
 
             if ($this->userSession['role'] === "ADMIN") {
 
-                $verif = $this->validation->addArticleValid($this->allPosts, $this->post->getPost('chapo'), $this->post->getPost('titre'), $this->post->getPost('contenu'));
+                $verif = $this->validation->addArticleValid($this->post->getPost('chapo'), $this->post->getPost('titre'), $this->post->getPost('contenu'));
 
                 if ($verif !== true) {
                     $this->alert('danger', $verif);
@@ -168,10 +143,12 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
             header('Location: /');
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -190,7 +167,7 @@ class ArticlesController extends Controller
 
                 $newArray = [];
                 foreach ($array as $a) {
-                    $newArray[$a->id_categorie] =  $a->type;
+                    $newArray[$a->getIdCategorie()] =  $a->getType();
                 }
 
                 $this->form->debutForm('post', '/articles/addValid', ["enctype" => "multipart/form-data"])
@@ -215,9 +192,11 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
             header('Location: /');
+            return;
         }
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -236,6 +215,7 @@ class ArticlesController extends Controller
 
                 $data = $this->articleModel->getArticleById($id);
 
+                // var_dump($data);die();
                 if ($data === null) {
                     header('Location: /articles/all');
                 }
@@ -244,18 +224,18 @@ class ArticlesController extends Controller
 
                 $newArray = [];
                 foreach ($array as $a) {
-                    $newArray[$a->id_categorie] =  $a->type;
+                    $newArray[$a->getIdCategorie()] =  $a->getType();
                 }
 
                 $this->form->debutForm('post', "/articles/updateValid/$id", ["enctype" => "multipart/form-data"])
                     ->ajoutLabelFor('categorie', 'Categorie :')
-                    ->ajoutSelect('categorie', $newArray, ['class' => 'form-control mb-3', 'id' => 'categorie', 'required' => 'true'], [$data->id_categorie, $data->type])
+                    ->ajoutSelect('categorie', $newArray, ['class' => 'form-control mb-3', 'id' => 'categorie', 'required' => 'true'], [$data->getIdCategorie(), $data->getCategorie()])
                     ->ajoutLabelFor('titre', 'Titre :')
-                    ->ajoutInput('text', 'titre', ['class' => 'form-control mb-3', 'id' => 'titre', 'required' => 'true', 'value' => $data->titre])
+                    ->ajoutInput('text', 'titre', ['class' => 'form-control mb-3', 'id' => 'titre', 'required' => 'true', 'value' => $data->getTitre()])
                     ->ajoutLabelFor('chapo', 'Chapô :')
-                    ->ajoutTextarea('chapo', $data->chapo, ['class' => 'form-control mb-3', 'id' => 'chapo', 'rows' => 3, 'required' => 'true'])
+                    ->ajoutTextarea('chapo', $data->getChapo(), ['class' => 'form-control mb-3', 'id' => 'chapo', 'rows' => 3, 'required' => 'true'])
                     ->ajoutLabelFor('contenu', 'Contenu :')
-                    ->ajoutTextarea('contenu', $data->contenu, ['class' => 'form-control mb-3', 'id' => 'contenu', 'rows' => 10, 'required' => 'true'])
+                    ->ajoutTextarea('contenu', $data->getContenu(), ['class' => 'form-control mb-3', 'id' => 'contenu', 'rows' => 10, 'required' => 'true'])
                     ->ajoutLabelFor('img', 'Image :')
                     ->ajoutInput('file', 'img', ['class' => 'form-control mb-3', 'id' => 'img'])
                     ->ajoutBouton("Ajouter", ['class' => 'btn btn-primary w-100 mt-3'])
@@ -269,10 +249,12 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
             header('Location: /');
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -299,10 +281,10 @@ class ArticlesController extends Controller
                 }
 
                 if ($this->files->getFiles('img')['size'] > 0) {
-                    unlink("uploads/$data->img");
+                    unlink("uploads/{$data->getImg()}");
                     $imgUrl = $this->imgTreatment->addFile($this->files->getFiles('img'), 'uploads/');
                 } else {
-                    $imgUrl = $data->img;
+                    $imgUrl = $data->getImg();
                 }
 
                 $slug = $this->generateSlug(htmlspecialchars($this->post->getPost('titre')));
@@ -316,10 +298,12 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
             header('Location: /');
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -349,10 +333,12 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
             header('Location: /');
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -365,14 +351,14 @@ class ArticlesController extends Controller
      */
     public function deleteValid(string $id): void
     {
-        if ($this->userSession === null) {
+        if ($this->userSession !== null) {
 
             if ($this->userSession['role'] === "ADMIN") {
 
                 if ($this->userSession['token'] === $this->post->getPost('token')) {
 
                     $data = $this->articleModel->getArticleById($id);
-                    $img = "uploads/$data->img";
+                    $img = "uploads/{$data->getImg()}";
 
                     if (file_exists($img)) {
 
@@ -385,18 +371,22 @@ class ArticlesController extends Controller
                     // si utilisateur n'est pas connecté on le redirige
                     $this->alert('danger', 'L\'image n\'existe pas');
                     header('Location: /');
+                    return;
                 }
                 // si utilisateur n'est pas connecté on le redirige
                 $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page');
                 header('Location: /');
+                return;
             }
             // si utilisateur n'est pas admin on le redirige
             $this->alert('danger', 'Vous n\'avez pas le droit d\'accéder à cette page.');
             header('Location: /');
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 
 
@@ -417,12 +407,12 @@ class ArticlesController extends Controller
 
             if($verif !== true) {
                 $this->alert('danger', $verif);
-                header("Location: /articles/unique/$article->slug");
+                header("Location: /articles/unique/{$article->getSlug()}");
                 return;
             }
 
             if ($article !== null) {
-                $slug = $article->slug;
+                $slug = $article->getSlug();
             }
 
             $this->commentaireModel->addCommentaire($this->post->getPost('commentaire'), $this->userSession['id'], $id);
@@ -430,9 +420,11 @@ class ArticlesController extends Controller
             // si utilisateur n'est pas connecté on le redirige
             $this->alert('success', 'Votre commentaire à été publié, un administrateur le validera dans les 48h.');
             header("Location: /articles/unique/$slug");
+            return;
         }
         // si utilisateur n'est pas connecté on le redirige
         $this->alert('danger', 'Vous n\'êtes pas connecté.');
         header('Location: /');
+        return;
     }
 }

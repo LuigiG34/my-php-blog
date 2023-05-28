@@ -216,7 +216,7 @@
                                     <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Wordpress</div>
                                 </div>
                                 <div class="col mb-4 mb-md-0">
-                                    <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Twig</div>
+                                    <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">MangoPay</div>
                                 </div>
                                 <div class="col">
                                     <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Symfony</div>
