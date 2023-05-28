@@ -71,7 +71,7 @@ class AdminController extends Controller
 
                 $users = $this->userModel->getAllUsers();
 
-                if ($users == null) {
+                if ($users === null) {
                     $this->alert('danger', 'Aucun utilisateurs trouvé.');
                 }
 
@@ -100,7 +100,7 @@ class AdminController extends Controller
 
                 $articles = $this->articleModel->getAllArticles();
 
-                if ($articles == null) {
+                if ($articles === null) {
                     $this->alert('danger', 'Aucun articles trouvé.');
                 }
 
@@ -129,7 +129,7 @@ class AdminController extends Controller
 
                 $commentaires = $this->commentaireModel->getAllCommentaires();
 
-                if ($commentaires == null) {
+                if ($commentaires === null) {
                     $this->alert('danger', 'Aucun comentaires trouvé.');
                 }
 

@@ -36,7 +36,7 @@ class ArticlesController extends Controller
     protected ImageTreatment $imgTreatment;
     protected Validation $validation;
 
-
+    
     public function __construct()
     {
         $this->files = new Files;
@@ -215,7 +215,6 @@ class ArticlesController extends Controller
 
                 $data = $this->articleModel->getArticleById($id);
 
-                // var_dump($data);die();
                 if ($data === null) {
                     header('Location: /articles/all');
                 }

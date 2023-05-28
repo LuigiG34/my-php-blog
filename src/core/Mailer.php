@@ -34,7 +34,6 @@ class Mailer
         $this->mail->SMTPAuth   = true;
         $this->mail->Username   = $this->config['MAIL_USERNAME'];
         $this->mail->Password   = $this->config['MAIL_PASSWORD'];
-        // $this->mail->SMTPSecure = 'tls';
         $this->mail->Port       = $this->config['MAIL_PORT'];
 
         $this->mail->setFrom($this->config['MAIL_FROM_ADDRESS'], $this->config['MAIL_FROM_NAME']);
